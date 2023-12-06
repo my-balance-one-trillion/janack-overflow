@@ -6,7 +6,7 @@
   },
   "husky": {
     "hooks": {
-      "prepare-commit-msg": "./husky/prepare-commit-msg",
+      "prepare-commit-msg": "exec < /dev/tty && ./husky/prepare-commit-msg $HUSKY_GIT_PARAMS",
       "pre-push": "./huskyhooks/pre-push",
       "commit-msg": "commitlint -E HUSKY_GIT_PARAMS"
     }
@@ -15,5 +15,5 @@
     "prepare": "husky install",
     "scriptname": "husky install"
   }
-  
+
 }
