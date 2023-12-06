@@ -1,20 +1,25 @@
 #!/usr/bin/env sh
 . "$(dirname -- "$0")/_/husky.sh"
 
-COMMIT_MESSAGE_FILE_PATH=$1
+COMMIT_MSG_FILE=$1
+COMMIT_SOURCE=$2
+SHA1=$3
 
-tail -n +2 $COMMIT_MESSAGE_FILE_PATH > .git/temp
-echo "$first_line" > $COMMIT_MESSAGE_FILE_PATH
-cat .git/temp >> $COMMIT_MESSAGE_FILE_PATH
+BRANCH_NAME=`git rev-parse --abbrev-ref HEAD`
+PROJECT_NAME=''
+PREFIX=''
 
-branch_name=$(git rev-parse --abbrev-ref HEAD)
-issue_number=$(echo "$branch_name" | sed -n 's/issue\([0-9]\{1,\}\)-.*/\1/p')
-
-# if the last line of commit includes #$issue_number, don't add it again
-last_line=$(tail -n1 "$COMMIT_MESSAGE_FILE_PATH")
-if [ `echo $last_line | grep -c "#$issue_number"` -eq 0 ]; then
-  subject=$(cat "$COMMIT_MESSAGE_FILE_PATH" | cut -d':' -f2)
-  echo "" >> "$COMMIT_MESSAGE_FILE_PATH"
-  echo "#$issue_number" >> "$COMMIT_MESSAGE_FILE_PATH"
+if [[ "${BRANCH_NAME}" == *"/"* ]];then
+    PROJECT_NAME=`echo ${BRANCH_NAME} | cut -d '/' -f1`
+    PREFIX=`echo PREFIX ${BRANCH_NAME} | cut -d '/' -f2`
 fi
 
+FIRST_LINE=`head -n1 ${COMMIT_MSG_FILE}`
+
+if [[ ${PROJECT_NAME} == '' ]]; then
+    exit
+fi
+
+if [ -z "$FIRST_LINE" ]; then
+    sed -i ".bak" "1s/^/[$PROJECT_NAME] $PREFIX : /" ${COMMIT_MSG_FILE}
+fi
