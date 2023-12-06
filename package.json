@@ -10,11 +10,12 @@
     "@commitlint/config-conventional": "^18.4.3",
     "husky": "^8.0.0"
   },
-  "scripts": {
+    "scripts": {
     "prepare": "husky install"
   },
   "husky": {
     "hooks": {
+      "pre-commit": "lint-staged",
       "commit-msg": "commitlint -E HUSKY_GIT_PARAMS",
       "pre-push": "./huskyhooks/pre-push"
     }
