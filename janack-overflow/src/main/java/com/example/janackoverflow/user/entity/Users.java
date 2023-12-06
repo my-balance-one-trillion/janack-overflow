@@ -7,19 +7,18 @@ import org.springframework.data.annotation.CreatedDate;
 import java.time.LocalDateTime;
 import java.util.Date;
 
-@Builder
+@Builder(toBuilder = true)
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
-@Setter
 @Entity
 @Table(name = "users")
 public class Users {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    private Long id;
 
-    @Column(nullable = false)
+    @Column(unique = true, nullable = false)
     private String email;
 
     @Column(nullable = false)
@@ -43,4 +42,26 @@ public class Users {
 
     @Column(nullable = false)
     private String role;
+
+    @Column(nullable = false)
+    private String profileImage;
+
+    public static Users of(Long id,String email,
+                           String password,String digit,
+                           Date birth,String name,LocalDateTime createdAt,
+                           String nickname,String status, String role,String profileImage
+                           ){
+        return new Users(null,email,
+                password,digit,
+                birth,name,createdAt,
+                nickname,status,role,profileImage);
+    }
+
+    public void updatePassword(String password){
+        this.password = password;
+    }
+
+    public void updateProfileImage(String profileImage){
+        this.profileImage = profileImage;
+    }
 }

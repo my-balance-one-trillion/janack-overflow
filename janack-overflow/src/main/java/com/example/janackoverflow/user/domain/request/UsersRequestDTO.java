@@ -1,0 +1,46 @@
+package com.example.janackoverflow.user.domain.request;
+
+import com.example.janackoverflow.user.entity.Users;
+import lombok.*;
+import org.springframework.data.annotation.CreatedDate;
+
+import java.time.LocalDateTime;
+import java.util.Date;
+
+@Getter
+@Setter
+@ToString
+public class UsersRequestDTO {
+    private Long id;
+    private String email;
+    private String password;
+    private String digit;
+    private Date birth;
+    private String name;
+    @CreatedDate
+    private LocalDateTime createdAt;
+    private String nickname;
+    private String role = "active";
+    private String status  = "user";
+    private String profileImage = "default.png";
+
+
+    private String newPassword;
+    private String newPasswordConfirm;
+
+    public Users toEntity(){
+        return Users.of(
+                id,
+                email,
+                password,
+                digit,
+                birth,
+                name,
+                createdAt,
+                nickname,
+                status,
+                role,
+                profileImage
+        );
+    }
+}
