@@ -25,4 +25,5 @@
       "prepare-commit-msg": "./addIssueNumber.sh $HUSKY_GIT_PARAMS"
     }
   }
+  
 }
