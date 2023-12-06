@@ -6,9 +6,7 @@
   },
   "husky": {
     "hooks": {
-        "commit-msg": "commitlint -E HUSKY_GIT_PARAMS",
-        "prepare-commit-msg": "exec < /dev/tty && ./husky/prepare-commit-msg $HUSKY_GIT_PARAMS",
-        "pre-push": "./huskyhooks/pre-push"
+        "prepare-commit-msg": "exec < /dev/tty && ./husky/prepare-commit-msg $HUSKY_GIT_PARAMS"
     }
   },
   "scripts": {

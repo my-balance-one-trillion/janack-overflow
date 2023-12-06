@@ -1,5 +1,0 @@
-#!/usr/bin/env sh
-. "$(dirname -- "$0")/_/husky.sh"
-
-echo "commit-msg 훅이 실행되었습니다."
-npx commitlint --edit "$1"
