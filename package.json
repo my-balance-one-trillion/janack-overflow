@@ -1,11 +1,14 @@
 {
   "devDependencies": {
+    "@commitlint/cli": "^18.4.3",
+    "@commitlint/config-conventional": "^18.4.3",
     "husky": "^8.0.3"
   },
   "husky": {
     "hooks": {
       "prepare-commit-msg": "./husky/prepare-commit-msg",
-      "pre-push": "./huskyhooks/pre-push"
+      "pre-push": "./huskyhooks/pre-push",
+      "commit-msg": "commitlint -E HUSKY_GIT_PARAMS"
     }
   },
   "scripts": {
