@@ -1,18 +1,12 @@
 {
   "devDependencies": {
-    "husky": "^8.0.3",
-    "jira-prepare-commit-msg": "^1.7.2"
+    "husky": "^8.0.3"
   },
   "husky": {
     "hooks": {
-      "prepare-commit-msg": "jira-prepare-commit-msg",
+      "prepare-commit-msg": "./husky/prepare-commit-msg",
       "pre-push": "./huskyhooks/pre-push"
     }
-  },
-  "jira-prepare-commit-msg": {
-    "messagePattern": "[$J] $M",
-    "jiraTicketPattern": "((?!([A-Z0-9a-z]{1,10})-?$)[A-Z]{1}[A-Z0-9]+-\\d+)",
-    "isConventionalCommit": true
   },
   "scripts": {
     "prepare": "husky install",

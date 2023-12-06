@@ -1,4 +1,10 @@
 #!/usr/bin/env sh
 . "$(dirname -- "$0")/_/husky.sh"
 
-npx jira-prepare-commit-msg $1
+BRANCH_NAME=$(git symbolic-ref --short HEAD)
+ISSUE_NUMBER=$(echo $BRANCH_NAME | grep -oE '[0-9]+-')
+
+if [ -n "$ISSUE_NUMBER" ]; then
+  ISSUE_NUMBER=$(echo $ISSUE_NUMBER | sed 's/-$//')
+  sed -i.bak -e "1s/^/\#$ISSUE_NUMBER /" "$1"
+fi
