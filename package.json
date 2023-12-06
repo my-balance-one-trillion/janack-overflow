@@ -6,8 +6,6 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "@commitlint/cli": "^18.4.3",
-    "@commitlint/config-conventional": "^18.4.3",
     "husky": "^8.0.0",
     "lint-staged": "^15.2.0"
   },
@@ -26,11 +24,5 @@
       "pre-commit": "lint-staged",
       "prepare-commit-msg": "./addIssueNumber.sh $HUSKY_GIT_PARAMS"
     }
-  },
-  "commitlint": {
-    "extends": [
-      "@commitlint/config-conventional"
-    ]
   }
-  
 }
