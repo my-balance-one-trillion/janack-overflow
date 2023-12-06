@@ -1,5 +1,6 @@
 package com.example.janackoverflow.community.entity;
 
+import com.example.janackoverflow.error.entity.Error;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;

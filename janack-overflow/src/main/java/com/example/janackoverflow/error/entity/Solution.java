@@ -1,4 +1,4 @@
-package com.example.janackoverflow.mypage.entity;
+package com.example.janackoverflow.error.entity;
 
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -25,5 +25,5 @@ public class Solution {
 
     @ManyToOne
     @JoinColumn(name = "error_id")
-    private Error error;
+    private java.lang.Error error;
 }

@@ -1,4 +1,4 @@
-package com.example.janackoverflow.community.entity;
+package com.example.janackoverflow.error.entity;
 
 import jakarta.persistence.*;
 import lombok.Getter;

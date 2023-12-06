@@ -1,4 +1,4 @@
-package com.example.janackoverflow.admin.entity;
+package com.example.janackoverflow.saving.entity;
 
 import jakarta.persistence.*;
 import lombok.Getter;
