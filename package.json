@@ -1,16 +1,16 @@
 {
-  "devDependencies": {
-    "@commitlint/cli": "^18.4.3",
-    "@commitlint/config-conventional": "^18.4.3",
-    "husky": "^8.0.3"
-  },
-  "husky": {
-    "hooks": {
-        "prepare-commit-msg": "exec < /dev/tty && ./husky/prepare-commit-msg $HUSKY_GIT_PARAMS"
+    "devDependencies": {
+        "@commitlint/cli": "^18.4.3",
+        "@commitlint/config-conventional": "^18.4.3",
+        "husky": "^8.0.3"
+    },
+    "husky": {
+        "hooks": {
+            "prepare-commit-msg": "exec < /dev/tty && ./husky/prepare-commit-msg $HUSKY_GIT_PARAMS"
+        }
+    },
+    "scripts": {
+        "prepare": "husky install",
+        "scriptname": "husky install"
     }
-  },
-  "scripts": {
-    "prepare": "husky install",
-    "scriptname": "husky install"
-  }
 }
