@@ -24,7 +24,7 @@
   "husky": {
     "hooks": {
       "pre-commit": "lint-staged",
-      "prepare-commit-msg": "./addIssueNumber.sh $HUSKY_GIT_PARAMS"
+      "prepare-commit-msg": "./add-issue-number.sh $HUSKY_GIT_PARAMS"
     }
   },
   "commitlint": {
