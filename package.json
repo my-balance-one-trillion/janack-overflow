@@ -15,5 +15,4 @@
     "prepare": "husky install",
     "scriptname": "husky install"
   }
-
 }
