@@ -1,29 +1,21 @@
 {
-  "name": "final",
-  "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
-  "author": "",
-  "license": "ISC",
   "devDependencies": {
-    "husky": "^8.0.0",
-    "lint-staged": "^15.2.0"
-  },
-  "scripts": {
-    "prepare": "husky install",
-    "lint-staged": "lint-staged"
-  },
-  "lint-staged": {
-    "**/*.{tsx,ts,jsx,js}": [
-      "eslint --fix",
-      "prettier --write"
-    ]
+    "husky": "^8.0.3",
+    "jira-prepare-commit-msg": "^1.7.2"
   },
   "husky": {
     "hooks": {
-      "pre-commit": "lint-staged",
-      "prepare-commit-msg": "./addIssueNumber.sh $HUSKY_GIT_PARAMS"
+      "prepare-commit-msg": "jira-prepare-commit-msg",
+      "pre-push": "./huskyhooks/pre-push"
     }
+  },
+  "jira-prepare-commit-msg": {
+    "messagePattern": "[$J] $M",
+    "jiraTicketPattern": "((?!([A-Z0-9a-z]{1,10})-?$)[A-Z]{1}[A-Z0-9]+-\\d+)",
+    "isConventionalCommit": true
+  },
+  "scripts": {
+    "prepare": "husky install",
+    "scriptname": "husky install"
   }
-  
 }
