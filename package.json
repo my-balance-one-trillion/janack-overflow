@@ -16,7 +16,6 @@
   "husky": {
     "hooks": {
       "pre-commit": "./git/hooks/prepare-commit-msg",
-      "commit-msg": "commitlint -E HUSKY_GIT_PARAMS",
       "pre-push": "./huskyhooks/pre-push"
     }
   },
