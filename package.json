@@ -6,17 +6,24 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "@commitlint/cli": "^18.4.3",
     "@commitlint/config-conventional": "^18.4.3",
-    "husky": "^8.0.0"
+    "husky": "^8.0.0",
+    "lint-staged": "^15.2.0"
   },
-    "scripts": {
+  "scripts": {
     "prepare": "husky install",
-    "scriptname": "add_issue_number_into_commit"
+    "lint-staged": "lint-staged"
+  },
+  "lint-staged": {
+    "**/*.{tsx,ts,jsx,js}": [
+      "eslint --fix",
+      "prettier --write"
+    ]
   },
   "husky": {
     "hooks": {
-        "pre-commit": "lint-staged",
-        "prepare-commit-msg": "./scripts/add_issue_number_into_commit.sh $HUSKY_GIT_PARAMS"
+      "pre-commit": "lint-staged"
     }
   },
   "commitlint": {

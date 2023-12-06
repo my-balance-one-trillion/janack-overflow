@@ -1,0 +1,25 @@
+#!/usr/bin/env sh
+. "$(dirname -- "$0")/_/husky.sh"
+
+COMMIT_MSG_FILE=$1
+COMMIT_SOURCE=$2
+SHA1=$3
+
+BRANCH_NAME=`git rev-parse --abbrev-ref HEAD`
+PROJECT_NAME=''
+PREFIX=''
+
+if [[ "${BRANCH_NAME}" == *"/"* ]];then
+    PROJECT_NAME=`echo ${BRANCH_NAME} | cut -d '/' -f1`
+    PREFIX=`echo PREFIX ${BRANCH_NAME} | cut -d '/' -f2`
+fi
+
+FIRST_LINE=`head -n1 ${COMMIT_MSG_FILE}`
+
+if [[ ${PROJECT_NAME} == '' ]]; then
+    exit
+fi
+
+if [ -z "$FIRST_LINE" ]; then
+    sed -i ".bak" "1s/^/[$PROJECT_NAME] $PREFIX : /" ${COMMIT_MSG_FILE}
+fi
