@@ -60,7 +60,18 @@ public class Users {
     public void updatePassword(String password){
         this.password = password;
     }
-
+    public void updateDigit(String digit){
+        this.digit = digit;
+    }
+    public void updateBirth(Date birth){
+        this.birth = birth;
+    }
+    public void updateName(String name){
+        this.name = name;
+    }
+    public void updateNickname(String nickname){
+        this.nickname = nickname;
+    }
     public void updateProfileImage(String profileImage){
         this.profileImage = profileImage;
     }

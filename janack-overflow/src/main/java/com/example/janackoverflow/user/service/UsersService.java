@@ -20,13 +20,10 @@ public class UsersService {
     public void updateUser(UsersRequestDTO usersRequestDTO, Long id){
         Users users = usersRepository.findById(id).orElseThrow(RuntimeException::new);
         if(users.getPassword().equals(usersRequestDTO.getPassword())){
-            users.toBuilder()
-                    .email(usersRequestDTO.getEmail())
-                    .digit(usersRequestDTO.getDigit())
-                    .birth(usersRequestDTO.getBirth())
-                    .name(usersRequestDTO.getName())
-                    .nickname(usersRequestDTO.getNickname())
-                    .build();
+            users.updateDigit(usersRequestDTO.getDigit());
+            users.updateBirth(usersRequestDTO.getBirth());
+            users.updateName(usersRequestDTO.getName());
+            users.updateNickname(usersRequestDTO.getNickname());
             if(usersRequestDTO.getNewPassword() != null){
                 if(usersRequestDTO.getNewPassword().equals(usersRequestDTO.getNewPasswordConfirm())){
                     users.updatePassword(usersRequestDTO.getNewPassword());
