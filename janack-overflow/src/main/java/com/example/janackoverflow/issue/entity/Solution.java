@@ -1,6 +1,5 @@
-package com.example.janackoverflow.community.entity;
+package com.example.janackoverflow.issue.entity;
 
-import com.example.janackoverflow.issue.entity.issue;
 import com.example.janackoverflow.global.entity.AuditingFields;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -9,8 +8,8 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity
-@Table(name = "comment")
-public class Comment extends AuditingFields {
+@Table(name = "solution")
+public class Solution extends AuditingFields {
     @Id
     @Column(name = "id", nullable = false)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -19,7 +18,13 @@ public class Comment extends AuditingFields {
     @Column(nullable = false)
     private String content;
 
+    @Column(nullable = false)
+    private String code;
+
+    @Column(nullable = false)
+    private int amount;
+
     @ManyToOne
-    @JoinColumn(name="issue_id")
+    @JoinColumn(name = "issue_id")
     private issue issue;
 }
