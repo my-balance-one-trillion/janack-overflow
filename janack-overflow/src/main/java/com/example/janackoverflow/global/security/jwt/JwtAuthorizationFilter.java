@@ -2,7 +2,7 @@ package com.example.janackoverflow.global.security.jwt;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
-import com.example.janackoverflow.security.auth.NowUserDetails;
+import com.example.janackoverflow.global.security.auth.NowUserDetails;
 import com.example.janackoverflow.user.entity.Users;
 import com.example.janackoverflow.user.repository.UsersRepository;
 import jakarta.servlet.FilterChain;
