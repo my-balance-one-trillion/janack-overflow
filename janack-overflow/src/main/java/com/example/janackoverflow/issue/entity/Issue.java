@@ -2,18 +2,25 @@ package com.example.janackoverflow.issue.entity;
 
 import com.example.janackoverflow.global.entity.AuditingFields;
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 @Getter
-@Setter
+@Builder
 @Entity
-@Table(name = "solution")
-public class Solution extends AuditingFields {
+@Table(name = "issue")
+@NoArgsConstructor
+@AllArgsConstructor
+public class Issue extends AuditingFields {
     @Id
     @Column(name = "id", nullable = false)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @Column(nullable = false)
+    private int amount;
+
+    @Column(nullable = false)
+    private String title;
 
     @Column(nullable = false)
     private String content;
@@ -22,9 +29,13 @@ public class Solution extends AuditingFields {
     private String code;
 
     @Column(nullable = false)
-    private int amount;
+    private String category;
 
-    @ManyToOne
-    @JoinColumn(name = "issue_id")
-    private Issue issue;
+    @Column(nullable = false)
+    private String status;
+
+    @Column(nullable = false)
+    private boolean publicStatus;
+
+    private String keyword;
 }

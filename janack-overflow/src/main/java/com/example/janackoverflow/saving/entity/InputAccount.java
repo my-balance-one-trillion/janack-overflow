@@ -34,6 +34,4 @@ public class InputAccount extends AuditingFields {
 
     @Column(length = 2, nullable = false)
     private String status;
-
-
 }

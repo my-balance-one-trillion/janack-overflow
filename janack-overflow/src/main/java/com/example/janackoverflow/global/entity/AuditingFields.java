@@ -22,9 +22,9 @@ public abstract class AuditingFields {
     @CreatedDate
     @Column(nullable = true, updatable = false)
     private LocalDateTime createdAt; //생성일시
-
+  
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
     @CreatedBy
     @Column(nullable = true)
-    private Long createdBy; // 생성자
+    private String createdBy; // 생성자
 }

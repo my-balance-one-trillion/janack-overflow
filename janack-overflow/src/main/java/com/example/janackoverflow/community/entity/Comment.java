@@ -3,12 +3,13 @@ package com.example.janackoverflow.community.entity;
 import com.example.janackoverflow.issue.entity.issue;
 import com.example.janackoverflow.global.entity.AuditingFields;
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 @Getter
-@Setter
+@Builder
 @Entity
+@AllArgsConstructor
+@NoArgsConstructor
 @Table(name = "comment")
 public class Comment extends AuditingFields {
     @Id
@@ -21,5 +22,5 @@ public class Comment extends AuditingFields {
 
     @ManyToOne
     @JoinColumn(name="issue_id")
-    private issue issue;
+    private Issue issue;
 }
