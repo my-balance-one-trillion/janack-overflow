@@ -1,6 +1,7 @@
 package com.example.janackoverflow.user.controller;
 
 import com.example.janackoverflow.user.domain.request.UsersRequestDTO;
+import com.example.janackoverflow.user.domain.response.UsersResponseDTO;
 import com.example.janackoverflow.user.entity.Users;
 import com.example.janackoverflow.user.service.UsersService;
 import org.springframework.http.HttpStatus;
@@ -44,16 +45,23 @@ public class UsersController {
 //    비밀번호 찾기
 
 //    마이페이지에서 비밀번호 재설정
-    @GetMapping
-    public ResponseEntity readUser(long userId){
-        return new ResponseEntity(HttpStatus.OK);
+    @GetMapping("/mypage/{usersid}")
+    public ResponseEntity readUser(@PathVariable("usersid") long usersId){
+        UsersResponseDTO usersResponseDTO =  usersService.readUser(usersId);
+        return new ResponseEntity(usersResponseDTO, HttpStatus.OK);
     }
-    @PutMapping("/mypage")
-    public ResponseEntity updateUser(@RequestBody UsersRequestDTO usersRequestDTO, long userId){
-        usersService.updateUser(usersRequestDTO, userId);
+    @PutMapping("/mypage/{usersid}")
+    public ResponseEntity updateUser(@RequestBody UsersRequestDTO usersRequestDTO,
+                                     @PathVariable("usersid") long usersId){
+        usersService.updateUser(usersRequestDTO, usersId);
         return new ResponseEntity(HttpStatus.RESET_CONTENT);
     }
 //    마이페이지에서 프로필 이미지 변경
-
+    @PutMapping("/mypage/profileimage/{usersid}")
+    public ResponseEntity updateProfileImage(@RequestBody UsersRequestDTO usersRequestDTO,
+                                             @PathVariable("usersid") long userId){
+        usersService.updateProfileImage(usersRequestDTO, userId);
+        return new ResponseEntity(HttpStatus.RESET_CONTENT);
+    }
 
 }

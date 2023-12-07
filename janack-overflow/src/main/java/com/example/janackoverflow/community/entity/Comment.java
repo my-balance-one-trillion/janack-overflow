@@ -1,4 +1,4 @@
-package com.example.janackoverflow.global.entity;
+package com.example.janackoverflow.community.entity;
 
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -7,8 +7,8 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity
-@Table(name = "solution")
-public class Solution {
+@Table(name = "comment")
+public class Comment{
     @Id
     @Column(name = "id", nullable = false)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -16,14 +16,4 @@ public class Solution {
 
     @Column(nullable = false)
     private String content;
-
-    @Column(nullable = false)
-    private String code;
-
-    @Column(nullable = false)
-    private int amount;
-
-    @ManyToOne
-    @JoinColumn(name = "error_id")
-    private Error error;
 }

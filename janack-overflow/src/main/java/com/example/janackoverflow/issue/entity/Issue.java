@@ -1,4 +1,4 @@
-package com.example.janackoverflow.global.entity;
+package com.example.janackoverflow.issue.entity;
 
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -7,8 +7,8 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity
-@Table(name = "error")
-public class Error {
+@Table(name = "issue")
+public class Issue {
     @Id
     @Column(name = "id", nullable = false)
     @GeneratedValue(strategy = GenerationType.IDENTITY)

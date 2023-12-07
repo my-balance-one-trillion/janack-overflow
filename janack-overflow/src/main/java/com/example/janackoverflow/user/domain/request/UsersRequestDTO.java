@@ -27,7 +27,6 @@ public class UsersRequestDTO {
     private String bankName;
     private String outputAcntNum;
 
-
     private String newPassword;
     private String newPasswordConfirm;
 

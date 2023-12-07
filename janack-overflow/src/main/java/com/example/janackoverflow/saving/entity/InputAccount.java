@@ -1,22 +1,27 @@
-package com.example.janackoverflow.global.entity;
+package com.example.janackoverflow.saving.entity;
 
+import com.example.janackoverflow.global.entity.AuditingFields;
+import com.example.janackoverflow.user.entity.Users;
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import java.time.LocalDateTime;
+
 
 @Getter
 @Setter
 @Entity
 @Table(name = "input_account")
-public class InputAccount {
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+public class InputAccount extends AuditingFields {
     @Id
     @Column(name = "id", nullable = false)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
+    //    @Column(nullable = false)
     private String acntNum;
 
     @Column(nullable = false)
@@ -28,13 +33,13 @@ public class InputAccount {
     @Column(nullable = false)
     private int goalAmount;
 
-    @Column(nullable = false)
     private LocalDateTime completedAt;
 
     @Column(length = 2, nullable = false)
     private String status;
 
-    @OneToOne
-    @JoinColumn(name = "output_account_id")
-    private OutputAccount outputAccount;
+    @ManyToOne
+    @JoinColumn(name = "users_id", nullable = false)
+    private Users users;
+
 }
