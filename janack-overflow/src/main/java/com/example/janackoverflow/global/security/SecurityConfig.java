@@ -1,4 +1,4 @@
-package com.example.janackoverflow.security;
+package com.example.janackoverflow.global.security;
 
 import com.example.janackoverflow.security.jwt.JwtAuthenticationFilter;
 import org.springframework.beans.factory.annotation.Autowired;

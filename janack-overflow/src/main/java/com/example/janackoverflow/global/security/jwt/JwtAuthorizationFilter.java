@@ -1,4 +1,4 @@
-package com.example.janackoverflow.security.jwt;
+package com.example.janackoverflow.global.security.jwt;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;

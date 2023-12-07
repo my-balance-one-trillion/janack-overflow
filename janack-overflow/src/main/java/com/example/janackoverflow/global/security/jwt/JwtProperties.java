@@ -1,4 +1,4 @@
-package com.example.janackoverflow.security.jwt;
+package com.example.janackoverflow.global.security.jwt;
 
 public interface JwtProperties {
 	String SECRET = "janack_overflow"; // 우리 서버만 알고 있는 비밀값

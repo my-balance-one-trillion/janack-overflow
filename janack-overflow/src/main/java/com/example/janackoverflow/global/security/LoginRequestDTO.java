@@ -1,4 +1,4 @@
-package com.example.janackoverflow.security;
+package com.example.janackoverflow.global.security;
 
 import lombok.Data;
 

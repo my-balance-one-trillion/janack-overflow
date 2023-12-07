@@ -1,4 +1,4 @@
-package com.example.janackoverflow.security.auth;
+package com.example.janackoverflow.global.security.auth;
 
 
 import com.example.janackoverflow.user.entity.Users;
