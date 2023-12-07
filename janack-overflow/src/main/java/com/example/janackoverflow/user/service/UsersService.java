@@ -32,6 +32,10 @@ public class UsersService {
         return usersRepository.save(users);
     }
 
+    public Optional<Users> findUser(String email){ //이메일로 회원찾기
+        return usersRepository.findByEmail(email);
+    }
+
     public void updateUser(UsersRequestDTO usersRequestDTO, Long id){
         Users users = usersRepository.findById(id).orElseThrow(RuntimeException::new);
         if(users.getPassword().equals(usersRequestDTO.getPassword())){

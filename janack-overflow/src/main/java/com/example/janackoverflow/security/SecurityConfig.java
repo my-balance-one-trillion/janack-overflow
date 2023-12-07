@@ -61,10 +61,14 @@ public class SecurityConfig {
 
 
         http.cors(Customizer.withDefaults())
-                //'USER' 역할 사용자가 모든 '/**' URL 패턴에 해당하는 요청 권한을 가진다
+                //'USER' 역할 사용자가 '/mypage' URL 패턴에 해당하는 요청 권한을 가진다
                 .authorizeHttpRequests((authorizeRequests) ->
                         authorizeRequests
-                                .requestMatchers("/**").hasRole("USER")
+                                .requestMatchers("/mypage").hasRole("USER")
+                )
+                .authorizeHttpRequests((authorizeRequests) ->
+                        authorizeRequests
+                                .requestMatchers("/mypage").hasRole("ADMIN")
                 )
                 //폼 기반 로그인 구성
                 .formLogin((formLogin) ->
@@ -77,25 +81,25 @@ public class SecurityConfig {
         return http.build();
     }
 
-    @Bean
-    public UserDetailsService userDetailsService(PasswordEncoder passwordEncoder) {
-
-        UserDetails user =
-                User.builder()
-                        .username("user") //사용자 이름
-                        .password(passwordEncoder.encode("password")) //패스워드 암호화
-                        .roles("USER") //역할(권한) 부여
-                        .build();
-
-        UserDetails admin = User.builder()
-                .username("admin") //관리자 이름
-                .password(passwordEncoder.encode("admin")) //관리자 패스워드
-                .roles("ADMIN") //역할(권한) 부여
-                .build();
-
-        return new InMemoryUserDetailsManager(user, admin);
-        //InMemory ~ Manager : 메모리에 사용자 정보(userDetails)를 저장하고 관리하는 데 사용됨
-    }
+//    @Bean
+//    public UserDetailsService userDetailsService(PasswordEncoder passwordEncoder) {
+//
+//        UserDetails user =
+//                User.builder()
+//                        .username("user") //사용자 이름
+//                        .password(passwordEncoder.encode("password")) //패스워드 암호화
+//                        .roles("USER") //역할(권한) 부여
+//                        .build();
+//
+//        UserDetails admin = User.builder()
+//                .username("admin") //관리자 이름
+//                .password(passwordEncoder.encode("admin")) //관리자 패스워드
+//                .roles("ADMIN") //역할(권한) 부여
+//                .build();
+//
+//        return new InMemoryUserDetailsManager(user, admin);
+//        //InMemory ~ Manager : 메모리에 사용자 정보(userDetails)를 저장하고 관리하는 데 사용됨
+//    }
 
     @Bean
     public AuthenticationManager authenticationManagerBean() throws Exception{
