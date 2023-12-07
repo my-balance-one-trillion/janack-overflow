@@ -25,5 +25,5 @@ public class Solution {
 
     @ManyToOne
     @JoinColumn(name = "error_id")
-    private Error error;
+    private issue issue;
 }
