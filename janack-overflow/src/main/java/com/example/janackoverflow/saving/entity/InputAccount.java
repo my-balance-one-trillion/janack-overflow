@@ -41,4 +41,5 @@ public class InputAccount extends AuditingFields {
     @JoinColumn(name = "users_id", nullable = false)
     private Users users;
 
+    private int acntAmount;
 }

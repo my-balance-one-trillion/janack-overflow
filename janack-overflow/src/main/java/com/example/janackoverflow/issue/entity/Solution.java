@@ -2,13 +2,14 @@ package com.example.janackoverflow.issue.entity;
 
 import com.example.janackoverflow.global.entity.AuditingFields;
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 @Getter
-@Setter
+@Builder
 @Entity
 @Table(name = "solution")
+@NoArgsConstructor
+@AllArgsConstructor
 public class Solution extends AuditingFields {
     @Id
     @Column(name = "id", nullable = false)
@@ -20,9 +21,6 @@ public class Solution extends AuditingFields {
 
     @Column(nullable = false)
     private String code;
-
-    @Column(nullable = false)
-    private int amount;
 
     @ManyToOne
     @JoinColumn(name = "issue_id")

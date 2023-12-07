@@ -18,6 +18,7 @@ import java.util.Date;
 @EntityListeners(AuditingEntityListener.class)
 public class Users {
     @Id
+    @Setter
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 

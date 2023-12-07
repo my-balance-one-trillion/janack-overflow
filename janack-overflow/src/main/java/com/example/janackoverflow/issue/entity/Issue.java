@@ -3,6 +3,7 @@ package com.example.janackoverflow.issue.entity;
 import com.example.janackoverflow.global.entity.AuditingFields;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.ColumnDefault;
 
 @Getter
 @Builder
@@ -16,7 +17,6 @@ public class Issue extends AuditingFields {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
     private int amount;
 
     @Column(nullable = false)
@@ -38,4 +38,7 @@ public class Issue extends AuditingFields {
     private boolean publicStatus;
 
     private String keyword;
+
+    @ColumnDefault("0")
+    private Integer views;
 }
