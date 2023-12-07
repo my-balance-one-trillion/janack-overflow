@@ -21,7 +21,6 @@ public class Likes extends AuditingFields {
     @JoinColumn(name="users_id", nullable = false)
     private Users users;
 
-    @ManyToOne
     @Id
     @JoinColumn(name="issue_id", nullable = false)
     private Issue issue;

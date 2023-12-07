@@ -1,7 +1,7 @@
 package com.example.janackoverflow.community.entity;
 
+import com.example.janackoverflow.issue.entity.issue;
 import com.example.janackoverflow.global.entity.AuditingFields;
-import com.example.janackoverflow.issue.entity.Issue;
 import jakarta.persistence.*;
 import lombok.*;
 

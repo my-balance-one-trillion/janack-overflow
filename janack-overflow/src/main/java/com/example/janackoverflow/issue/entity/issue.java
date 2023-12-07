@@ -1,37 +1,40 @@
-package com.example.janackoverflow.saving.entity;
+package com.example.janackoverflow.issue.entity;
 
 import com.example.janackoverflow.global.entity.AuditingFields;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.time.LocalDateTime;
-
 @Getter
 @Setter
 @Entity
-@Table(name = "input_account")
-public class InputAccount extends AuditingFields {
+@Table(name = "issue")
+public class issue extends AuditingFields {
     @Id
     @Column(name = "id", nullable = false)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(nullable = false)
-    private String acntNum;
+    private int amount;
 
     @Column(nullable = false)
-    private String acntName;
+    private String title;
 
     @Column(nullable = false)
-    private String goalName;
+    private String content;
 
     @Column(nullable = false)
-    private int goalAmount;
+    private String code;
 
     @Column(nullable = false)
-    private LocalDateTime completedAt;
+    private String category;
 
-    @Column(length = 2, nullable = false)
+    @Column(nullable = false)
     private String status;
+
+    @Column(nullable = false)
+    private boolean publicStatus;
+
+    private String keyword;
 }
