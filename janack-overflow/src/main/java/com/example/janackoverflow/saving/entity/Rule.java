@@ -1,14 +1,18 @@
 package com.example.janackoverflow.saving.entity;
 
+import com.example.janackoverflow.global.entity.AuditingFields;
+import com.example.janackoverflow.user.entity.Users;
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 @Getter
 @Setter
 @Entity
 @Table(name = "rule")
-public class Rule {
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+public class Rule{
     @Id
     @Column(name = "id", nullable = false)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -26,4 +30,8 @@ public class Rule {
     @ManyToOne
     @JoinColumn(name = "input_account_id")
     private InputAccount inputAccount;
+
+    @ManyToOne
+    @JoinColumn(name = "users_id")
+    private Users users;
 }

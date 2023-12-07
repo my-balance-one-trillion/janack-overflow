@@ -51,5 +51,5 @@ public class Users {
     private String bankName;
 
     //@Column(nullable = false)
-    private String OutputAcntNum;
+    private String outputAcntNum;
 }
