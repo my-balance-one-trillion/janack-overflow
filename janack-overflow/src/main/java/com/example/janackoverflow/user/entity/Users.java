@@ -44,12 +44,12 @@ public class Users {
     @Column(nullable = false)
     private String role;
 
-    @Column(nullable = false)
+    //@Column(nullable = false)
     private String holder;
 
-    @Column(nullable = false)
+    //@Column(nullable = false)
     private String bankName;
 
-    @Column(nullable = false)
-    private String OutputAcntNum;
+    //@Column(nullable = false)
+    private String outputAcntNum;
 }
