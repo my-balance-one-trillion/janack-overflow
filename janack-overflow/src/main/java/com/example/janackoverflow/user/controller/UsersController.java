@@ -18,12 +18,22 @@ public class UsersController {
 //    회원가입
     @PostMapping("/signup")
     public ResponseEntity createUser(@RequestBody UsersRequestDTO usersRequestDTO){
-        usersService.createUser(usersRequestDTO);
-        return new ResponseEntity<>(usersRequestDTO, HttpStatus.CREATED);
+
+        if (usersService.isDuplicatedNick(usersRequestDTO)) { //닉네임 중복확인
+            return new ResponseEntity<>("중복되는 닉네임입니다", HttpStatus.FORBIDDEN);
+        } else if(usersService.isDuplicatedEmail(usersRequestDTO)) { //이메일 중복확인
+            return new ResponseEntity<>("중복되는 이메일입니다", HttpStatus.FORBIDDEN);
+        } else {
+            usersRequestDTO.setRole("user"); //역활
+            usersRequestDTO.setStatus("1"); //상태
+            usersRequestDTO.setProfileImage("default.png"); //프로필 이미지
+            usersService.createUser(usersRequestDTO);
+            //return new ResponseEntity<>(usersRequestDTO, HttpStatus.CREATED);
+            return new ResponseEntity<>("성공적으로 생성", HttpStatus.OK);
+        }
+
     }
 //    이메일 인증
-
-//    닉네임 중복확인
 
 //    자체 로그인 기능
 

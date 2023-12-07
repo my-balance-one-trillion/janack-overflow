@@ -50,21 +50,21 @@ public class Users {
     @Column(nullable = false)
     private String profileImage;
 
-//    @Column(nullable = false)
+    //    @Column(nullable = false)
     private String holder;
 
-//    @Column(nullable = false)
+    //    @Column(nullable = false)
     private String bankName;
 
-//    @Column(nullable = false)
+    //    @Column(nullable = false)
     private String outputAcntNum;
 
     public static Users of(Long id,String email,
                            String password,String digit,
                            Date birth,String name,LocalDateTime createdAt,
                            String nickname,String status, String role,String profileImage
-                           ,String holder, String bankName, String outputAcntNum
-                           ){
+            ,String holder, String bankName, String outputAcntNum
+    ){
         return new Users(null,email,
                 password,digit,
                 birth,name,createdAt,
