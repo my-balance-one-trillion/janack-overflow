@@ -6,10 +6,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 
-import java.util.List;
-import java.util.Optional;
-
 public interface CommentRepository extends JpaRepository<Comment, Long> {
 
-    public Page<Comment> findAllByError_IdOrderByCreatedAtDesc(Long id, Pageable pageable);
+    public Page<Comment> findAllByIssue_IdOrderByCreatedAtDesc(Long id, Pageable pageable);
 }

@@ -33,8 +33,4 @@ public class InputAccount {
 
     @Column(length = 2, nullable = false)
     private String status;
-
-    @OneToOne
-    @JoinColumn(name = "output_account_id")
-    private OutputAccount outputAccount;
 }

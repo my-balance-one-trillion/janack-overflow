@@ -1,5 +1,6 @@
-package com.example.janackoverflow.error.entity;
+package com.example.janackoverflow.issue.entity;
 
+import com.example.janackoverflow.global.entity.AuditingFields;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -8,7 +9,7 @@ import lombok.Setter;
 @Setter
 @Entity
 @Table(name = "solution")
-public class Solution {
+public class Solution extends AuditingFields {
     @Id
     @Column(name = "id", nullable = false)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -24,6 +25,6 @@ public class Solution {
     private int amount;
 
     @ManyToOne
-    @JoinColumn(name = "error_id")
-    private java.lang.Error error;
+    @JoinColumn(name = "issue_id")
+    private Issue issue;
 }

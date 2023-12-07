@@ -1,7 +1,7 @@
 package com.example.janackoverflow.community.entity;
 
-import com.example.janackoverflow.AuditingFields;
-import com.example.janackoverflow.error.entity.Error;
+import com.example.janackoverflow.global.entity.AuditingFields;
+import com.example.janackoverflow.issue.entity.Issue;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -21,6 +21,6 @@ public class Comment extends AuditingFields {
     private String content;
 
     @ManyToOne
-    @JoinColumn(name="error_id")
-    private Error error;
+    @JoinColumn(name="issue_id")
+    private Issue issue;
 }

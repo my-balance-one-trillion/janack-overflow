@@ -43,4 +43,13 @@ public class Users {
 
     @Column(nullable = false)
     private String role;
+
+    @Column(nullable = false)
+    private String holder;
+
+    @Column(nullable = false)
+    private String bankName;
+
+    @Column(nullable = false)
+    private String OutputAcntNum;
 }

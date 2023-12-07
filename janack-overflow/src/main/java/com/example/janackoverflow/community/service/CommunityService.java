@@ -21,14 +21,14 @@ public class CommunityService {
     /**
      * 게시글의 댓글 리스트
      *
-     * @param errorId
+     * @param issueId
      * @return
      */
-    public Page<CommentDTO.CommentResponseDto> getCommentList(Long errorId) {
+    public Page<CommentDTO.CommentResponseDto> getCommentList(Long issueId) {
         Pageable pageable = PageRequest.of(0, 5, Sort.by(Sort.Direction.DESC, "id"));
 
         // 페이져블 객체와 errorId로 모든 comment를 들고온다.
-        Page<Comment> commentList = commentRepository.findAllByError_IdOrderByCreatedAtDesc(errorId, pageable);
+        Page<Comment> commentList = commentRepository.findAllByIssue_IdOrderByCreatedAtDesc(1L, pageable);
 
         // 댓글DtoList
         List<CommentDTO.CommentResponseDto> commentResponseDtolist = commentList.stream().map(comment -> CommentDTO.CommentResponseDto.builder()

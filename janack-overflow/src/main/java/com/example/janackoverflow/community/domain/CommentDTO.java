@@ -1,11 +1,11 @@
 package com.example.janackoverflow.community.domain;
 
 import com.example.janackoverflow.community.entity.Comment;
+import com.example.janackoverflow.issue.entity.Issue;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.ToString;
-import org.apache.catalina.User;
 
 import java.time.LocalDateTime;
 
@@ -31,7 +31,7 @@ public class CommentDTO {
         private Long id;
         private String comment;
         private LocalDateTime createdAt;
-        private Error error;
+        private Issue issue;
 
         public CommentResponseDto toDto() {
             return CommentResponseDto.builder()

@@ -1,22 +1,28 @@
 package com.example.janackoverflow.community.entity;
 
-import com.example.janackoverflow.error.entity.Error;
+import com.example.janackoverflow.community.domain.likes.LikesId;
+import com.example.janackoverflow.global.entity.AuditingFields;
+import com.example.janackoverflow.issue.entity.Issue;
+import com.example.janackoverflow.user.entity.Users;
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 @Getter
-@Setter
+@Builder
 @Entity
+@IdClass(LikesId.class)
 @Table(name = "likes")
-public class Likes {
+@NoArgsConstructor
+@AllArgsConstructor
+@EqualsAndHashCode(callSuper = false)
+public class Likes extends AuditingFields {
+    @ManyToOne
     @Id
-    @Column(name = "id", nullable = false)
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @JoinColumn(name="users_id", nullable = false)
+    private Users users;
 
     @ManyToOne
-    @JoinColumn(name="error_id")
-    private Error error;
-
+    @Id
+    @JoinColumn(name="issue_id", nullable = false)
+    private Issue issue;
 }

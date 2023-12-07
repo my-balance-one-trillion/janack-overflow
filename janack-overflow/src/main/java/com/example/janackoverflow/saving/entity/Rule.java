@@ -15,10 +15,13 @@ public class Rule {
     private Long id;
 
     @Column(nullable = false)
-    private int time;
-
+    private int underThirty;
     @Column(nullable = false)
-    private int amount;
+    private int underHour;
+    @Column(nullable = false)
+    private int underThreeHour;
+    @Column(nullable = false)
+    private int overThreeHour;
 
     @ManyToOne
     @JoinColumn(name = "input_account_id")
