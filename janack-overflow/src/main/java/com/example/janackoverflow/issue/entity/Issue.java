@@ -1,14 +1,16 @@
-package com.example.janackoverflow.global.entity;
+package com.example.janackoverflow.issue.entity;
 
+import com.example.janackoverflow.global.entity.AuditingFields;
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 @Getter
-@Setter
+@Builder
 @Entity
 @Table(name = "issue")
-public class issue {
+@NoArgsConstructor
+@AllArgsConstructor
+public class Issue extends AuditingFields {
     @Id
     @Column(name = "id", nullable = false)
     @GeneratedValue(strategy = GenerationType.IDENTITY)

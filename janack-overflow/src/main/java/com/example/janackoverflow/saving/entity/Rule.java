@@ -1,6 +1,6 @@
 package com.example.janackoverflow.saving.entity;
 
-import com.example.janackoverflow.global.entity.InputAccount;
+import com.example.janackoverflow.global.entity.AuditingFields;
 import com.example.janackoverflow.user.entity.Users;
 import jakarta.persistence.*;
 import lombok.*;

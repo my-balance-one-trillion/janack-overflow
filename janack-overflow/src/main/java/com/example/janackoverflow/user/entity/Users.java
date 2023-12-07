@@ -31,7 +31,6 @@ public class Users {
     private String digit;
 
     private Date birth;
-
     private String name;
 
     @CreatedDate
@@ -50,13 +49,8 @@ public class Users {
     @Column(nullable = false)
     private String profileImage;
 
-    //    @Column(nullable = false)
     private String holder;
-
-    //    @Column(nullable = false)
     private String bankName;
-
-    //    @Column(nullable = false)
     private String outputAcntNum;
 
     public static Users of(Long id,String email,
@@ -65,40 +59,27 @@ public class Users {
                            String nickname,String status, String role,String profileImage
             ,String holder, String bankName, String outputAcntNum
     ){
-        return new Users(null,email,
-                password,digit,
-                birth,name,createdAt,
-                nickname,status,role,profileImage,
-                holder,bankName,outputAcntNum);
+        return Users.builder()
+                .id(id)
+                .email(email)
+                .password(password)
+                .digit(digit)
+                .birth(birth)
+                .name(name)
+                .createdAt(createdAt)
+                .nickname(nickname)
+                .status(status)
+                .role(role)
+                .profileImage(profileImage)
+                .holder(holder)
+                .bankName(bankName)
+                .outputAcntNum(outputAcntNum)
+                .build();
     }
 
     public void updatePassword(String password){
         this.password = password;
     }
-    public void updateDigit(String digit){
-        this.digit = digit;
-    }
-    public void updateBirth(Date birth){
-        this.birth = birth;
-    }
-    public void updateName(String name){
-        this.name = name;
-    }
-    public void updateNickname(String nickname){
-        this.nickname = nickname;
-    }
-    public void updateProfileImage(String profileImage){
-        this.profileImage = profileImage;
-    }
-    // 입금주 관련 업뎃 메서드
-    public void updateHolder(String holder){
-        this.holder = holder;
-    }
-    public void updateBankName(String bankName){
-        this.bankName = bankName;
-    }
-    public void updateOutputAcntNum(String outputAcntNum){
-        this.outputAcntNum = outputAcntNum;
-    }
+
 
 }

@@ -1,16 +1,15 @@
 package com.example.janackoverflow.user.domain.response;
 
+import com.example.janackoverflow.user.entity.Users;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
-import org.springframework.data.annotation.CreatedDate;
 
 import java.time.LocalDateTime;
 import java.util.Date;
 
 @Getter
-@Setter
 @ToString
 @Builder
 public class UsersResponseDTO {
@@ -28,13 +27,4 @@ public class UsersResponseDTO {
     private String bankName;
     private String outputAcntNum;
 
-    public static UsersResponseDTO from(Long id, String email, String digit,
-                                        Date birth, String name, LocalDateTime createdAt,
-                                        String nickname, String status, String role, String profileImage, String holder,
-                                        String bankName, String outputAcntNum){
-        return new UsersResponseDTO(id,email,digit,
-                birth,name,createdAt,
-                nickname,status,role,profileImage,holder,
-                bankName,outputAcntNum);
-    }
 }
