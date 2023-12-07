@@ -5,10 +5,7 @@ import com.example.janackoverflow.user.entity.Users;
 import com.example.janackoverflow.user.service.UsersService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 public class UsersController {
@@ -33,15 +30,19 @@ public class UsersController {
 //    아이디 찾기
 
 //    비밀번호 재설정
+
+//    비밀번호 찾기
+
+//    마이페이지에서 비밀번호 재설정
+    @GetMapping
+    public ResponseEntity readUser(long userId){
+        return new ResponseEntity(HttpStatus.OK);
+    }
     @PutMapping("/mypage")
     public ResponseEntity updateUser(@RequestBody UsersRequestDTO usersRequestDTO, long userId){
         usersService.updateUser(usersRequestDTO, userId);
         return new ResponseEntity(HttpStatus.RESET_CONTENT);
     }
-//    비밀번호 찾기
-
-//    마이페이지에서 비밀번호 재설정
-
 //    마이페이지에서 프로필 이미지 변경
 
 

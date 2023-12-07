@@ -20,9 +20,12 @@ public class UsersRequestDTO {
     @CreatedDate
     private LocalDateTime createdAt;
     private String nickname;
-    private String role = "active";
-    private String status  = "user";
+    private String role = "user";
+    private String status  = "1";
     private String profileImage = "default.png";
+    private String holder;
+    private String bankName;
+    private String outputAcntNum;
 
 
     private String newPassword;
@@ -40,7 +43,10 @@ public class UsersRequestDTO {
                 nickname,
                 status,
                 role,
-                profileImage
+                profileImage,
+                holder,
+                bankName,
+                outputAcntNum
         );
     }
 }
