@@ -5,6 +5,8 @@ import com.example.janackoverflow.user.entity.Users;
 import com.example.janackoverflow.user.repository.UsersRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
 public class UsersService {
     private final UsersRepository usersRepository;
@@ -12,7 +14,20 @@ public class UsersService {
     public UsersService(UsersRepository usersRepository){
         this.usersRepository = usersRepository;
     }
-    public Users createUser(UsersRequestDTO usersRequestDTO){
+
+    public boolean isDuplicatedNick(UsersRequestDTO usersRequestDTO){ //닉네임 중복 확인
+        Users users = usersRequestDTO.toEntity();
+        Optional<Users> optionalUsers = usersRepository.findByNickname(users.getNickname());
+        return optionalUsers.isPresent() && !(optionalUsers.get().getId() == users.getId());
+    }
+
+    public boolean isDuplicatedEmail(UsersRequestDTO usersRequestDTO){ //이메일 중복 확인
+        Users users = usersRequestDTO.toEntity();
+        Optional<Users> optionalUsers = usersRepository.findByEmail(users.getEmail());
+        return optionalUsers.isPresent() && !(optionalUsers.get().getId() == users.getId());
+    }
+
+    public Users createUser(UsersRequestDTO usersRequestDTO){ //회원 생성
         Users users = usersRequestDTO.toEntity();
         return usersRepository.save(users);
     }

@@ -16,14 +16,25 @@ import java.util.Date;
 public class UsersResponseDTO {
     private Long id;
     private String email;
-    private String password;
     private String digit;
     private Date birth;
     private String name;
-    @CreatedDate
     private LocalDateTime createdAt;
     private String nickname;
     private String status;
     private String role;
     private String profileImage;
+    private String holder;
+    private String bankName;
+    private String outputAcntNum;
+
+    public static UsersResponseDTO from(Long id, String email, String digit,
+                                        Date birth, String name, LocalDateTime createdAt,
+                                        String nickname, String status, String role, String profileImage, String holder,
+                                        String bankName, String outputAcntNum){
+        return new UsersResponseDTO(id,email,digit,
+                birth,name,createdAt,
+                nickname,status,role,profileImage,holder,
+                bankName,outputAcntNum);
+    }
 }
