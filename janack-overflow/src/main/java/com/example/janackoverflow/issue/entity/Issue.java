@@ -1,6 +1,7 @@
 package com.example.janackoverflow.issue.entity;
 
 import com.example.janackoverflow.global.entity.AuditingFields;
+import com.example.janackoverflow.user.entity.Users;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
@@ -17,6 +18,10 @@ public class Issue extends AuditingFields {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @ManyToOne
+    @JoinColumn(name = "users_id")
+    private Users users;
+
     private int amount;
 
     @Column(nullable = false)
@@ -32,12 +37,14 @@ public class Issue extends AuditingFields {
     private String category;
 
     @Column(nullable = false)
-    private String status;
+    @ColumnDefault(value = "01")
+    private String status; // 해결여부 01: 진행중, 02: 포기, 03: 해결
 
     @Column(nullable = false)
-    private boolean publicStatus;
+    @ColumnDefault(value = "false")
+    private boolean publicStatus; // false : 비공개, true : 공개
 
-    private String keyword;
+    private String keyword; // comma (,) 로 append
 
     @ColumnDefault("0")
     private Integer views;
