@@ -19,6 +19,8 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import java.util.List;
 
+import static org.springframework.security.config.Customizer.withDefaults;
+
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity
@@ -72,7 +74,7 @@ public class SecurityConfig {
                 // 모든 유저에게 해당 URL 패턴 개방 (화이트 리스트)
                 .authorizeHttpRequests((authorizeRequests) ->
                         authorizeRequests
-                                .requestMatchers("/image/**", "/css/**", "/", "/login", "/login/**", "/logout", "/signup", "/community", "/saving").permitAll()
+                                .requestMatchers("/image/**", "/css/**", "/", "/login", "/login/**", "/logout", "/logout/**", "/signup", "/community", "/community/**", "/saving").permitAll()
                 )
                 //폼 기반 로그인 구성
                 .formLogin((formLogin) ->
@@ -80,7 +82,8 @@ public class SecurityConfig {
                                 .loginPage("/login") // '/login' 경로를 사용자 정의 로그인 페이지로 지정
                                 .defaultSuccessUrl("/") //로그인 성공 시 기본으로 이동하는 경로
                                 .permitAll() //모든 사용자가 로그인 페이지에 접근 가능
-                );
+                )
+                .logout(withDefaults());
 
         return http.build();
     }

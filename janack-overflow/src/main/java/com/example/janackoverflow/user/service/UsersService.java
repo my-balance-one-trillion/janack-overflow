@@ -100,7 +100,8 @@ public class UsersService {
         usersRepository.save(updatedUser);
     }
 
-    public Optional<Users> findUser(String email) {
+    public Optional<Users> findByEmail(String email) { //UserDetails loadUserByUsername() 전용 서비스
         return usersRepository.findByEmail(email);
     }
+
 }

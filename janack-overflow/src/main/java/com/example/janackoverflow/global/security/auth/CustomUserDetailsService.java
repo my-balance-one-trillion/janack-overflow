@@ -24,7 +24,7 @@ public class CustomUserDetailsService implements UserDetailsService {
         //사용자 Role에 따라 두 가지 역할을 부여하는 코드를 작성했습니다.
 
         System.out.println("loging email : " + email);
-        Users findUser = usersService.findUser(email).orElseThrow(()-> new RuntimeException());
+        Users findUser = usersService.findByEmail(email).orElseThrow(()-> new RuntimeException());
 
         if ("user".equals(findUser.getRole())) {
             return org.springframework.security.core.userdetails.User.builder()

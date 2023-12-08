@@ -4,11 +4,14 @@ import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.example.janackoverflow.global.security.LoginRequestDTO;
 import com.example.janackoverflow.global.security.auth.NowUserDetails;
+import com.example.janackoverflow.user.entity.Users;
+import com.example.janackoverflow.user.service.UsersService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -27,6 +30,10 @@ public class JwtAuthenticationFilter extends AbstractAuthenticationProcessingFil
 	private static final AntPathRequestMatcher DEFAULT_ANT_PATH_REQUEST_MATCHER =
 			new AntPathRequestMatcher("/login", "POST");
 									// '/login' URL 접근 시 필터 실행
+
+	@Autowired
+	private UsersService usersService;
+
 
 	public JwtAuthenticationFilter(AuthenticationManager authenticationManager) {
 
