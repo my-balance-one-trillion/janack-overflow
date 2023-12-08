@@ -2,6 +2,7 @@ package com.example.janackoverflow.community.entity;
 
 import com.example.janackoverflow.issue.entity.Issue;
 import com.example.janackoverflow.global.entity.AuditingFields;
+import com.example.janackoverflow.user.entity.Users;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -16,6 +17,10 @@ public class Comment extends AuditingFields {
     @Column(name = "id", nullable = false)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @ManyToOne
+    @JoinColumn(name="users_id")
+    private Users users;
 
     @Column(nullable = false)
     private String content;
