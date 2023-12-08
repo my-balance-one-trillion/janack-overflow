@@ -1,5 +1,7 @@
 package com.example.janackoverflow.user.entity;
 
+import com.example.janackoverflow.community.domain.CommunityUsersDTO;
+import com.example.janackoverflow.user.domain.response.UsersResponseDTO;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
@@ -75,6 +77,14 @@ public class Users {
                 .holder(holder)
                 .bankName(bankName)
                 .outputAcntNum(outputAcntNum)
+                .build();
+    }
+
+    public CommunityUsersDTO toIssueDto() {
+        return CommunityUsersDTO.builder()
+                .id(id)
+                .nickname(nickname)
+                .profileImage(profileImage)
                 .build();
     }
 

@@ -1,9 +1,11 @@
 package com.example.janackoverflow.issue.domain;
 
 import com.example.janackoverflow.community.domain.CommentDTO;
+import com.example.janackoverflow.community.domain.CommunityUsersDTO;
 import com.example.janackoverflow.community.entity.Comment;
 import com.example.janackoverflow.community.entity.Likes;
 import com.example.janackoverflow.issue.entity.Issue;
+import com.example.janackoverflow.user.domain.response.UsersResponseDTO;
 import com.example.janackoverflow.user.entity.Users;
 import jakarta.persistence.Column;
 import lombok.AllArgsConstructor;
@@ -65,6 +67,7 @@ public class IssueDTO {
         private String keyword;
         private Integer views;
         private long likes;
-        private Users users;
+        private CommunityUsersDTO communityUsersDTO;
+        private List<CommentDTO.ResponseDto> commenResponseDtoList;
     }
 }
