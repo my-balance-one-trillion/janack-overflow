@@ -2,6 +2,7 @@ package com.example.janackoverflow.issue.domain;
 
 import com.example.janackoverflow.community.domain.CommentDTO;
 import com.example.janackoverflow.community.entity.Comment;
+import com.example.janackoverflow.community.entity.Likes;
 import com.example.janackoverflow.issue.entity.Issue;
 import com.example.janackoverflow.user.entity.Users;
 import jakarta.persistence.Column;
@@ -9,7 +10,10 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.apache.catalina.User;
 import org.hibernate.annotations.ColumnDefault;
+
+import java.util.List;
 
 public class IssueDTO {
 
@@ -18,6 +22,7 @@ public class IssueDTO {
     @AllArgsConstructor
     @Builder
     public static class RequestDTO {
+        private long id;
         private int amount;
         private String title;
         private String content;
@@ -30,6 +35,7 @@ public class IssueDTO {
 
         public Issue toEntity(Users users) {
             return Issue.builder()
+                    .id(id)
                     .users(users)
                     .title(title)
                     .content(content)
@@ -48,6 +54,7 @@ public class IssueDTO {
     @AllArgsConstructor
     @Builder
     public static class ResponseDTO {
+        private long id;
         private int amount;
         private String title;
         private String content;
@@ -57,19 +64,7 @@ public class IssueDTO {
         private boolean publicStatus; // 공개여부
         private String keyword;
         private Integer views;
-
-        public IssueDTO.ResponseDTO toDto() {
-            return ResponseDTO.builder()
-                    .title(title)
-                    .content(content)
-                    .category(category)
-                    .code(code)
-                    .keyword(keyword)
-//                    .status(status)
-//                    .publicStatus(publicStatus)
-                    .amount(amount)
-                    .views(views)
-                    .build();
-        }
+        private long likes;
+        private Users users;
     }
 }

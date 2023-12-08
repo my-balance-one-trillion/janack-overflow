@@ -1,10 +1,14 @@
 package com.example.janackoverflow.issue.entity;
 
+import com.example.janackoverflow.community.entity.Likes;
 import com.example.janackoverflow.global.entity.AuditingFields;
+import com.example.janackoverflow.issue.domain.IssueDTO;
 import com.example.janackoverflow.user.entity.Users;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
+
+import java.util.List;
 
 @Getter
 @Builder
@@ -48,4 +52,21 @@ public class Issue extends AuditingFields {
 
     @ColumnDefault("0")
     private Integer views;
+
+    public IssueDTO.ResponseDTO toDto(long likes, Users users) {
+        return IssueDTO.ResponseDTO.builder()
+                .id(id)
+                .users(users)
+                .title(title)
+                .content(content)
+                .category(category)
+                .code(code)
+                .keyword(keyword)
+                .status(status)
+                .publicStatus(publicStatus)
+                .amount(amount)
+                .likes(likes)
+                .views(views)
+                .build();
+    }
 }
