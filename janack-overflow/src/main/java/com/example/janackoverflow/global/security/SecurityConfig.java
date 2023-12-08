@@ -55,16 +55,21 @@ public class SecurityConfig {
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", corsConfiguration);
 
-
-        http.cors(Customizer.withDefaults())
+        http.csrf().disable()
                 //'USER' 역할 사용자가 '/mypage' URL 패턴에 해당하는 요청 권한을 가진다
                 .authorizeHttpRequests((authorizeRequests) ->
                         authorizeRequests
                                 .requestMatchers("/mypage").hasRole("USER")
                 )
+                //'ADMIN' 역할 사용자가 해당 URL 패턴에 해당하는 요청 권한을 가진다
                 .authorizeHttpRequests((authorizeRequests) ->
                         authorizeRequests
-                                .requestMatchers("/mypage").hasRole("ADMIN")
+                                .requestMatchers("/mypage", "/admin").hasRole("ADMIN")
+                )
+                // 모든 유저에게 해당 URL 패턴 개방 (화이트 리스트)
+                .authorizeHttpRequests((authorizeRequests) ->
+                        authorizeRequests
+                                .requestMatchers("/**", "/", "/login", "/logout", "/signup", "/community", "/saving").permitAll()
                 )
                 //폼 기반 로그인 구성
                 .formLogin((formLogin) ->
