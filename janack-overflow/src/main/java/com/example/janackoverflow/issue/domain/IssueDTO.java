@@ -28,8 +28,8 @@ public class IssueDTO {
         private String content;
         private String code;
         private String category;
-        private String status;
-        private boolean publicStatus;
+        private String status = "01";
+        private boolean publicStatus = false;
         // java, spring -> , 로 이어진 문자열
         private String keyword;
 
