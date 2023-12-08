@@ -13,6 +13,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
@@ -56,15 +57,17 @@ public class SecurityConfig {
         source.registerCorsConfiguration("/**", corsConfiguration);
 
         http.csrf().disable()
+                .addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class)
+
                 //'USER' 역할 사용자가 '/mypage' URL 패턴에 해당하는 요청 권한을 가진다
                 .authorizeHttpRequests((authorizeRequests) ->
                         authorizeRequests
-                                .requestMatchers("/mypage").hasRole("USER")
+                                .requestMatchers("/mypage", "/mypage/**").hasRole("USER")
                 )
                 //'ADMIN' 역할 사용자가 해당 URL 패턴에 해당하는 요청 권한을 가진다
                 .authorizeHttpRequests((authorizeRequests) ->
                         authorizeRequests
-                                .requestMatchers("/mypage", "/admin").hasRole("ADMIN")
+                                .requestMatchers("/mypage", "/admin", "/admin/**").hasRole("ADMIN")
                 )
                 // 모든 유저에게 해당 URL 패턴 개방 (화이트 리스트)
                 .authorizeHttpRequests((authorizeRequests) ->
@@ -82,25 +85,6 @@ public class SecurityConfig {
         return http.build();
     }
 
-//    @Bean
-//    public UserDetailsService userDetailsService(PasswordEncoder passwordEncoder) {
-//
-//        UserDetails user =
-//                User.builder()
-//                        .username("user") //사용자 이름
-//                        .password(passwordEncoder.encode("password")) //패스워드 암호화
-//                        .roles("USER") //역할(권한) 부여
-//                        .build();
-//
-//        UserDetails admin = User.builder()
-//                .username("admin") //관리자 이름
-//                .password(passwordEncoder.encode("admin")) //관리자 패스워드
-//                .roles("ADMIN") //역할(권한) 부여
-//                .build();
-//
-//        return new InMemoryUserDetailsManager(user, admin);
-//        //InMemory ~ Manager : 메모리에 사용자 정보(userDetails)를 저장하고 관리하는 데 사용됨
-//    }
 
     @Bean
     public AuthenticationManager authenticationManagerBean() throws Exception{
