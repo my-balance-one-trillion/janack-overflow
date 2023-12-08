@@ -1,5 +1,6 @@
 package com.example.janackoverflow.saving.service;
 
+import com.example.janackoverflow.saving.domain.request.InputAccountRequestDTO;
 import com.example.janackoverflow.saving.domain.request.RuleRequestDTO;
 import com.example.janackoverflow.saving.domain.request.SavingRequestDTO;
 import com.example.janackoverflow.saving.entity.InputAccount;
@@ -22,5 +23,18 @@ public class RuleService {
     @Transactional
     public Rule createRule(RuleRequestDTO ruleRequestDTO, InputAccount inputAccount, Users users) {
         return ruleRepository.save(ruleRequestDTO.toEntity(inputAccount, users));
+    }
+
+    // 규칙 수정
+    @Transactional
+    public Rule updateRule(RuleRequestDTO ruleRequestDTO, long accountId){
+        Rule updateRule = ruleRepository.findByInputAccountId(accountId);
+
+        updateRule.setUnderThirty(ruleRequestDTO.getUnderThirty());
+        updateRule.setUnderHour(ruleRequestDTO.getUnderHour());
+        updateRule.setUnderThreeHour(ruleRequestDTO.getUnderThreeHour());
+        updateRule.setOverThreeHour(ruleRequestDTO.getOverThreeHour());
+
+        return ruleRepository.save(updateRule);
     }
 }

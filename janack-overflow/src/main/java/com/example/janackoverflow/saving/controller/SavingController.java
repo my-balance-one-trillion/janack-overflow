@@ -1,14 +1,11 @@
 package com.example.janackoverflow.saving.controller;
 
-import com.example.janackoverflow.saving.domain.request.InputAccountRequestDTO;
-import com.example.janackoverflow.saving.domain.request.RuleRequestDTO;
 import com.example.janackoverflow.saving.domain.request.SavingRequestDTO;
 import com.example.janackoverflow.saving.entity.InputAccount;
 import com.example.janackoverflow.saving.entity.Rule;
 import com.example.janackoverflow.saving.service.InputAccountService;
 import com.example.janackoverflow.saving.service.RuleService;
 import com.example.janackoverflow.user.entity.Users;
-import org.apache.catalina.User;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -16,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/savings")
@@ -31,7 +29,7 @@ public class SavingController {
 
     // 적금 개설
     @PostMapping
-    public ResponseEntity createAccount(@RequestBody SavingRequestDTO savingRequestDTO){
+    public ResponseEntity<?> createAccount(@RequestBody SavingRequestDTO savingRequestDTO){
         Users users = new Users();
         users.setId(1L);
 
@@ -50,14 +48,30 @@ public class SavingController {
         }
     }
 
-    // 적금 기록 조회
-    @GetMapping
-    public ResponseEntity getUserAccounts(@PathVariable("id") long id){
-        // Users user = userService.getUserById(userId);
+    // 적금 내역 (진행 중인 적금 정보)
+    @GetMapping("/users/{id}/progress")
+    public ResponseEntity<?> getUserAccountProgress(@PathVariable("id") long userId){
+        Optional<InputAccount> inProgressAccount = inputAccountService.getInProgressAccountByUser(userId);
+        return new ResponseEntity<>(inProgressAccount, HttpStatus.OK);
+    }
+
+    // 적금 기록 (사용자 적금 전부 조회)
+    @GetMapping("/users/{id}")
+    public ResponseEntity<?> getUserAccounts(@PathVariable("id") long id){
         List<InputAccount> userAccounts = inputAccountService.getAccountsByUser(id);
         return new ResponseEntity<>(userAccounts, HttpStatus.OK);
     }
 
-    // 현재 적금 수정
+    // 진행 중인 적금 정보 수정
+    @PatchMapping("{id}")
+    public ResponseEntity<?> updateAccountInfo(@RequestBody SavingRequestDTO savingRequestDTO, @PathVariable("id") long userId){
+        InputAccount updateAccount = inputAccountService.updateInputAccount(savingRequestDTO.getInputAccountRequestDTO(), userId);
+        Rule updateRule = ruleService.updateRule(savingRequestDTO.getRuleRequestDTO(), updateAccount.getId());
 
+        Map<String, Object> response = new HashMap<>();
+        response.put("updateAccount", updateAccount);
+        response.put("updateRule", updateRule);
+
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
 }
