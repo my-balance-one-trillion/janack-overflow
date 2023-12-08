@@ -8,6 +8,7 @@ import com.example.janackoverflow.saving.repository.InputAccountRepository;
 import com.example.janackoverflow.saving.repository.RuleRepository;
 import com.example.janackoverflow.user.entity.Users;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
@@ -72,10 +73,20 @@ public class InputAccountService {
         InputAccount updateAccount = inputAccountRepository.findByUsersIdAndStatus(userId, "01")
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "진행 중인 적금 없음"));
 
+        // 적금 정보 수정 (적금 이름, 적금 목표명, 적금 목표 금액)
         updateAccount.setAcntName(inputAccountRequestDTO.getAcntName());
         updateAccount.setGoalName(inputAccountRequestDTO.getGoalName());
         updateAccount.setGoalAmount(inputAccountRequestDTO.getGoalAmount());
 
         return inputAccountRepository.save(updateAccount);
+    }
+
+    public InputAccount deleteInputAccount(long userId) {
+        InputAccount deleteAccount = inputAccountRepository.findByUsersIdAndStatus(userId, "01")
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "진행 중인 적금 없음"));
+
+        // 적금 포기 상태로 변경
+        deleteAccount.setStatus("02");
+        return inputAccountRepository.save(deleteAccount);
     }
 }

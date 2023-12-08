@@ -1,11 +1,13 @@
 package com.example.janackoverflow.saving.controller;
 
+import com.example.janackoverflow.saving.domain.request.InputAccountRequestDTO;
 import com.example.janackoverflow.saving.domain.request.SavingRequestDTO;
 import com.example.janackoverflow.saving.entity.InputAccount;
 import com.example.janackoverflow.saving.entity.Rule;
 import com.example.janackoverflow.saving.service.InputAccountService;
 import com.example.janackoverflow.saving.service.RuleService;
 import com.example.janackoverflow.user.entity.Users;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -73,5 +75,12 @@ public class SavingController {
         response.put("updateRule", updateRule);
 
         return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+    // 적금 삭제 (적금 포기 상태로 변경 status=02)
+    @PatchMapping("{id}/giveup")
+    public ResponseEntity<?> updateAccountStatusGiveup(@PathVariable("id") long userId){
+        InputAccount deleteAccount = inputAccountService.deleteInputAccount(userId);
+        return new ResponseEntity<>(deleteAccount, HttpStatus.OK);
     }
 }
