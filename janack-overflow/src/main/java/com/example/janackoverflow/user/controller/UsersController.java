@@ -28,8 +28,9 @@ public class UsersController {
             usersRequestDTO.setRole("user"); //역활
             usersRequestDTO.setStatus("1"); //상태
             usersRequestDTO.setProfileImage("default.png"); //프로필 이미지
+
             usersService.createUser(usersRequestDTO);
-            //return new ResponseEntity<>(usersRequestDTO, HttpStatus.CREATED);
+
             return new ResponseEntity<>("성공적으로 생성", HttpStatus.OK);
         }
 

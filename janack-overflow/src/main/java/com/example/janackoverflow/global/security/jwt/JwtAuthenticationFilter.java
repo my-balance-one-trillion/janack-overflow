@@ -13,6 +13,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
@@ -75,9 +76,9 @@ public class JwtAuthenticationFilter extends AbstractAuthenticationProcessingFil
 		Authentication authentication =
 				authenticationManager.authenticate(authenticationToken);
 		
-		NowUserDetails principalDetailis = (NowUserDetails) authentication.getPrincipal();
+		UserDetails principalDetailis = (UserDetails) authentication.getPrincipal();
 
-		System.out.println("Authentication : " + principalDetailis.getUser().getEmail());
+		System.out.println("Authentication : " + principalDetailis.getUsername());
 
 		return authentication;
 	}
@@ -90,19 +91,20 @@ public class JwtAuthenticationFilter extends AbstractAuthenticationProcessingFil
 
 		System.out.println("successful Authentication");
 		
-		NowUserDetails principalDetailis = (NowUserDetails) authResult.getPrincipal();
+		UserDetails principalDetailis = (UserDetails) authResult.getPrincipal();
 
-		System.out.println("로그인 시도 계정 : " + principalDetailis.getUser().getEmail());
+		System.out.println("로그인 시도 계정 : " + principalDetailis.getUsername());
 
 		// JWT Token 생성해서 response에 담아주기
 		String jwtToken = JWT.create()
 				.withSubject(principalDetailis.getUsername())
 				.withExpiresAt(new Date(System.currentTimeMillis() + JwtProperties.EXPIRATION_TIME)) //토큰 유효시간
-				.withClaim("id", principalDetailis.getUser().getId()) //id값
 				.withClaim("email", principalDetailis.getUsername()) //email값
 				.sign(Algorithm.HMAC512(JwtProperties.SECRET)); //시크릿 키 이용하여 HMAC512 알고리즘 적용
 
 		response.addHeader("Authorization", JwtProperties.TOKEN_PREFIX + jwtToken);
+
+		System.out.println("login complete");
 	}
 	
 }
