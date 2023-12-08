@@ -1,13 +1,12 @@
 package com.example.janackoverflow.saving.controller;
 
-import com.example.janackoverflow.saving.domain.request.InputAccountRequestDTO;
 import com.example.janackoverflow.saving.domain.request.SavingRequestDTO;
+import com.example.janackoverflow.saving.domain.response.InputAccountResponseDTO;
 import com.example.janackoverflow.saving.entity.InputAccount;
 import com.example.janackoverflow.saving.entity.Rule;
 import com.example.janackoverflow.saving.service.InputAccountService;
 import com.example.janackoverflow.saving.service.RuleService;
 import com.example.janackoverflow.user.entity.Users;
-import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -53,14 +52,14 @@ public class SavingController {
     // 적금 내역 (진행 중인 적금 정보)
     @GetMapping("/users/{id}/progress")
     public ResponseEntity<?> getUserAccountProgress(@PathVariable("id") long userId){
-        Optional<InputAccount> inProgressAccount = inputAccountService.getInProgressAccountByUser(userId);
+        Optional<InputAccountResponseDTO> inProgressAccount = inputAccountService.getInProgressAccountByUser(userId);
         return new ResponseEntity<>(inProgressAccount, HttpStatus.OK);
     }
 
     // 적금 기록 (사용자 적금 전부 조회)
     @GetMapping("/users/{id}")
     public ResponseEntity<?> getUserAccounts(@PathVariable("id") long id){
-        List<InputAccount> userAccounts = inputAccountService.getAccountsByUser(id);
+        List<InputAccountResponseDTO> userAccounts = inputAccountService.getAccountsByUser(id);
         return new ResponseEntity<>(userAccounts, HttpStatus.OK);
     }
 

@@ -2,7 +2,6 @@ package com.example.janackoverflow.saving.domain.request;
 
 import com.example.janackoverflow.saving.entity.InputAccount;
 import com.example.janackoverflow.user.entity.Users;
-import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 
 @Getter

@@ -2,6 +2,7 @@ package com.example.janackoverflow.saving.service;
 
 import com.example.janackoverflow.saving.domain.request.InputAccountRequestDTO;
 import com.example.janackoverflow.saving.domain.request.SavingRequestDTO;
+import com.example.janackoverflow.saving.domain.response.InputAccountResponseDTO;
 import com.example.janackoverflow.saving.entity.InputAccount;
 import com.example.janackoverflow.saving.entity.Rule;
 import com.example.janackoverflow.saving.repository.InputAccountRepository;
@@ -15,6 +16,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class InputAccountService {
@@ -57,14 +59,25 @@ public class InputAccountService {
     }
 
     // 현재 진행 중인 계좌 정보만 조회
-     public Optional<InputAccount> getInProgressAccountByUser(long userId) {
-        return inputAccountRepository.findByUsersIdAndStatus(userId, "01");
+    @Transactional(readOnly = true)
+     public Optional<InputAccountResponseDTO> getInProgressAccountByUser(long userId) {
+        return Optional.ofNullable(inputAccountRepository.findByUsersIdAndStatus(userId, "01")
+                .map(InputAccountResponseDTO::toDto)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "진행 중인 적금 없음")));
     }
 
     // 사용자의 모든 입금 계좌(적금 계좌) 조회
     @Transactional(readOnly = true)
-    public List<InputAccount> getAccountsByUser(long id){
-        return inputAccountRepository.findByUsersId(id);
+    public List<InputAccountResponseDTO> getAccountsByUser(long id){
+        List<InputAccount> allAccountsByUser =  inputAccountRepository.findByUsersId(id);
+
+        if (allAccountsByUser.isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "적금 없음");
+        }
+
+        return allAccountsByUser.stream()
+                .map(InputAccountResponseDTO::toDto)
+                .collect(Collectors.toList());
     }
 
     // 계좌 정보 수정
@@ -81,6 +94,8 @@ public class InputAccountService {
         return inputAccountRepository.save(updateAccount);
     }
 
+    // 현재 진행 중인 적금 상태 변경
+    @Transactional
     public InputAccount deleteInputAccount(long userId) {
         InputAccount deleteAccount = inputAccountRepository.findByUsersIdAndStatus(userId, "01")
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "진행 중인 적금 없음"));
