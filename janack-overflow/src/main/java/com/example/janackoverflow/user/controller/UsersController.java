@@ -25,7 +25,7 @@ public class UsersController {
         } else if(usersService.isDuplicatedEmail(usersRequestDTO)) { //이메일 중복확인
             return new ResponseEntity<>("중복되는 이메일입니다", HttpStatus.FORBIDDEN);
         } else {
-            usersRequestDTO.setRole("user"); //역활
+            usersRequestDTO.setRole("USER"); //역활
             usersRequestDTO.setStatus("1"); //상태
             usersRequestDTO.setProfileImage("default.png"); //프로필 이미지
 
