@@ -27,6 +27,7 @@ public class Issue extends AuditingFields {
     private Users users;
 
     @ColumnDefault(value = "0")
+    @Setter
     private int amount;
 
     @Column(nullable = false)
@@ -47,6 +48,7 @@ public class Issue extends AuditingFields {
 
     @Column(nullable = false)
     @ColumnDefault(value = "false")
+    @Setter
     private boolean publicStatus; // false : 비공개, true : 공개
 
     private String keyword; // comma (,) 로 append
