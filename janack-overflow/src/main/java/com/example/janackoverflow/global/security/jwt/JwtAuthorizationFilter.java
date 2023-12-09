@@ -5,38 +5,59 @@ import com.auth0.jwt.algorithms.Algorithm;
 import com.example.janackoverflow.global.security.auth.NowUserDetails;
 import com.example.janackoverflow.user.entity.Users;
 import com.example.janackoverflow.user.repository.UsersRepository;
+import com.example.janackoverflow.user.service.UsersService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
+import org.springframework.stereotype.Component;
+import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 
-// 인가
-public class JwtAuthorizationFilter extends BasicAuthenticationFilter{
+@Component
+public class JwtAuthorizationFilter extends OncePerRequestFilter {
 	//요청 헤더의 아이디와 패스워드를 파싱하여 인증 요청을 위임하는 필터
 	//인증 성공 여부에 따라 핸들러 실행
-	
+
+	@Autowired
 	private UsersRepository usersRepository;
-	
-	public JwtAuthorizationFilter(AuthenticationManager authenticationManager, UsersRepository userRepository) {
-		super(authenticationManager);
-		this.usersRepository = userRepository;
-	}
-	
+
+	//토큰 인증에서 제외할 url
+	private static final List<String> EXCLUDE_URL =
+			Collections.unmodifiableList(
+					Arrays.asList(
+							"/",
+							"/static/**",
+							"/favicon.ico",
+							"/signup",
+							"/login",
+							"/logout"
+					));
+
+	// Filter에서 제외할 URL 설정 <- 이거 안하면 로그인도 막힐거 같아서 걸어둠
 	@Override
-	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
+	protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
+		return EXCLUDE_URL.stream().anyMatch(exclude -> exclude.equalsIgnoreCase(request.getServletPath()));
+	}
+
+	@Override
+	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
 			throws IOException, ServletException {
 
 		String header = request.getHeader(JwtProperties.HEADER_STRING); //헤더 추출
 		
 		if(header == null || !header.startsWith(JwtProperties.TOKEN_PREFIX)) {
-			chain.doFilter(request, response);
+			filterChain.doFilter(request, response);
 			return;
 		}
 
@@ -44,9 +65,10 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter{
 
 		String token = header.replace(JwtProperties.TOKEN_PREFIX, "");
 
-		try {
-			// 토큰 검증 (이게 인증이기 때문에 AuthenticationManager도 필요 없음)
-			// 내가 SecurityContext에 집적접근해서 세션을 만들때 자동으로 UserDetailsService에 있는 loadByUsername이 호출됨.
+		System.out.println("Bearer 빼고 추출된 토큰 token : " + token);
+
+			// 토큰 검증 (이 절차 때문에 AuthenticationManager 불러올 필요 없음)
+			// SecurityContext에 직접 접근하여 세션을 만들면 자동으로 UserDetailsService에 있는 loadByUsername이 호출됨
 			String username = JWT.require(Algorithm.HMAC512(JwtProperties.SECRET))
 					.build()
 					.verify(token)
@@ -56,31 +78,26 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter{
 			System.out.println("doFilterInternal : " + username);
 
 			if (username != null) {
-				Users user = usersRepository.findByEmail(username).orElse(null);
+				Users users = usersRepository.findByEmail(username).orElseThrow(
+						() -> new RuntimeException("Can`t find Claim userEmail " + username));
 
 				// 인증은 토큰 검증시 끝. 인증을 하기 위해서가 아닌 스프링 시큐리티가 수행해주는 권한 처리를 위해
 				// 아래와 같이 토큰을 만들어서 Authentication 객체를 강제로 만들고 그걸 세션에 저장!
-				NowUserDetails principalDetails = new NowUserDetails(user);
+				NowUserDetails principalDetails = new NowUserDetails(users);
 
 				System.out.println(principalDetails.getAuthorities());
 
 				Authentication authentication =
 						new UsernamePasswordAuthenticationToken(
 								principalDetails, //나중에 컨트롤러에서 DI해서 쓸 때 사용하기 편함.
-								null, // 패스워드는 모르니까 null 처리, 어차피 지금 인증하는게 아니니까!!
+								null, // 패스워드는 null 처리, 어차피 지금 인증하는게 아니니까!!
 								principalDetails.getAuthorities());
 
 				// 강제로 시큐리티의 세션에 접근하여 값 저장
 				SecurityContextHolder.getContext().setAuthentication(authentication);
 			}
-			chain.doFilter(request, response);
-		}catch (Exception e){
-			// 토큰 검증 실패 시 예외 처리
-			response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-			response.getWriter().write("Unauthorized");
-			response.getWriter().flush();
-			response.getWriter().close();
-		}
+
+			filterChain.doFilter(request, response);
 	}
 	
 }

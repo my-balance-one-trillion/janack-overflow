@@ -100,8 +100,9 @@ public class UsersService {
         usersRepository.save(updatedUser);
     }
 
-    public Optional<Users> findByEmail(String email) { //UserDetails loadUserByUsername() 전용 서비스
-        return usersRepository.findByEmail(email);
+    public Users findByEmail(String email) { //UserDetails loadUserByUsername() 전용 서비스
+        System.out.println("findByEmail start! email : " + email);
+        return usersRepository.findByEmail(email).get();
     }
 
 }

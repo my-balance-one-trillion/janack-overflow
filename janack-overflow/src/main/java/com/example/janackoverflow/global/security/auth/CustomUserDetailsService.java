@@ -12,29 +12,25 @@ import org.springframework.stereotype.Service;
 @Service
 public class CustomUserDetailsService implements UserDetailsService {
 
-    private UsersService usersService;
-
     @Autowired
-    public CustomUserDetailsService(UsersService usersService){
-        this.usersService = usersService;
-    }
+    private UsersService usersService;
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         //사용자 Role에 따라 두 가지 역할을 부여하는 코드를 작성했습니다.
 
         System.out.println("loging email : " + email);
-        Users findUser = usersService.findByEmail(email).orElseThrow(()-> new RuntimeException());
+        Users findUser = usersService.findByEmail(email);
 
         if ("USER".equals(findUser.getRole())) {
             return User.builder()
-                    .username(findUser.getNickname()) // 유저 이름
+                    .username(findUser.getEmail()) // 유저 이름
                     .password(findUser.getPassword()) // 암호화된 "password"
                     .roles("USER") // 권한 부여
                     .build();
         } else if("ADMIN".equals(findUser.getRole())) {
             return User.builder()
-                    .username(findUser.getNickname()) // 유저 이름
+                    .username(findUser.getEmail()) // 유저 이름
                     .password(findUser.getPassword()) // 암호화된 "password"
                     .roles("ADMIN") // 권한 부여
                     .build();

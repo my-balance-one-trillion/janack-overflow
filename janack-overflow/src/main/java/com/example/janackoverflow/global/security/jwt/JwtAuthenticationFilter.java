@@ -4,7 +4,6 @@ import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.example.janackoverflow.global.security.LoginRequestDTO;
 import com.example.janackoverflow.global.security.auth.NowUserDetails;
-import com.example.janackoverflow.user.entity.Users;
 import com.example.janackoverflow.user.service.UsersService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.FilterChain;
@@ -34,6 +33,8 @@ public class JwtAuthenticationFilter extends AbstractAuthenticationProcessingFil
 	@Autowired
 	private UsersService usersService;
 
+	LoginRequestDTO loginRequestDTO;
+
 
 	public JwtAuthenticationFilter(AuthenticationManager authenticationManager) {
 
@@ -53,21 +54,18 @@ public class JwtAuthenticationFilter extends AbstractAuthenticationProcessingFil
 		
 		// request에 있는 username과 password를 파싱해서 자바 Object로 받기
 		ObjectMapper om = new ObjectMapper();
-		LoginRequestDTO loginRequestDto = null;
-		
+
 		try {
-			loginRequestDto = om.readValue(request.getInputStream(), LoginRequestDTO.class);
+			loginRequestDTO = om.readValue(request.getInputStream(), LoginRequestDTO.class);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		
-		System.out.println("JwtAuthenticationFilter : " + loginRequestDto);
-		
 		// 유저네임, 패스워드 토큰 생성
 		UsernamePasswordAuthenticationToken authenticationToken = 
 				new UsernamePasswordAuthenticationToken(
-						loginRequestDto.getEmail(),
-						loginRequestDto.getPassword());
+						loginRequestDTO.getEmail(),
+						loginRequestDTO.getPassword());
 		
 		System.out.println("JwtAuthenticationFilter : 토큰 생성 완료");
 		
