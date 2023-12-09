@@ -12,10 +12,14 @@ import lombok.*;
 @AllArgsConstructor
 public class InputAccountRequestDTO {
 
+//    @NotBlank(message="적금명을 입력하세요.")
     private String acntName;
+
+//    @NotBlank(message="목표명을 입력하세요.")
     private String goalName;
+
+//    @NotBlank(message="목표 금액을 입력하세요.")
     private int goalAmount;
-    private String status;
 
     public InputAccount toEntity(Users users){
         return InputAccount.builder()
@@ -23,7 +27,7 @@ public class InputAccountRequestDTO {
                 .acntName(this.acntName)
                 .goalName(this.goalName)
                 .goalAmount(this.goalAmount)
-                .status("0") // 진행중
+                .status("01") // 진행중
                 .build();
     }
 }
