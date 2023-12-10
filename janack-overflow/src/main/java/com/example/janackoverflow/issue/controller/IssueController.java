@@ -1,7 +1,7 @@
 package com.example.janackoverflow.issue.controller;
 
-import com.example.janackoverflow.issue.domain.IssueDTO;
-import com.example.janackoverflow.issue.domain.SolutionDTO;
+import com.example.janackoverflow.issue.domain.request.CreateIssueRequestDTO;
+import com.example.janackoverflow.issue.domain.request.CreateSolutionRequestDTO;
 import com.example.janackoverflow.issue.domain.response.IssueResponseDTO;
 import com.example.janackoverflow.issue.domain.response.StackOverflowResponse;
 import com.example.janackoverflow.issue.entity.Issue;
@@ -31,7 +31,8 @@ public class IssueController {
 
     // 에러 등록
     @PostMapping
-    public ResponseEntity<?> createIssue(@RequestBody IssueDTO.RequestDTO issueRequestDTO){
+    public ResponseEntity<?> createIssue(@RequestBody CreateIssueRequestDTO issueRequestDTO){
+        // 회원번호 1번으로 강제 설정
         Users users = new Users();
         users.setId(1L);
 
@@ -57,19 +58,23 @@ public class IssueController {
     @GetMapping("/{issueId}/keyword")
     public ResponseEntity<List<StackOverflowResponse>> searchStackOverflow(@PathVariable Long issueId) throws JsonProcessingException {
         List<StackOverflowResponse> searchResult = issueService.searchByKeyword(issueId);
-
         if(searchResult.isEmpty()){
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
-
         return new ResponseEntity<>(searchResult, HttpStatus.OK);
     }
 
     // 해결 등록
     @PostMapping("/{issueId}/solution")
-    public ResponseEntity<?> createSolution(@RequestBody SolutionDTO.RequestDTO solutionRequestDTO, @PathVariable Long issueId){
+    public ResponseEntity<?> createSolution(@RequestBody CreateSolutionRequestDTO solutionRequestDTO, @PathVariable Long issueId){
         Solution solution = solutionService.createSolution(solutionRequestDTO, issueId);
-
         return new ResponseEntity<>(solution, HttpStatus.CREATED);
+    }
+
+    // 에러 해결 포기
+    @PatchMapping("{issueId}/giveup")
+    public ResponseEntity<?> updateIssueStatus(@PathVariable Long issueId){
+        Issue issue = issueService.updateIssueStatus(issueId);
+        return new ResponseEntity<>(issue, HttpStatus.OK);
     }
 }

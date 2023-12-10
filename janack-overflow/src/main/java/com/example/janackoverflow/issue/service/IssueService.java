@@ -1,6 +1,7 @@
 package com.example.janackoverflow.issue.service;
 
 import com.example.janackoverflow.issue.domain.IssueDTO;
+import com.example.janackoverflow.issue.domain.request.CreateIssueRequestDTO;
 import com.example.janackoverflow.issue.domain.response.IssueResponseDTO;
 import com.example.janackoverflow.issue.domain.response.StackOverflowResponse;
 import com.example.janackoverflow.issue.entity.Issue;
@@ -34,7 +35,7 @@ public class IssueService {
 
     // 에러 등록
     @Transactional
-    public Issue createIssue(IssueDTO.RequestDTO issueRequestDTO, Users users) {
+    public Issue createIssue(CreateIssueRequestDTO issueRequestDTO, Users users) {
         return issueRepository.save(issueRequestDTO.toEntity(users));
     }
 
@@ -44,7 +45,7 @@ public class IssueService {
         Optional<Issue> optionalIssue = issueRepository.findById(issueId);
 
         if(optionalIssue.isEmpty()){
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "이슈 없음");
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "에러 없음");
         }
 
         return optionalIssue.map(IssueResponseDTO::toDto);
@@ -118,5 +119,17 @@ public class IssueService {
         item.setLink(link);
         item.setTitle(title);
         return item;
+    }
+
+    // 에러 상태 변경 (포기)
+    @Transactional
+    public Issue updateIssueStatus(Long issueId) {
+        Optional<Issue> optionalIssue = issueRepository.findById(issueId);
+        if(optionalIssue.isEmpty()){
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "에러 없음");
+        }
+        Issue issue = optionalIssue.get();
+        issue.setStatus("02");
+        return issueRepository.save(issue);
     }
 }

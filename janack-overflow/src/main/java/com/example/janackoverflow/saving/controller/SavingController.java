@@ -51,21 +51,21 @@ public class SavingController {
 
     // 적금 내역 (진행 중인 적금 정보)
     @GetMapping("/users/{id}/progress")
-    public ResponseEntity<?> getUserAccountProgress(@PathVariable("id") long userId){
+    public ResponseEntity<?> getUserAccountProgress(@PathVariable("id") Long userId){
         Optional<InputAccountResponseDTO> inProgressAccount = inputAccountService.getInProgressAccountByUser(userId);
         return new ResponseEntity<>(inProgressAccount, HttpStatus.OK);
     }
 
     // 적금 기록 (사용자 적금 전부 조회)
     @GetMapping("/users/{id}")
-    public ResponseEntity<?> getUserAccounts(@PathVariable("id") long id){
+    public ResponseEntity<?> getUserAccounts(@PathVariable("id") Long id){
         List<InputAccountResponseDTO> userAccounts = inputAccountService.getAccountsByUser(id);
         return new ResponseEntity<>(userAccounts, HttpStatus.OK);
     }
 
     // 진행 중인 적금 정보 수정
     @PatchMapping("{id}")
-    public ResponseEntity<?> updateAccountInfo(@RequestBody SavingRequestDTO savingRequestDTO, @PathVariable("id") long userId){
+    public ResponseEntity<?> updateAccountInfo(@RequestBody SavingRequestDTO savingRequestDTO, @PathVariable("id") Long userId){
         InputAccount updateAccount = inputAccountService.updateInputAccount(savingRequestDTO.getInputAccountRequestDTO(), userId);
         Rule updateRule = ruleService.updateRule(savingRequestDTO.getRuleRequestDTO(), updateAccount.getId());
 
@@ -78,7 +78,7 @@ public class SavingController {
 
     // 적금 삭제 (적금 포기 상태로 변경 status=02)
     @PatchMapping("{id}/giveup")
-    public ResponseEntity<?> updateAccountStatusGiveup(@PathVariable("id") long userId){
+    public ResponseEntity<?> updateAccountStatusGiveup(@PathVariable("id") Long userId){
         InputAccount deleteAccount = inputAccountService.deleteInputAccount(userId);
         return new ResponseEntity<>(deleteAccount, HttpStatus.OK);
     }

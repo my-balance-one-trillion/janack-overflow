@@ -9,7 +9,7 @@ import java.util.Optional;
 
 @Repository
 public interface InputAccountRepository extends JpaRepository<InputAccount, Long> {
-    List<InputAccount> findByUsersId(long userId);
+    List<InputAccount> findByUsersId(Long userId);
 
-    Optional<InputAccount> findByUsersIdAndStatus(long userId, String num);
+    Optional<InputAccount> findByUsersIdAndStatus(Long userId, String status);
 }

@@ -44,6 +44,7 @@ public class Issue extends AuditingFields {
 
     @Column(nullable = false)
     @ColumnDefault(value = "'01'")
+    @Setter
     private String status; // 해결여부 01: 진행중, 02: 포기, 03: 해결
 
     @Column(nullable = false)

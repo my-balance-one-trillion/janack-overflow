@@ -60,7 +60,7 @@ public class InputAccountService {
 
     // 현재 진행 중인 계좌 정보만 조회
     @Transactional(readOnly = true)
-     public Optional<InputAccountResponseDTO> getInProgressAccountByUser(long userId) {
+     public Optional<InputAccountResponseDTO> getInProgressAccountByUser(Long userId) {
         return Optional.ofNullable(inputAccountRepository.findByUsersIdAndStatus(userId, "01")
                 .map(InputAccountResponseDTO::toDto)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "진행 중인 적금 없음")));
@@ -68,7 +68,7 @@ public class InputAccountService {
 
     // 사용자의 모든 입금 계좌(적금 계좌) 조회
     @Transactional(readOnly = true)
-    public List<InputAccountResponseDTO> getAccountsByUser(long id){
+    public List<InputAccountResponseDTO> getAccountsByUser(Long id){
         List<InputAccount> allAccountsByUser =  inputAccountRepository.findByUsersId(id);
 
         if (allAccountsByUser.isEmpty()) {
@@ -82,7 +82,7 @@ public class InputAccountService {
 
     // 계좌 정보 수정
     @Transactional
-    public InputAccount updateInputAccount(InputAccountRequestDTO inputAccountRequestDTO, long userId) {
+    public InputAccount updateInputAccount(InputAccountRequestDTO inputAccountRequestDTO, Long userId) {
         InputAccount updateAccount = inputAccountRepository.findByUsersIdAndStatus(userId, "01")
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "진행 중인 적금 없음"));
 
@@ -96,12 +96,11 @@ public class InputAccountService {
 
     // 현재 진행 중인 적금 상태 변경
     @Transactional
-    public InputAccount deleteInputAccount(long userId) {
+    public InputAccount deleteInputAccount(Long userId) {
         InputAccount deleteAccount = inputAccountRepository.findByUsersIdAndStatus(userId, "01")
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "진행 중인 적금 없음"));
 
-        // 적금 포기 상태로 변경
-        deleteAccount.setStatus("02");
+        deleteAccount.setStatus("02");  // 적금 포기 상태로 변경
         return inputAccountRepository.save(deleteAccount);
     }
 }
