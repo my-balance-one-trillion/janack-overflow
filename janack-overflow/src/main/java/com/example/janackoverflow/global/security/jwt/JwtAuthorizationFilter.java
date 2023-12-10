@@ -5,17 +5,14 @@ import com.auth0.jwt.algorithms.Algorithm;
 import com.example.janackoverflow.global.security.auth.NowUserDetails;
 import com.example.janackoverflow.user.entity.Users;
 import com.example.janackoverflow.user.repository.UsersRepository;
-import com.example.janackoverflow.user.service.UsersService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
@@ -28,6 +25,9 @@ import java.util.List;
 public class JwtAuthorizationFilter extends OncePerRequestFilter {
 	//요청 헤더의 아이디와 패스워드를 파싱하여 인증 요청을 위임하는 필터
 	//인증 성공 여부에 따라 핸들러 실행
+
+	@Autowired
+	private JwtProperties jwtProperties;
 
 	@Autowired
 	private UsersRepository usersRepository;
@@ -54,22 +54,21 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
 	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
 			throws IOException, ServletException {
 
-		String header = request.getHeader(JwtProperties.HEADER_STRING); //헤더 추출
-		
-		if(header == null || !header.startsWith(JwtProperties.TOKEN_PREFIX)) {
+		String header = request.getHeader(jwtProperties.getHeader()); //헤더 추출
+
+		//추출된 헤더가 없거나 헤더에 정보가 없으면 필터 체인지 실행하고 종료
+		if(header == null || !header.startsWith("Bearer ")) {
 			filterChain.doFilter(request, response);
 			return;
 		}
 
-		System.out.println("필터 수행 - 현재 header : " + header);
+		System.out.println("현재 header : " + header);
 
-		String token = header.replace(JwtProperties.TOKEN_PREFIX, "");
-
-		System.out.println("Bearer 빼고 추출된 토큰 token : " + token);
+		String token = header.replace("Bearer ", "");
 
 			// 토큰 검증 (이 절차 때문에 AuthenticationManager 불러올 필요 없음)
 			// SecurityContext에 직접 접근하여 세션을 만들면 자동으로 UserDetailsService에 있는 loadByUsername이 호출됨
-			String username = JWT.require(Algorithm.HMAC512(JwtProperties.SECRET))
+			String username = JWT.require(Algorithm.HMAC512(jwtProperties.getSecret()))
 					.build()
 					.verify(token)
 					.getClaim("email")

@@ -3,7 +3,6 @@ package com.example.janackoverflow.global.security.jwt;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.example.janackoverflow.global.security.LoginRequestDTO;
-import com.example.janackoverflow.global.security.auth.NowUserDetails;
 import com.example.janackoverflow.user.service.UsersService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.FilterChain;
@@ -33,7 +32,10 @@ public class JwtAuthenticationFilter extends AbstractAuthenticationProcessingFil
 	@Autowired
 	private UsersService usersService;
 
-	LoginRequestDTO loginRequestDTO;
+	@Autowired
+	private JwtProperties jwtProperties;
+
+	private LoginRequestDTO loginRequestDTO;
 
 
 	public JwtAuthenticationFilter(AuthenticationManager authenticationManager) {
@@ -102,12 +104,12 @@ public class JwtAuthenticationFilter extends AbstractAuthenticationProcessingFil
 
 		// JWT Token 생성해서 response에 담아주기
 		String jwtToken = JWT.create()
-				.withSubject(principalDetailis.getUsername())
-				.withExpiresAt(new Date(System.currentTimeMillis() + JwtProperties.EXPIRATION_TIME)) //토큰 유효시간
+				.withSubject(principalDetailis.getUsername()) //현재 주체가 되는 사용자 (Subject)
+				.withExpiresAt(new Date(System.currentTimeMillis() + jwtProperties.getTokenValidityInSeconds() * 1000)) //토큰 유효시간
 				.withClaim("email", principalDetailis.getUsername()) //email값
-				.sign(Algorithm.HMAC512(JwtProperties.SECRET)); //시크릿 키 이용하여 HMAC512 알고리즘 적용
+				.sign(Algorithm.HMAC512(jwtProperties.getSecret())); //시크릿 키 이용하여 HMAC512 알고리즘 적용
 
-		response.addHeader("Authorization", JwtProperties.TOKEN_PREFIX + jwtToken);
+		response.addHeader(jwtProperties.getHeader(), "Bearer " + jwtToken);
 
 		System.out.println("login complete");
 	}
