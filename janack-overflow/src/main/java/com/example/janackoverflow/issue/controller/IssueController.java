@@ -10,11 +10,9 @@ import com.example.janackoverflow.issue.service.IssueService;
 import com.example.janackoverflow.issue.service.SolutionService;
 import com.example.janackoverflow.user.entity.Users;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.Errors;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -87,7 +85,7 @@ public class IssueController {
     // 에러 해결 포기
     @PatchMapping("{issueId}/giveup")
     public ResponseEntity<?> giveUpIssue(@PathVariable Long issueId){
-        IssueResponseDTO issue = issueService.updateIssueStatus(issueId);
+        Issue issue = issueService.updateIssueStatus(issueId);
         return new ResponseEntity<>(issue, HttpStatus.OK);
     }
 }
