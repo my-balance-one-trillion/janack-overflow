@@ -2,8 +2,8 @@ package com.example.janackoverflow.global.security.jwt;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
-
 import com.example.janackoverflow.global.security.LoginRequestDTO;
+import com.example.janackoverflow.global.security.auth.NowUserDetails;
 import com.example.janackoverflow.user.service.UsersService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.FilterChain;
@@ -15,7 +15,6 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
@@ -84,9 +83,9 @@ public class JwtAuthenticationFilter extends AbstractAuthenticationProcessingFil
 		Authentication authentication =
 				authenticationManager.authenticate(authenticationToken);
 		
-		UserDetails principalDetailis = (UserDetails) authentication.getPrincipal();
+		NowUserDetails principalDetailis = (NowUserDetails) authentication.getPrincipal();
 
-		System.out.println("Authentication : " + principalDetailis.getUsername());
+		System.out.println("Authentication Id : " + principalDetailis.getId());
 
 		return authentication;
 	}
@@ -99,7 +98,7 @@ public class JwtAuthenticationFilter extends AbstractAuthenticationProcessingFil
 
 		System.out.println("successful Authentication");
 		
-		UserDetails principalDetailis = (UserDetails) authResult.getPrincipal();
+		NowUserDetails principalDetailis = (NowUserDetails) authResult.getPrincipal();
 
 		System.out.println("로그인 시도 계정 : " + principalDetailis.getUsername());
 

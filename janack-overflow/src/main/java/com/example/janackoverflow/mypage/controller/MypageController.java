@@ -50,7 +50,7 @@ public class MypageController {
         return new ResponseEntity(myIssueList, HttpStatus.OK);
     }
 //    내가쓴 댓글 보기
-    @GetMapping("/mypage/mycomment/{usersid}")
+    @GetMapping("/mypage/mycomment")
     public ResponseEntity readMyComment(@PathVariable("usersid") Long usersId){
         Page<CommentDTO.ResponseDto> myCommentList = mypageService.readMyComment(usersId);
         return new ResponseEntity(myCommentList ,HttpStatus.OK);
