@@ -1,5 +1,4 @@
 package com.example.janackoverflow.issue.entity;
-
 import com.example.janackoverflow.community.domain.CommentDTO;
 import com.example.janackoverflow.community.domain.CommunityUsersDTO;
 import com.example.janackoverflow.community.domain.MediumArticle;
@@ -28,6 +27,7 @@ public class Issue extends AuditingFields {
     @JoinColumn(name = "users_id")
     private Users users;
 
+    @ColumnDefault(value = "0")
     private int amount;
 
     @Column(nullable = false)
@@ -43,7 +43,7 @@ public class Issue extends AuditingFields {
     private String category;
 
     @Column(nullable = false)
-    @ColumnDefault(value = "01")
+    @ColumnDefault(value = "'01'")
     private String status; // 해결여부 01: 진행중, 02: 포기, 03: 해결
 
     @Column(nullable = false)
@@ -52,9 +52,9 @@ public class Issue extends AuditingFields {
 
     private String keyword; // comma (,) 로 append
 
-    @ColumnDefault("0")
+    @ColumnDefault(value = "0")
     private Integer views;
-
+  
     public IssueDTO.ResponseDTO toDto(long likes, CommunityUsersDTO communityUsersDTO) {
         return IssueDTO.ResponseDTO.builder()
                 .id(id)
@@ -71,7 +71,7 @@ public class Issue extends AuditingFields {
                 .views(views)
                 .build();
     }
-
+  
     public IssueDTO.ResponseDTO toDetailDto(long likes, CommunityUsersDTO communityUsersDTO, List<CommentDTO.ResponseDto> commenResponseDtoList, List<MediumArticle> articleList) {
         return IssueDTO.ResponseDTO.builder()
                 .id(id)

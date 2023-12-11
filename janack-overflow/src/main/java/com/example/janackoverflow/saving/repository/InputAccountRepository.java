@@ -9,4 +9,6 @@ import java.util.List;
 @Repository
 public interface InputAccountRepository extends JpaRepository<InputAccount, Long> {
     List<InputAccount> findByUsersId(long userId);
+    //status
+    List<InputAccount> findByUsersIdAndStatus(long userId, String status);
 }
