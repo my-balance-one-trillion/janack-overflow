@@ -10,7 +10,7 @@ public class LoginController {
 
     @PostMapping("/login")
     public ResponseEntity login(){
-        return new ResponseEntity<>("로그인이 수행됐습니다 (시큐리티 X)", HttpStatus.OK);
+        return new ResponseEntity<>("Not Security Process", HttpStatus.OK);
     }
 
 }

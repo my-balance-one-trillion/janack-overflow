@@ -97,8 +97,6 @@ public class JwtAuthenticationFilter extends AbstractAuthenticationProcessingFil
 		
 		NowUserDetails principalDetailis = (NowUserDetails) authResult.getPrincipal();
 
-		System.out.println("로그인 시도 계정 : " + principalDetailis.getUsername());
-
 		// JWT Token 생성해서 response에 담아주기
 		String jwtToken = JWT.create()
 				.withSubject(principalDetailis.getUsername()) //현재 주체가 되는 사용자 (Subject)
