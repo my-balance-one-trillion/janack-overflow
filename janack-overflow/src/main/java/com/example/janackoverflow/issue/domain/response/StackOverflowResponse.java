@@ -7,10 +7,14 @@ import lombok.ToString;
 import java.util.List;
 
 @Getter
-@Setter
-@ToString
 public class StackOverflowResponse {
-    private List<String> tags;
-    private String link;
-    private String title;
+    private final List<String> tags;
+    private final String link;
+    private final String title;
+
+    public StackOverflowResponse(List<String> tags, String link, String title) {
+        this.tags = tags;
+        this.link = link;
+        this.title = title;
+    }
 }

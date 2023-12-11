@@ -1,20 +1,20 @@
 package com.example.janackoverflow.issue.service;
 
-import com.example.janackoverflow.issue.domain.IssueDTO;
+import com.example.janackoverflow.global.exception.BusinessLogicException;
+import com.example.janackoverflow.global.exception.ExceptionCode;
 import com.example.janackoverflow.issue.domain.request.CreateIssueRequestDTO;
 import com.example.janackoverflow.issue.domain.response.IssueResponseDTO;
 import com.example.janackoverflow.issue.domain.response.StackOverflowResponse;
 import com.example.janackoverflow.issue.entity.Issue;
 import com.example.janackoverflow.issue.repository.IssueRepository;
+import com.example.janackoverflow.saving.repository.InputAccountRepository;
 import com.example.janackoverflow.user.entity.Users;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.reactive.function.client.WebClient;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -24,9 +24,11 @@ import java.util.Optional;
 @Service
 public class IssueService {
     private final IssueRepository issueRepository;
+    private final InputAccountRepository inputAccountRepository;
 
-    public IssueService(IssueRepository issueRepository) {
+    public IssueService(IssueRepository issueRepository, InputAccountRepository inputAccountRepository) {
         this.issueRepository = issueRepository;
+        this.inputAccountRepository = inputAccountRepository;
     }
 
     public Issue getIssue(Long issueId) {
@@ -36,38 +38,33 @@ public class IssueService {
     // 에러 등록
     @Transactional
     public Issue createIssue(CreateIssueRequestDTO issueRequestDTO, Users users) {
+        inputAccountRepository.findByUsersIdAndStatus(users.getId(),"01")
+                .orElseThrow(() -> new BusinessLogicException(ExceptionCode.ACCOUNT_NOT_FOUND));
+        if(issueRepository.findByUsersIdAndStatus(users.getId(),"01").isPresent()){
+            throw new BusinessLogicException(ExceptionCode.ERROR_EXIST);
+        }
         return issueRepository.save(issueRequestDTO.toEntity(users));
     }
 
     // 에러 조회
     @Transactional(readOnly = true)
     public Optional<IssueResponseDTO> getIssueById(Long issueId){
-        Optional<Issue> optionalIssue = issueRepository.findById(issueId);
-
-        if(optionalIssue.isEmpty()){
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "에러 없음");
-        }
-
-        return optionalIssue.map(IssueResponseDTO::toDto);
+        return Optional.ofNullable(issueRepository.findById(issueId).map(IssueResponseDTO::toDto)
+                .orElseThrow(() -> new BusinessLogicException(ExceptionCode.ERROR_NOT_FOUND)));
     }
 
-    // 에러 등록 시간 조회
+    /*// 에러 등록 시간 조회
     @Transactional(readOnly = true)
     public LocalDateTime getIssueCreatedAt(Long issueId) {
-        Optional<Issue> createAt = issueRepository.findById(issueId);
-        return createAt.map(Issue::getCreatedAt).orElse(null);
-    }
+        return issueRepository.findById(issueId).map(Issue::getCreatedAt)
+                .orElseThrow(() -> new BusinessLogicException(ExceptionCode.ERROR_NOT_FOUND));
+    }*/
 
     // 에러 키워드로 검색
     @Transactional(readOnly = true)
     public List<StackOverflowResponse> searchByKeyword(Long issueId) throws JsonProcessingException {
-        Optional<Issue> issueOptional = issueRepository.findById(issueId);
-
-        if (issueOptional.isEmpty()) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
-        }
-
-        Issue issue = issueOptional.get();
+        Issue issue =  issueRepository.findById(issueId)
+                .orElseThrow(() -> new BusinessLogicException(ExceptionCode.ERROR_NOT_FOUND));
         String keyword = issue.getKeyword();
 
         // StackOverflow API 검색 Endpoint URL
@@ -102,34 +99,26 @@ public class IssueService {
         return searchResult;
     }
 
-    // 태그, 링크, 제목 값을 사용해서 StackOverflowResponse 객체 생성
     private static StackOverflowResponse getStackOverflowResponse(JsonNode tagsNode, JsonNode linksNode, JsonNode titlesNode) {
-        List<String> tagsList = new ArrayList<>();
+        List<String> tags = new ArrayList<>();
         if(tagsNode != null){
             for(JsonNode tagNode : tagsNode){
-                tagsList.add(String.valueOf(tagNode).replace("\"","")); // 이스케이프 문자(JSON 데이터를 파싱할 때 사용) 제거
+                tags.add(String.valueOf(tagNode).replace("\"","")); // 이스케이프 문자(JSON 데이터를 파싱할 때 사용) 제거
             }
         }
 
         String link = String.valueOf(linksNode).replace("\"","");
         String title = String.valueOf(titlesNode).replace("\"","");
 
-        StackOverflowResponse item = new StackOverflowResponse();
-        item.setTags(tagsList);
-        item.setLink(link);
-        item.setTitle(title);
-        return item;
+        return new StackOverflowResponse(tags, link, title);
     }
 
     // 에러 상태 변경 (포기)
     @Transactional
-    public Issue updateIssueStatus(Long issueId) {
-        Optional<Issue> optionalIssue = issueRepository.findById(issueId);
-        if(optionalIssue.isEmpty()){
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "에러 없음");
-        }
-        Issue issue = optionalIssue.get();
-        issue.setStatus("02");
-        return issueRepository.save(issue);
+    public IssueResponseDTO updateIssueStatus(Long issueId) {
+        Issue issue =  issueRepository.findById(issueId)
+                .orElseThrow(() -> new BusinessLogicException(ExceptionCode.ERROR_NOT_FOUND));
+        issue.updateStatus("02");
+        return IssueResponseDTO.toDto(issue);
     }
 }

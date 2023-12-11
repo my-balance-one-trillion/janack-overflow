@@ -55,7 +55,7 @@ public class InputAccountService {
     // 계좌 번호 생성
     private void createAcntNum(InputAccount inputAccount){
         Long id = inputAccount.getId();
-        inputAccount.setAcntNum(""+(id+3020000009687L));
+        inputAccount.updateAcntNum(""+(id+3020000009687L));
     }
 
     // 현재 진행 중인 계좌 정보만 조회
@@ -100,7 +100,7 @@ public class InputAccountService {
         InputAccount deleteAccount = inputAccountRepository.findByUsersIdAndStatus(userId, "01")
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "진행 중인 적금 없음"));
 
-        deleteAccount.setStatus("02");  // 적금 포기 상태로 변경
+        deleteAccount.updateStatus("02");  // 적금 포기 상태로 변경
         return inputAccountRepository.save(deleteAccount);
     }
 }

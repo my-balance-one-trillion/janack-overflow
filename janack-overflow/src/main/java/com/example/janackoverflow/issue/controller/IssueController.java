@@ -10,11 +10,16 @@ import com.example.janackoverflow.issue.service.IssueService;
 import com.example.janackoverflow.issue.service.SolutionService;
 import com.example.janackoverflow.user.entity.Users;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.Errors;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 @RestController
@@ -31,11 +36,15 @@ public class IssueController {
 
     // 에러 등록
     @PostMapping
-    public ResponseEntity<?> createIssue(@RequestBody CreateIssueRequestDTO issueRequestDTO){
+    public ResponseEntity<?> createIssue(@Validated @RequestBody CreateIssueRequestDTO issueRequestDTO, BindingResult bindingResult){
         // 회원번호 1번으로 강제 설정
         Users users = new Users();
-        users.setId(1L);
+        users.setId(3L);
 
+        if(bindingResult.hasErrors()){
+            String message = Objects.requireNonNull(bindingResult.getFieldError()).getDefaultMessage();
+            return new ResponseEntity<>(message, HttpStatus.BAD_REQUEST);
+        }
         Issue issue =  issueService.createIssue(issueRequestDTO, users);
         return new ResponseEntity<>(issue, HttpStatus.CREATED);
     }
@@ -66,15 +75,19 @@ public class IssueController {
 
     // 해결 등록
     @PostMapping("/{issueId}/solution")
-    public ResponseEntity<?> createSolution(@RequestBody CreateSolutionRequestDTO solutionRequestDTO, @PathVariable Long issueId){
+    public ResponseEntity<?> createSolution(@Validated @RequestBody CreateSolutionRequestDTO solutionRequestDTO, @PathVariable Long issueId, BindingResult bindingResult){
+        if(bindingResult.hasErrors()){
+            String message = Objects.requireNonNull(bindingResult.getFieldError()).getDefaultMessage();
+            return new ResponseEntity<>(message, HttpStatus.BAD_REQUEST);
+        }
         Solution solution = solutionService.createSolution(solutionRequestDTO, issueId);
         return new ResponseEntity<>(solution, HttpStatus.CREATED);
     }
 
     // 에러 해결 포기
     @PatchMapping("{issueId}/giveup")
-    public ResponseEntity<?> updateIssueStatus(@PathVariable Long issueId){
-        Issue issue = issueService.updateIssueStatus(issueId);
+    public ResponseEntity<?> giveUpIssue(@PathVariable Long issueId){
+        IssueResponseDTO issue = issueService.updateIssueStatus(issueId);
         return new ResponseEntity<>(issue, HttpStatus.OK);
     }
 }
