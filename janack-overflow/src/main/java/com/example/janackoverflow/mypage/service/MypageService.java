@@ -66,16 +66,16 @@ public class MypageService {
 //    내가 쓴글 보기
 
 //    내가 쓴 댓글 보기
-    public Page<CommentDTO.CommentResponseDto> readMyComment(Long usersId){
+    public Page<CommentDTO.ResponseDto> readMyComment(Long usersId){
         Pageable pageable = PageRequest.of(0, 5, Sort.by(Sort.Direction.DESC, "id"));
         Page<Comment> myCommentList = commentRepository.findAllByUsers_IdOrderByCreatedAtDesc(usersId,pageable);
         // 댓글DtoList
-        List<CommentDTO.CommentResponseDto> commentResponseDtolist = myCommentList.stream().map(comment -> CommentDTO.CommentResponseDto.builder()
+        List<CommentDTO.ResponseDto> commentResponseDtolist = myCommentList.stream().map(comment -> CommentDTO.ResponseDto.builder()
                 .id(comment.getId())
                 .comment(comment.getContent())
                 .build()).toList();
 
-        Page<CommentDTO.CommentResponseDto> commentPage = new PageImpl<>(commentResponseDtolist, pageable, myCommentList.getTotalElements());
+        Page<CommentDTO.ResponseDto> commentPage = new PageImpl<>(commentResponseDtolist, pageable, myCommentList.getTotalElements());
         return commentPage;
     }
 //    댓글 삭제

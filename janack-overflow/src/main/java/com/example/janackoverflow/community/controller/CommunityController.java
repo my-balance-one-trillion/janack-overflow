@@ -24,6 +24,7 @@ import java.util.List;
 
 @RestController
 @Slf4j
+@RequestMapping(value = "/community")
 public class CommunityController {
     private final CommunityService communityService;
     private final LikesService likesService;
