@@ -25,11 +25,12 @@ public class UsersController {
         } else if(usersService.isDuplicatedEmail(usersRequestDTO)) { //이메일 중복확인
             return new ResponseEntity<>("중복되는 이메일입니다", HttpStatus.FORBIDDEN);
         } else {
-            usersRequestDTO.setRole("user"); //역활
+            usersRequestDTO.setRole("USER"); //역활
             usersRequestDTO.setStatus("1"); //상태
             usersRequestDTO.setProfileImage("default.png"); //프로필 이미지
+
             usersService.createUser(usersRequestDTO);
-            //return new ResponseEntity<>(usersRequestDTO, HttpStatus.CREATED);
+
             return new ResponseEntity<>("성공적으로 생성", HttpStatus.OK);
         }
 
@@ -43,25 +44,4 @@ public class UsersController {
 //    비밀번호 재설정
 
 //    비밀번호 찾기
-
-//    마이페이지에서 비밀번호 재설정
-    @GetMapping("/mypage/{usersid}")
-    public ResponseEntity readUser(@PathVariable("usersid") long usersId){
-        UsersResponseDTO usersResponseDTO =  usersService.readUser(usersId);
-        return new ResponseEntity(usersResponseDTO, HttpStatus.OK);
-    }
-    @PutMapping("/mypage/{usersid}")
-    public ResponseEntity updateUser(@RequestBody UsersRequestDTO usersRequestDTO,
-                                     @PathVariable("usersid") long usersId){
-        usersService.updateUser(usersRequestDTO, usersId);
-        return new ResponseEntity(HttpStatus.RESET_CONTENT);
-    }
-//    마이페이지에서 프로필 이미지 변경
-    @PutMapping("/mypage/profileimage/{usersid}")
-    public ResponseEntity updateProfileImage(@RequestBody UsersRequestDTO usersRequestDTO,
-                                             @PathVariable("usersid") long userId){
-        usersService.updateProfileImage(usersRequestDTO, userId);
-        return new ResponseEntity(HttpStatus.RESET_CONTENT);
-    }
-
 }
