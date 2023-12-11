@@ -69,9 +69,5 @@ function userSignup(event){
 </script>
 
 <style scoped>
-@import "@/assets/users/signup.css";
-.not-overflow-y {
-height: 100%;
-overflow-y: hidden;
-}
+
 </style>

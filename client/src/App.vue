@@ -1,5 +1,8 @@
 <script setup></script>
 
-<template></template>
+<template>
+  <div class="page-wrapper">
+  </div>
+</template>
 
 <style scoped></style>

@@ -30,9 +30,6 @@ public class JwtAuthenticationFilter extends AbstractAuthenticationProcessingFil
 									// '/login' URL 접근 시 필터 실행
 
 	@Autowired
-	private UsersService usersService;
-
-	@Autowired
 	private JwtProperties jwtProperties;
 
 	private LoginRequestDTO loginRequestDTO;
