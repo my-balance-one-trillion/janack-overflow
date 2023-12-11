@@ -11,6 +11,7 @@ import com.example.janackoverflow.user.entity.Users;
 import com.example.janackoverflow.user.repository.UsersRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.data.domain.*;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import lombok.extern.slf4j.Slf4j;
 
@@ -23,19 +24,24 @@ public class MypageService {
     private final UsersRepository usersRepository;
     private final CommentRepository commentRepository;
     private final IssueRepository issueRepository;
+    private final PasswordEncoder passwordEncoder;
 
-    public MypageService(UsersRepository usersRepository, CommentRepository commentRepository,IssueRepository issueRepository){
+    public MypageService(UsersRepository usersRepository,
+                         CommentRepository commentRepository,
+                         IssueRepository issueRepository,
+                         PasswordEncoder passwordEncoder){
         this.usersRepository = usersRepository;
         this.commentRepository =commentRepository;
         this.issueRepository =  issueRepository;
+        this.passwordEncoder =  passwordEncoder;
     }
 
 //    회원 정보 수정
     public void updateUser(UsersRequestDTO usersRequestDTO, Long usersId){
         Users users = usersRepository.findById(usersId).orElseThrow(RuntimeException::new);
-        if(users.getPassword().equals(usersRequestDTO.getPassword())){
+        if(passwordEncoder.matches(usersRequestDTO.getPassword(), users.getPassword())){
             Users updatedUser = users.toBuilder()
-                    .email(usersRequestDTO.getEmail())
+//                    .email(usersRequestDTO.getEmail())
                     .digit(usersRequestDTO.getDigit())
                     .birth(usersRequestDTO.getBirth())
                     .name(usersRequestDTO.getName())
