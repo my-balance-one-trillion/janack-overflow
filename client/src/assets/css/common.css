@@ -33,6 +33,10 @@ body {
   overflow: hidden;
 }
 
+.bold {
+  font-weight: 700;
+}
+
 /* 
 
 헤더 nav transform 
