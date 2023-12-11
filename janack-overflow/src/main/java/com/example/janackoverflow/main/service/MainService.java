@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @Slf4j
@@ -24,9 +25,9 @@ public class MainService {
     public InputAccount readNowAccount(Long userId){
         Users users = usersRepository.findById(userId)
                 .orElseThrow(() -> new IllegalArgumentException("not found :"+userId));
-        List<InputAccount> inputAccount = inputAccountRepository.findByUsersIdAndStatus(userId, "01");
+        Optional<InputAccount> inputAccount = inputAccountRepository.findByUsersIdAndStatus(userId, "01");
 
-        return inputAccount.get(0);
+        return inputAccount.get();
     }
     //최근 일주일 이슈
 //    public List<Issue> readWeeklyIssues(Long userId){

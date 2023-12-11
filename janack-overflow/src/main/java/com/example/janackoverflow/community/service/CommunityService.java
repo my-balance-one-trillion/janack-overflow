@@ -17,6 +17,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.*;
 
 import org.springframework.stereotype.Service;
@@ -36,6 +37,8 @@ public class CommunityService {
     private final UsersRepository usersRepository;
     private final LikesService likesService;
 
+    @Value("${external.medium.medium-key}")
+    private String apikey;
     private final CommunityRepositoryImpl communityRepositoryImpl;
 
     public CommunityService (CommentRepository commentRepository,
@@ -130,7 +133,7 @@ public class CommunityService {
     public List<MediumArticle> getMediumApi(String query) throws IOException, InterruptedException {
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create("https://medium2.p.rapidapi.com/topfeeds/" + query + "/top_month?count=3"))
-                .header("X-RapidAPI-Key", "***REMOVED***")
+                .header("X-RapidAPI-Key", apikey)
                 .header("X-RapidAPI-Host", "medium2.p.rapidapi.com")
                 .method("GET", HttpRequest.BodyPublishers.noBody())
                 .build();
@@ -161,9 +164,10 @@ public class CommunityService {
 
     public MediumArticle getArticlesInfo(String articleId) throws IOException, InterruptedException {
 
+
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create("https://medium2.p.rapidapi.com/article/" + articleId))
-                .header("X-RapidAPI-Key", "***REMOVED***")
+                .header("X-RapidAPI-Key", apikey)
                 .header("X-RapidAPI-Host", "medium2.p.rapidapi.com")
                 .method("GET", HttpRequest.BodyPublishers.noBody())
                 .build();
