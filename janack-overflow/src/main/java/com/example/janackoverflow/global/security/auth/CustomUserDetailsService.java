@@ -14,6 +14,11 @@ public class CustomUserDetailsService implements UserDetailsService {
     @Autowired
     private UsersService usersService;
 
+    @Autowired
+    public CustomUserDetailsService(UsersService usersService){
+        this.usersService = usersService;
+    }
+
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
 
