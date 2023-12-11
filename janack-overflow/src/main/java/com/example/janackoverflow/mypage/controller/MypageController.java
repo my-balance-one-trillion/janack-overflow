@@ -1,6 +1,7 @@
 package com.example.janackoverflow.mypage.controller;
 
 import com.example.janackoverflow.community.domain.CommentDTO;
+import com.example.janackoverflow.issue.domain.response.IssueResponseDTO;
 import com.example.janackoverflow.user.service.UsersService;
 import com.example.janackoverflow.mypage.service.MypageService;
 import com.example.janackoverflow.user.domain.request.UsersRequestDTO;
@@ -22,12 +23,12 @@ public class MypageController {
     }
 
     //    마이페이지에서 비밀번호 재설정
-    @GetMapping("/mypage/{usersid}")
+    @GetMapping("/mypage/myinfo/{usersid}")
     public ResponseEntity readUser(@PathVariable("usersid") Long usersId){
         UsersResponseDTO usersResponseDTO =  usersService.readUser(usersId);
         return new ResponseEntity(usersResponseDTO, HttpStatus.OK);
     }
-    @PutMapping("/mypage/{usersid}")
+    @PutMapping("/mypage/myinfo/{usersid}")
     public ResponseEntity updateUser(@RequestBody UsersRequestDTO usersRequestDTO,
                                      @PathVariable("usersid") Long usersId){
         mypageService.updateUser(usersRequestDTO, usersId);
@@ -43,11 +44,15 @@ public class MypageController {
     }
 
 //    내가 쓴 글 보기
-
+    @GetMapping("mypage/myissue/{usersid}")
+    public ResponseEntity readMyIssue(@PathVariable("usersid") Long usersId){
+        Page<IssueResponseDTO> myIssueList = mypageService.readMyIssue(usersId);
+        return new ResponseEntity(myIssueList, HttpStatus.OK);
+    }
 //    내가쓴 댓글 보기
     @GetMapping("/mypage/mycomment/{usersid}")
     public ResponseEntity readMyComment(@PathVariable("usersid") Long usersId){
-        Page<CommentDTO.CommentResponseDto> myCommentList = mypageService.readMyComment(usersId);
+        Page<CommentDTO.ResponseDto> myCommentList = mypageService.readMyComment(usersId);
         return new ResponseEntity(myCommentList ,HttpStatus.OK);
     }
 

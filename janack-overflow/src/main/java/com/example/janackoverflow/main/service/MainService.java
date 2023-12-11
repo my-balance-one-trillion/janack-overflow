@@ -21,13 +21,13 @@ public class MainService {
     private UsersRepository usersRepository;
 
     //적금 호출 status= "01", user 같은 경우
-    public InputAccount readNowAccount(Long userId){
-        Users users = usersRepository.findById(userId)
-                .orElseThrow(() -> new IllegalArgumentException("not found :"+userId));
-        List<InputAccount> inputAccount = inputAccountRepository.findByUsersIdAndStatus(userId, "01");
-
-        return inputAccount.get(0);
-    }
+//    public InputAccount readNowAccount(Long userId){
+//        Users users = usersRepository.findById(userId)
+//                .orElseThrow(() -> new IllegalArgumentException("not found :"+userId));
+//        List<InputAccount> inputAccount = inputAccountRepository.findByUsersIdAndStatus(userId, "01");
+//
+//        return inputAccount.get(0);
+//    }
     //최근 일주일 이슈
 //    public List<Issue> readWeeklyIssues(Long userId){
 //
