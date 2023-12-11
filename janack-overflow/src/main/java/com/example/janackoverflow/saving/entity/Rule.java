@@ -6,7 +6,6 @@ import jakarta.persistence.*;
 import lombok.*;
 
 @Getter
-@Setter
 @Entity
 @Table(name = "rule")
 @Builder
@@ -34,4 +33,11 @@ public class Rule{
     @ManyToOne
     @JoinColumn(name = "users_id")
     private Users users;
+
+    public void updateRule(int underThirty, int underHour, int underThreeHour, int overThreeHour){
+        this.underThirty = underThirty;
+        this.underHour = underHour;
+        this.underThreeHour = underThreeHour;
+        this.overThreeHour = overThreeHour;
+    }
 }

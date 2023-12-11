@@ -9,7 +9,6 @@ import lombok.ToString;
 import java.util.List;
 
 @Getter
-@Setter
 @ToString
 public class SavingRequestDTO {
     private  InputAccountRequestDTO inputAccountRequestDTO;
