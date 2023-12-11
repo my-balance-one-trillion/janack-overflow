@@ -84,9 +84,9 @@ public class InputAccountService {
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "진행 중인 적금 없음"));
 
         // 적금 정보 수정 (적금 이름, 적금 목표명, 적금 목표 금액)
-        updateAccount.updateAcntName(inputAccountRequestDTO.getAcntName());
-        updateAccount.updateGoalName(inputAccountRequestDTO.getGoalName());
-        updateAccount.updateGoalNum(inputAccountRequestDTO.getGoalAmount());
+        updateAccount.updateInputAccount(inputAccountRequestDTO.getAcntName(),
+                inputAccountRequestDTO.getGoalName(),
+                inputAccountRequestDTO.getGoalAmount());
 
         return inputAccountRepository.save(updateAccount);
     }

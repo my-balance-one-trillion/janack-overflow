@@ -41,6 +41,7 @@ public class InputAccount extends AuditingFields {
 
     private int acntAmount;
 
+
     public void updateAcntNum(String newAcntNum) {
         this.acntNum = newAcntNum;
     }
@@ -56,10 +57,9 @@ public class InputAccount extends AuditingFields {
     public void updateCompletedAt() {
         this.completedAt = LocalDateTime.now();
     }
-
-    public void updateAcntName(String newAcntName){ this.acntName = newAcntName; }
-
-    public void updateGoalName(String newGoalName) { this.goalName = newGoalName; }
-
-    public void updateGoalNum(int newGoalAmount) { this.goalAmount = newGoalAmount; }
+    public void updateInputAccount(String newAcntName, String newGoalName, int newGoalAmount) {
+        this.acntName = newAcntName;
+        this.goalName = newGoalName;
+        this.goalAmount = newGoalAmount;
+    }
 }

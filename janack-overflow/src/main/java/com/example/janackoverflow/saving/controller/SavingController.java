@@ -76,7 +76,7 @@ public class SavingController {
     public ResponseEntity<?> updateAccountInfo(@RequestBody SavingRequestDTO savingRequestDTO, @AuthenticationPrincipal NowUserDetails userDetails){
         Long userId = userDetails.getUser().getId();
         InputAccount updateAccount = inputAccountService.updateInputAccount(savingRequestDTO.getInputAccountRequestDTO(), userId);
-        Rule updateRule = ruleService.updateRule(savingRequestDTO.getRuleRequestDTO(), updateAccount.getId());
+        Rule updateRule = ruleService.updateRule(savingRequestDTO.getRuleRequestDTO(),userId, updateAccount.getId());
 
         Map<String, Object> response = new HashMap<>();
         response.put("updateAccount", updateAccount);
