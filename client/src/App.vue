@@ -1,8 +1,11 @@
+<script setup>
+import Header from "@/components/Header.vue";
+</script>
+
 <template>
-  <div class="page-wrapper">
-    <router-view />
+  <div class="bg-blue-200 page-wrapper">
+    <Header></Header>
   </div>
 </template>
 
-<script setup></script>
 <style scoped></style>
