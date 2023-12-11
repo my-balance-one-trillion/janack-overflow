@@ -8,7 +8,6 @@ import lombok.*;
 import java.time.LocalDateTime;
 
 @Getter
-@Setter
 @Entity
 @Table(name = "input_account")
 @Builder
@@ -20,7 +19,6 @@ public class InputAccount extends AuditingFields {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    //    @Column(nullable = false)
     private String acntNum;
 
     @Column(nullable = false)
@@ -42,4 +40,26 @@ public class InputAccount extends AuditingFields {
     private Users users;
 
     private int acntAmount;
+
+    public void updateAcntNum(String newAcntNum) {
+        this.acntNum = newAcntNum;
+    }
+
+    public void updateAcntAmount(int newAcntAmount) {
+        this.acntAmount = newAcntAmount;
+    }
+
+    public void updateStatus(String newStatus) {
+        this.status = newStatus;
+    }
+
+    public void updateCompletedAt() {
+        this.completedAt = LocalDateTime.now();
+    }
+
+    public void updateAcntName(String newAcntName){ this.acntName = newAcntName; }
+
+    public void updateGoalName(String newGoalName) { this.goalName = newGoalName; }
+
+    public void updateGoalNum(int newGoalAmount) { this.goalAmount = newGoalAmount; }
 }

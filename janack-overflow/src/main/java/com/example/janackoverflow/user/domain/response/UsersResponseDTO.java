@@ -26,5 +26,4 @@ public class UsersResponseDTO {
     private String holder;
     private String bankName;
     private String outputAcntNum;
-
 }
