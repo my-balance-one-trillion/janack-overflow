@@ -1,6 +1,7 @@
 package com.example.janackoverflow.issue.entity;
-
-import com.example.janackoverflow.community.entity.Likes;
+import com.example.janackoverflow.community.domain.CommentDTO;
+import com.example.janackoverflow.community.domain.CommunityUsersDTO;
+import com.example.janackoverflow.community.domain.MediumArticle;
 import com.example.janackoverflow.global.entity.AuditingFields;
 import com.example.janackoverflow.issue.domain.IssueDTO;
 import com.example.janackoverflow.user.entity.Users;
@@ -53,11 +54,11 @@ public class Issue extends AuditingFields {
 
     @ColumnDefault(value = "0")
     private Integer views;
-
-    public IssueDTO.ResponseDTO toDto(long likes, Users users) {
+  
+    public IssueDTO.ResponseDTO toDto(long likes, CommunityUsersDTO communityUsersDTO) {
         return IssueDTO.ResponseDTO.builder()
                 .id(id)
-                .users(users)
+                .communityUsersDTO(communityUsersDTO)
                 .title(title)
                 .content(content)
                 .category(category)
@@ -69,5 +70,27 @@ public class Issue extends AuditingFields {
                 .likes(likes)
                 .views(views)
                 .build();
+    }
+  
+    public IssueDTO.ResponseDTO toDetailDto(long likes, CommunityUsersDTO communityUsersDTO, List<CommentDTO.ResponseDto> commenResponseDtoList, List<MediumArticle> articleList) {
+        return IssueDTO.ResponseDTO.builder()
+                .id(id)
+                .communityUsersDTO(communityUsersDTO)
+                .commenResponseDtoList(commenResponseDtoList)
+                .title(title)
+                .content(content)
+                .category(category)
+                .code(code)
+                .keyword(keyword)
+                .status(status)
+                .publicStatus(publicStatus)
+                .likes(likes)
+                .views(views)
+                .articleList(articleList)
+                .build();
+    }
+
+    public void updateViews() {
+        views += 1;
     }
 }
