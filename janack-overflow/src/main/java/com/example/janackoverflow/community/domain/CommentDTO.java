@@ -2,23 +2,27 @@ package com.example.janackoverflow.community.domain;
 
 import com.example.janackoverflow.community.entity.Comment;
 import com.example.janackoverflow.issue.entity.Issue;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.ToString;
+import com.example.janackoverflow.user.entity.Users;
+import lombok.*;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDateTime;
 
 public class CommentDTO {
     @Getter
     @AllArgsConstructor
+    @NoArgsConstructor
     @Builder
     public static class CommentRequestDto {
+        private Issue issue;
+        private Users users;
         private String content;
 
-        public Comment toEntity() {
+        public Comment toEntity(Issue issue, Users users) {
             return Comment.builder()
-                    .content(this.content)
+                    .content(content)
+                    .issue(issue)
+                    .users(users)
                     .build();
         }
     }
@@ -27,18 +31,14 @@ public class CommentDTO {
     @ToString
     @AllArgsConstructor
     @Builder
-    public static class CommentResponseDto {
+    public static class ResponseDto {
         private Long id;
         private String comment;
         private LocalDateTime createdAt;
-        private Issue issue;
-
-        public CommentResponseDto toDto() {
-            return CommentResponseDto.builder()
-                    .id(id)
-                    .comment(comment)
-                    .build();
-        }
+        private Long issueId;
+//        private CommunityUsersDTO communityUsersDTO;
+        private String profileImage;
+        private String nickname;
     }
 
 }

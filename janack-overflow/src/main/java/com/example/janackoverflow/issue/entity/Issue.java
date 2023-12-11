@@ -1,9 +1,16 @@
 package com.example.janackoverflow.issue.entity;
 
+import com.example.janackoverflow.community.domain.CommentDTO;
+import com.example.janackoverflow.community.domain.CommunityUsersDTO;
+import com.example.janackoverflow.community.domain.MediumArticle;
 import com.example.janackoverflow.global.entity.AuditingFields;
+import com.example.janackoverflow.issue.domain.IssueDTO;
+import com.example.janackoverflow.user.entity.Users;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
+
+import java.util.List;
 
 @Getter
 @Builder
@@ -16,6 +23,10 @@ public class Issue extends AuditingFields {
     @Column(name = "id", nullable = false)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @ManyToOne
+    @JoinColumn(name = "users_id")
+    private Users users;
 
     private int amount;
 
@@ -32,13 +43,54 @@ public class Issue extends AuditingFields {
     private String category;
 
     @Column(nullable = false)
-    private String status;
+    @ColumnDefault(value = "01")
+    private String status; // 해결여부 01: 진행중, 02: 포기, 03: 해결
 
     @Column(nullable = false)
-    private boolean publicStatus;
+    @ColumnDefault(value = "false")
+    private boolean publicStatus; // false : 비공개, true : 공개
 
-    private String keyword;
+    private String keyword; // comma (,) 로 append
 
     @ColumnDefault("0")
     private Integer views;
+
+    public IssueDTO.ResponseDTO toDto(long likes, CommunityUsersDTO communityUsersDTO) {
+        return IssueDTO.ResponseDTO.builder()
+                .id(id)
+                .communityUsersDTO(communityUsersDTO)
+                .title(title)
+                .content(content)
+                .category(category)
+                .code(code)
+                .keyword(keyword)
+                .status(status)
+                .publicStatus(publicStatus)
+                .amount(amount)
+                .likes(likes)
+                .views(views)
+                .build();
+    }
+
+    public IssueDTO.ResponseDTO toDetailDto(long likes, CommunityUsersDTO communityUsersDTO, List<CommentDTO.ResponseDto> commenResponseDtoList, List<MediumArticle> articleList) {
+        return IssueDTO.ResponseDTO.builder()
+                .id(id)
+                .communityUsersDTO(communityUsersDTO)
+                .commenResponseDtoList(commenResponseDtoList)
+                .title(title)
+                .content(content)
+                .category(category)
+                .code(code)
+                .keyword(keyword)
+                .status(status)
+                .publicStatus(publicStatus)
+                .likes(likes)
+                .views(views)
+                .articleList(articleList)
+                .build();
+    }
+
+    public void updateViews() {
+        views += 1;
+    }
 }
