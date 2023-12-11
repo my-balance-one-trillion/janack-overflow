@@ -10,6 +10,9 @@
 .idea/**/dictionaries
 .idea/**/shelf
 
+bfg-1.14.0.jar
+word.txt
+
 # AWS User-specific
 .idea/**/aws.xml
 
