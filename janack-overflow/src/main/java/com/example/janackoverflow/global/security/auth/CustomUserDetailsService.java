@@ -24,17 +24,9 @@ public class CustomUserDetailsService implements UserDetailsService {
         Users findUser = usersService.findByEmail(email);
 
         if ("USER".equals(findUser.getRole())) {
-            return User.builder()
-                    .username(findUser.getEmail()) // 유저 이름
-                    .password(findUser.getPassword()) // 암호화된 "password"
-                    .roles("USER") // 권한 부여
-                    .build();
+            return new NowUserDetails(findUser);
         } else if("ADMIN".equals(findUser.getRole())) {
-            return User.builder()
-                    .username(findUser.getEmail()) // 유저 이름
-                    .password(findUser.getPassword()) // 암호화된 "password"
-                    .roles("ADMIN") // 권한 부여
-                    .build();
+            return new NowUserDetails(findUser);
         } else {
             throw new UsernameNotFoundException("해당 정보를 가진 유저 정보가 존재하지 않습니다 : " + email);
         }

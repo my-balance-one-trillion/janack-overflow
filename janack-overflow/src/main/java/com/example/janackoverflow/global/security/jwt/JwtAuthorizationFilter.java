@@ -71,7 +71,7 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
 			String username = JWT.require(Algorithm.HMAC512(jwtProperties.getSecret()))
 					.build()
 					.verify(token)
-					.getClaim("email")
+					.getClaim("id")
 					.asString();
 
 			System.out.println("doFilterInternal : " + username);
