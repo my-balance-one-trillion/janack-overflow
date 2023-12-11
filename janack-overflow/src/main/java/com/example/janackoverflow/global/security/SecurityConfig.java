@@ -92,7 +92,7 @@ public class SecurityConfig {
                                 .dispatcherTypeMatchers(DispatcherType.FORWARD).permitAll()
                                 .requestMatchers("/image/**", "/css/**", "/", "/login", "/logout", "/signup", "/community/**", "/saving/**").permitAll()
                                 .anyRequest().authenticated()
-                                //해당 url을 제외한 나머지는 인증절차 필요
+                                //해당 url을 제외한 나머지는 인증절차 필요 (403 발생)
                 );
                 //폼 기반 로그인 구성 <- 이거 구현하면 REST api 요청 막혀서 주석처리함
 //                .formLogin((formLogin) ->
