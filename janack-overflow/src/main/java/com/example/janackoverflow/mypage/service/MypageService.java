@@ -57,10 +57,10 @@ public class MypageService {
 //    프로필사진만 교체
     public void updateProfileImage(UsersRequestDTO usersRequestDTO, Long usersId){
         Users users = usersRepository.findById(usersId).orElseThrow(RuntimeException::new);
-        Users updatedUser = users.toBuilder()
+        Users updatedUsers = users.toBuilder()
                 .profileImage(usersRequestDTO.getProfileImage())
                 .build();
-        usersRepository.save(updatedUser);
+        usersRepository.save(updatedUsers);
     }
 
 //    내가 쓴글 보기
