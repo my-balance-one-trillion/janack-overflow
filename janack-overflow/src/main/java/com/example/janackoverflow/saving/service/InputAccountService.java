@@ -1,5 +1,6 @@
 package com.example.janackoverflow.saving.service;
 
+import com.example.janackoverflow.issue.domain.response.IssueResponseDTO;
 import com.example.janackoverflow.saving.domain.request.InputAccountRequestDTO;
 import com.example.janackoverflow.saving.domain.request.SavingRequestDTO;
 import com.example.janackoverflow.saving.domain.response.InputAccountResponseDTO;
@@ -87,9 +88,9 @@ public class InputAccountService {
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "진행 중인 적금 없음"));
 
         // 적금 정보 수정 (적금 이름, 적금 목표명, 적금 목표 금액)
-        updateAccount.setAcntName(inputAccountRequestDTO.getAcntName());
-        updateAccount.setGoalName(inputAccountRequestDTO.getGoalName());
-        updateAccount.setGoalAmount(inputAccountRequestDTO.getGoalAmount());
+        updateAccount.updateAcntName(inputAccountRequestDTO.getAcntName());
+        updateAccount.updateGoalName(inputAccountRequestDTO.getGoalName());
+        updateAccount.updateGoalNum(inputAccountRequestDTO.getGoalAmount());
 
         return inputAccountRepository.save(updateAccount);
     }

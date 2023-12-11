@@ -12,13 +12,13 @@ public class InputAccountResponseDTO {
 
     private  String acntName;
     private String goalName;
-    private int goalNum;
+    private int goalAmount;
 
     public static InputAccountResponseDTO toDto(InputAccount inputAccount){
         return InputAccountResponseDTO.builder()
                 .acntName(inputAccount.getAcntName())
                 .goalName(inputAccount.getGoalName())
-                .goalNum(inputAccount.getGoalAmount())
+                .goalAmount(inputAccount.getGoalAmount())
                 .build();
     }
 }

@@ -8,7 +8,6 @@ import lombok.*;
 import java.time.LocalDateTime;
 
 @Getter
-@Setter
 @Entity
 @Table(name = "input_account")
 @Builder
@@ -57,4 +56,10 @@ public class InputAccount extends AuditingFields {
     public void updateCompletedAt() {
         this.completedAt = LocalDateTime.now();
     }
+
+    public void updateAcntName(String newAcntName){ this.acntName = newAcntName; }
+
+    public void updateGoalName(String newGoalName) { this.goalName = newGoalName; }
+
+    public void updateGoalNum(int newGoalAmount) { this.goalAmount = newGoalAmount; }
 }
