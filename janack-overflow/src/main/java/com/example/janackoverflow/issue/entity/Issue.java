@@ -2,10 +2,9 @@ package com.example.janackoverflow.issue.entity;
 
 import com.example.janackoverflow.community.domain.CommentDTO;
 import com.example.janackoverflow.community.domain.CommunityUsersDTO;
-import com.example.janackoverflow.community.entity.Likes;
+import com.example.janackoverflow.community.domain.MediumArticle;
 import com.example.janackoverflow.global.entity.AuditingFields;
 import com.example.janackoverflow.issue.domain.IssueDTO;
-import com.example.janackoverflow.user.domain.response.UsersResponseDTO;
 import com.example.janackoverflow.user.entity.Users;
 import jakarta.persistence.*;
 import lombok.*;
@@ -73,7 +72,7 @@ public class Issue extends AuditingFields {
                 .build();
     }
 
-    public IssueDTO.ResponseDTO toDetailDto(long likes, CommunityUsersDTO communityUsersDTO, List<CommentDTO.ResponseDto> commenResponseDtoList) {
+    public IssueDTO.ResponseDTO toDetailDto(long likes, CommunityUsersDTO communityUsersDTO, List<CommentDTO.ResponseDto> commenResponseDtoList, List<MediumArticle> articleList) {
         return IssueDTO.ResponseDTO.builder()
                 .id(id)
                 .communityUsersDTO(communityUsersDTO)
@@ -87,6 +86,7 @@ public class Issue extends AuditingFields {
                 .publicStatus(publicStatus)
                 .likes(likes)
                 .views(views)
+                .articleList(articleList)
                 .build();
     }
 
