@@ -4,9 +4,11 @@ import com.example.janackoverflow.saving.entity.Rule;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.Optional;
+
 @Repository
 public interface RuleRepository extends JpaRepository<Rule, Long> {
 
-    Rule findByInputAccountId(long accountId);
-    Rule findByUsersId(Long id);
+    Rule findByInputAccountId(Long accountId);
+    Optional<Rule> findByInputAccountIdAndUsersId(Long accountId, Long usersId);
 }
