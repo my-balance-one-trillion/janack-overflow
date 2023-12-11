@@ -68,26 +68,22 @@ public class SecurityConfig {
         // jwt Filter 적용
         http.addFilterBefore(jwtAuthorizationFilter, UsernamePasswordAuthenticationFilter.class);
 
-        http.csrf(AbstractHttpConfigurer::disable)
+        http.csrf(AbstractHttpConfigurer::disable);
 
-                //'USER' 역할 사용자가 '/mypage' URL 패턴에 해당하는 요청 권한을 가진다
-                .authorizeHttpRequests((authorizeRequests) ->
-                        authorizeRequests
-                                .requestMatchers("/mypage", "/mypage/**").hasRole("USER")
-                )
-                //'ADMIN' 역할 사용자가 해당 URL 패턴에 해당하는 요청 권한을 가진다
-                .authorizeHttpRequests((authorizeRequests) ->
-                        authorizeRequests
-                                .requestMatchers("/mypage", "/mypage/**", "/admin", "/admin/**").hasRole("ADMIN")
-                )
-                // 모든 유저에게 해당 URL 패턴 개방 (화이트 리스트)
-                .authorizeHttpRequests((authorizeRequests) ->
+        //'USER' 역할 사용자가 '/mypage' URL 패턴에 해당하는 요청 권한을 가진다
+        http.authorizeHttpRequests((authorizeRequests) ->
                         authorizeRequests
                                 .dispatcherTypeMatchers(DispatcherType.FORWARD).permitAll()
-                                .requestMatchers("/image/**", "/css/**", "/", "/login", "/logout", "/signup", "/community/**", "/saving/**").permitAll()
+                                .requestMatchers("/image/**", "/css/**", "/", "/login", "/logout", "/signup", "/community/**", "/saving/**").permitAll() //화이트리스트
+                                .requestMatchers("/mypage", "/mypage/**").hasRole("USER") //USER만 접근 가능
+                                .requestMatchers("/mypage", "/mypage/**", "/admin", "/admin/**").hasRole("ADMIN") //ADMIN만 접근 가능
                                 .anyRequest().authenticated()
-                                //해당 url을 제외한 나머지는 인증절차 필요 (403 발생)
-                );
+                                //위에 작성된 url을 제외한 나머지는 인증절차 필요 (403 발생)
+                ).exceptionHandling((exceptionHandling) ->
+                        exceptionHandling
+                                .accessDeniedPage("/login"));
+                                //권한이 없는 사용자를 '/login' 으로 이동
+
                 //폼 기반 로그인 구성 <- 이거 구현하면 REST api 요청 막혀서 주석처리함
 //                .formLogin((formLogin) ->
 //                        formLogin

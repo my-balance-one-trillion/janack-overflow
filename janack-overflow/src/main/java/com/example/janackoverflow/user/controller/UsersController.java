@@ -26,7 +26,7 @@ public class UsersController {
             return new ResponseEntity<>("중복되는 이메일입니다", HttpStatus.FORBIDDEN);
         } else {
             usersRequestDTO.setRole("USER"); //역활
-            usersRequestDTO.setStatus("1"); //상태
+            usersRequestDTO.setStatus("01"); //상태
             usersRequestDTO.setProfileImage("default.png"); //프로필 이미지
 
             usersService.createUser(usersRequestDTO);
