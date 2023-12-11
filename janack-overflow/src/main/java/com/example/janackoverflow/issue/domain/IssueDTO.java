@@ -2,6 +2,7 @@ package com.example.janackoverflow.issue.domain;
 
 import com.example.janackoverflow.community.domain.CommentDTO;
 import com.example.janackoverflow.community.domain.CommunityUsersDTO;
+import com.example.janackoverflow.community.domain.MediumArticle;
 import com.example.janackoverflow.community.entity.Comment;
 import com.example.janackoverflow.community.entity.Likes;
 import com.example.janackoverflow.issue.entity.Issue;
@@ -69,5 +70,6 @@ public class IssueDTO {
         private long likes;
         private CommunityUsersDTO communityUsersDTO;
         private List<CommentDTO.ResponseDto> commenResponseDtoList;
+        private List<MediumArticle> articleList;
     }
 }
