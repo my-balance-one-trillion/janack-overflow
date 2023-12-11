@@ -7,7 +7,7 @@ import lombok.*;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class ChatMessageDTO {
+public class ChatDTO {
     public enum MessageType{
         ENTER, TALK, QUIT;
     }
@@ -15,4 +15,5 @@ public class ChatMessageDTO {
     private int roomId;
     private String sender;
     private String message;
+    private String time;
 }
