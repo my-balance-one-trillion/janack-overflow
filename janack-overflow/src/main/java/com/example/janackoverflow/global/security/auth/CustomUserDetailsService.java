@@ -3,7 +3,6 @@ package com.example.janackoverflow.global.security.auth;
 import com.example.janackoverflow.user.entity.Users;
 import com.example.janackoverflow.user.service.UsersService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
