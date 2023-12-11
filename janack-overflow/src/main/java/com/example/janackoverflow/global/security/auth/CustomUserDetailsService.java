@@ -15,6 +15,11 @@ public class CustomUserDetailsService implements UserDetailsService {
     @Autowired
     private UsersService usersService;
 
+    @Autowired
+    public CustomUserDetailsService(UsersService usersService){
+        this.usersService = usersService;
+    }
+
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         //사용자 Role에 따라 두 가지 역할을 부여하는 코드를 작성했습니다.
