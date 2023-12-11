@@ -4,6 +4,7 @@ import com.example.janackoverflow.community.domain.CommunityUsersDTO;
 import com.example.janackoverflow.community.domain.MediumArticle;
 import com.example.janackoverflow.global.entity.AuditingFields;
 import com.example.janackoverflow.issue.domain.IssueDTO;
+import com.example.janackoverflow.issue.domain.request.CreateIssueRequestDTO;
 import com.example.janackoverflow.user.entity.Users;
 import jakarta.persistence.*;
 import lombok.*;
@@ -71,7 +72,19 @@ public class Issue extends AuditingFields {
                 .views(views)
                 .build();
     }
-  
+
+    public void updateStatus(String newStatus) {
+        this.status = newStatus;
+    }
+
+    public void updateAmount(int newAmount) {
+        this.amount = newAmount;
+    }
+
+    public void updatePublicStatus(Boolean newPublicStatus){
+        this.publicStatus = newPublicStatus;
+    }
+
     public IssueDTO.ResponseDTO toDetailDto(long likes, CommunityUsersDTO communityUsersDTO, List<CommentDTO.ResponseDto> commenResponseDtoList, List<MediumArticle> articleList) {
         return IssueDTO.ResponseDTO.builder()
                 .id(id)
