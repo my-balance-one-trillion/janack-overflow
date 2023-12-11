@@ -84,7 +84,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests((authorizeRequests) ->
                         authorizeRequests
                                 .dispatcherTypeMatchers(DispatcherType.FORWARD).permitAll()
-                                .requestMatchers("/image/**", "/css/**", "/", "/login", "/logout", "/signup", "/community/**", "/saving/**").permitAll()
+                                .requestMatchers("/image/**", "/css/**", "/", "/login", "/logout", "/signup", "/community/**", "/savings/**", "/issues/**").permitAll()
                                 .anyRequest().authenticated()
                                 //해당 url을 제외한 나머지는 인증절차 필요 (403 발생)
                 );

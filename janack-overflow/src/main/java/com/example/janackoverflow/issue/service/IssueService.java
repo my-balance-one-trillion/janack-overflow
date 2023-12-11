@@ -115,10 +115,10 @@ public class IssueService {
 
     // 에러 상태 변경 (포기)
     @Transactional
-    public IssueResponseDTO updateIssueStatus(Long issueId) {
+    public Issue updateIssueStatus(Long issueId) {
         Issue issue =  issueRepository.findById(issueId)
                 .orElseThrow(() -> new BusinessLogicException(ExceptionCode.ERROR_NOT_FOUND));
         issue.updateStatus("02");
-        return IssueResponseDTO.toDto(issue);
+        return issueRepository.save(issue);
     }
 }
