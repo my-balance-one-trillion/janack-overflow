@@ -93,10 +93,9 @@ public class CommunityController {
     }
 
     @GetMapping(value = "/solvedissue/filter")
-    public ResponseEntity<Page<IssueDTO.ResponseDTO>> filterCategory(@RequestParam(value = "title", required = false) String title,
-                                                                     @RequestParam(value = "category", required = false) String category) {
+    public ResponseEntity<Page<IssueDTO.ResponseDTO>> filterCategory(@RequestParam(value = "category", required = false) String category) {
 
-        return null;
+        return ResponseEntity.ok(communityService.filterCategory(category));
     }
 }
 

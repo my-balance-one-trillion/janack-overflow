@@ -78,6 +78,18 @@ public class CommunityService {
                             new IllegalArgumentException("해당 유저를 찾을 수 없습니다.")).toIssueDto()));
     }
 
+    public Page<IssueDTO.ResponseDTO> filterCategory(String category) {
+        List<String> categories = new ArrayList<>();
+        if(category != null){
+            categories = Arrays.asList(category.split(","));
+        }
+        Pageable pageable = PageRequest.of(0, 10, Sort.by(Sort.Direction.DESC, "id"));
+        return communityRepositoryImpl.findAllByCategory(categories, pageable).map(issue ->
+                issue.toDto(likesService.getIssueLikes(issue.getId()),
+                        usersRepository.findById(issue.getUsers().getId()).orElseThrow(() ->
+                                new IllegalArgumentException("해당 유저를 찾을 수 없습니다.")).toIssueDto()));
+    }
+
     public Page<IssueDTO.ResponseDTO> search(String title, String category) {
         List<String> categories = new ArrayList<>();
         if(category != null){
@@ -85,7 +97,7 @@ public class CommunityService {
         }
 
         Pageable pageable = PageRequest.of(0, 10, Sort.by(Sort.Direction.DESC, "id"));
-        List<IssueDTO.ResponseDTO> issuePageList = communityRepositoryImpl.findAllByCategory(title, categories, pageable).map(issue ->
+        List<IssueDTO.ResponseDTO> issuePageList = communityRepositoryImpl.findAllByCategoryOrTitile(title, categories, pageable).map(issue ->
                 issue.toDto(likesService.getIssueLikes(issue.getId()),
                         usersRepository.findById(issue.getUsers().getId()).orElseThrow(() ->
                                 new IllegalArgumentException("해당 유저를 찾을 수 없습니다.")).toIssueDto())).toList();

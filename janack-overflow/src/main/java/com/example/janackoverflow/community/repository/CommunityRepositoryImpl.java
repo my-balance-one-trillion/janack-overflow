@@ -34,7 +34,7 @@ public class CommunityRepositoryImpl implements CommunityRepository {
     }
 
     @Override
-    public Page<Issue> findAllByCategory(String title, List<String> category, Pageable pageable) {
+    public Page<Issue> findAllByCategoryOrTitile(String title, List<String> category, Pageable pageable) {
         List<Issue> Issues = jpaQueryFactory.selectFrom(issue)
                 .where(eqCategories(category).or(eqTitle(title)))
                 .orderBy(new OrderSpecifier<>(Order.DESC, issue.createdAt))
@@ -42,7 +42,19 @@ public class CommunityRepositoryImpl implements CommunityRepository {
                 .limit(pageable.getPageSize())
                 .fetch();
 
-        return new PageImpl<>(Issues, pageable, getCategoryCount(title, category));
+        return new PageImpl<>(Issues, pageable, getTitleCategoryCount(title, category));
+    }
+
+    @Override
+    public Page<Issue> findAllByCategory(List<String> category, Pageable pageable) {
+        List<Issue> Issues = jpaQueryFactory.selectFrom(issue)
+                .where(eqCategories(category))
+                .orderBy(new OrderSpecifier<>(Order.DESC, issue.createdAt))
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize())
+                .fetch();
+
+        return new PageImpl<>(Issues, pageable, getCategoryCount(category));
     }
 
     private Long getCount(String keyword) {
@@ -52,10 +64,17 @@ public class CommunityRepositoryImpl implements CommunityRepository {
                 .fetchOne();
     }
 
-    private Long getCategoryCount(String title, List<String> category) {
+    private Long getTitleCategoryCount(String title, List<String> category) {
         return jpaQueryFactory.select(issue.count())
                 .from(issue)
                 .where(eqCategories(category).or(eqTitle(title)))
+                .fetchOne();
+    }
+
+    private Long getCategoryCount(List<String> category) {
+        return jpaQueryFactory.select(issue.count())
+                .from(issue)
+                .where(eqCategories(category))
                 .fetchOne();
     }
 
