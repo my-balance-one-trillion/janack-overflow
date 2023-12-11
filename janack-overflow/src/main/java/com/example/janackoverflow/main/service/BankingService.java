@@ -39,7 +39,6 @@ public class BankingService {
     private String acntNum;
     @Value("${external.api.fin-acno}")
     private String finAcno;
-    //출금 계좌 입력(인증)
 
 //    계좌 생성
     public String createAccount(Long id) throws JsonProcessingException {
