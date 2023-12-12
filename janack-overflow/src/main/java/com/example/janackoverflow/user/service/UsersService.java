@@ -66,7 +66,7 @@ public class UsersService {
 
     public void updateUser(UsersRequestDTO usersRequestDTO, long id){ //회원 정보 수정
         Users users = usersRepository.findById(id).orElseThrow(RuntimeException::new);
-        if(users.getPassword().equals(usersRequestDTO.getPassword())){
+        if(passwordEncoder.matches(usersRequestDTO.getPassword(), users.getPassword())){
             Users updatedUser = users.toBuilder()
                     .email(usersRequestDTO.getEmail())
                     .digit(usersRequestDTO.getDigit())
