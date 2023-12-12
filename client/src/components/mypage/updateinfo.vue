@@ -163,5 +163,22 @@
     </form>
   </article>
 </template>
-<script setup></script>
+
+<script setup>
+import axios from 'axios';
+const token = localStorage.getItem('token');
+console.log(token);
+  async function readInfo(){
+    const response = await axios.get('/mypage/myinfo', {
+      headers: {
+      'authorization': token,
+    },
+    });
+    const { data } = response.data;
+    console.log(data);
+  }
+
+  readInfo();
+
+</script>
 <style scoped></style>
