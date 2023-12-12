@@ -1,5 +1,9 @@
 <script setup></script>
 
-<template></template>
+<template>
+    <div class="page-wrapper">
+      <router-view />
+  </div>
+</template>
 
 <style scoped></style>
