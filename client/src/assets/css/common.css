@@ -40,6 +40,9 @@ body {
   font-weight: 700;
 }
 
+.esa-light {
+  font-weight: 300;
+}
 /* 
 헤더 nav transform 
 */
