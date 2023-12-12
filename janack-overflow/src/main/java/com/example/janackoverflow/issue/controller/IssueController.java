@@ -1,5 +1,6 @@
 package com.example.janackoverflow.issue.controller;
 
+import com.example.janackoverflow.global.security.auth.NowUserDetails;
 import com.example.janackoverflow.issue.domain.request.CreateIssueRequestDTO;
 import com.example.janackoverflow.issue.domain.request.CreateSolutionRequestDTO;
 import com.example.janackoverflow.issue.domain.response.IssueResponseDTO;
@@ -10,11 +11,10 @@ import com.example.janackoverflow.issue.service.IssueService;
 import com.example.janackoverflow.issue.service.SolutionService;
 import com.example.janackoverflow.user.entity.Users;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.Errors;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -36,11 +36,9 @@ public class IssueController {
 
     // 에러 등록
     @PostMapping
-    public ResponseEntity<?> createIssue(@Validated @RequestBody CreateIssueRequestDTO issueRequestDTO, BindingResult bindingResult){
-        // 회원번호 1번으로 강제 설정
-        Users users = new Users();
-        users.setId(3L);
-
+    public ResponseEntity<?> createIssue(@Validated @RequestBody CreateIssueRequestDTO issueRequestDTO,
+                                         BindingResult bindingResult, @AuthenticationPrincipal NowUserDetails userDetails){
+        Users users = userDetails.getUser();
         if(bindingResult.hasErrors()){
             String message = Objects.requireNonNull(bindingResult.getFieldError()).getDefaultMessage();
             return new ResponseEntity<>(message, HttpStatus.BAD_REQUEST);
@@ -87,7 +85,7 @@ public class IssueController {
     // 에러 해결 포기
     @PatchMapping("{issueId}/giveup")
     public ResponseEntity<?> giveUpIssue(@PathVariable Long issueId){
-        IssueResponseDTO issue = issueService.updateIssueStatus(issueId);
+        Issue issue = issueService.updateIssueStatus(issueId);
         return new ResponseEntity<>(issue, HttpStatus.OK);
     }
 }

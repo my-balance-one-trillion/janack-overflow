@@ -7,6 +7,7 @@ import Saving from "@/pages/Saving.vue";
 import SignUp from "@/pages/SignUp.vue";
 import Community from "@/pages/Community.vue";
 import Detail from "@/pages/CommunityDetail.vue";
+import Mypage from "@/pages/Mypage.vue";
 
 const routes = [
   { path: "/", component: Main },
@@ -16,11 +17,12 @@ const routes = [
   { path: "/signup", component: SignUp },
   { path: "/community", component: Community },
   { path: '/community/detail', component: Detail },
+  { path: "/mypage", component: Mypage },
 ];
 
 const router = createRouter({
-    history: createWebHistory(),
-    routes,
-  });
+  history: createWebHistory(),
+  routes,
+});
 
 export default router;

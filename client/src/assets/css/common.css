@@ -7,29 +7,30 @@
 @import "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css";
 
 @font-face {
-  font-family: "GongGothicMedium";
-  src: url("https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_20-10@1.0/GongGothicMedium.woff")
-    format("woff");
-  font-weight: normal;
-  font-style: normal;
+    font-family: "GongGothicMedium";
+    src: url("https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_20-10@1.0/GongGothicMedium.woff") format("woff");
+    font-weight: normal;
+    font-style: normal;
 }
 
 @font-face {
-  font-family: "D2Coding";
-  src: url("https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_three@1.0/D2Coding.woff")
-    format("woff");
-  font-weight: normal;
-  font-style: normal;
+    font-family: "D2Coding";
+    src: url("https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_three@1.0/D2Coding.woff") format("woff");
+    font-weight: normal;
+    font-style: normal;
 }
 
 /* common */
 body {
     padding: 0;
-  }
-  .page-wrapper {
+    font-family: "GongGothicMedium";
+}
+
+.page-wrapper {
     width: 1300px;
     margin: 0 auto;
-  }
+}
+
 /*
 
 헤더 nav transform
@@ -37,12 +38,13 @@ body {
 */
 .bars-wrap {
     position: relative;
-  }
-  #menu {
+}
+
+#menu {
     z-index: 2;
-  }
-  
-  #menu-bar {
+}
+
+#menu-bar {
     top: 0;
     right: 0;
     position: absolute;
@@ -50,60 +52,60 @@ body {
     height: 40px;
     margin: 30px 0 70px 20px;
     cursor: pointer;
-  }
-  
-  .bar {
+}
+
+.bar {
     height: 5px;
     width: 100%;
     background-color: #000;
     display: block;
     border-radius: 5px;
     transition: 0.3s ease;
-  }
-  
-  #bar1 {
+}
+
+#bar1 {
     transform: translateY(-4px);
-  }
-  
-  #bar3 {
+}
+
+#bar3 {
     transform: translateY(4px);
-  }
-  
-  .nav {
+}
+
+.nav {
     margin-top: 65px;
     transition: 0.3s ease;
     display: none;
     width: 16rem;
-  }
-  
-  .nav ul {
+}
+
+.nav ul {
     padding: 0 0 0 22px;
-  }
-  
-  .nav li {
+}
+
+.nav li {
     list-style: none;
     padding: 12px 0;
     text-align: right;
-  }
-  
-  .nav li a {
+}
+
+.nav li a {
     color: white;
     font-size: 25px;
     text-decoration: none;
-  }
-  
-  .nav li a:hover {
+}
+
+.nav li a:hover {
     font-weight: bold;
-  }
-  
-  .menu-bg,
-  #menu {
+}
+
+.menu-bg,
+#menu {
     top: -25px;
     right: -15px;
     position: absolute;
-  }
-  
-  .menu-bg {
+}
+
+.menu-bg {
     z-index: 1;
     width: 0;
     height: 0;
@@ -111,132 +113,152 @@ body {
     background: radial-gradient(circle, #BF1131, #BF1131);
     border-radius: 50%;
     transition: 0.3s ease;
-  }
-  
-  .change {
+}
+
+.change {
     display: block;
-  }
-  
-  .change .bar {
+}
+
+.change .bar {
     background-color: white;
-  }
-  
-  .change #bar1 {
+}
+
+.change #bar1 {
     transform: translateY(4px) rotateZ(-45deg);
-  }
-  
-  .change #bar2 {
+}
+
+.change #bar2 {
     opacity: 0;
-  }
-  
-  .change #bar3 {
+}
+
+.change #bar3 {
     transform: translateY(-6px) rotateZ(45deg);
-  }
-  
-  .change-bg {
+}
+
+.change-bg {
     width: 520px;
     height: 470px;
     transform: translate(60%, -30%);
-  }
+}
 
 /*
  * search btn
  */
-  .glow {
+.glow {
     top: -10%;
     left: -10%;
     width: 120%;
     height: 120%;
     border-radius: 100%;
-  }
-  
-  .glow-1 {
+}
+
+.glow-1 {
     animation: glow1 4s linear infinite;
-  }
-  
-  .glow-2 {
+}
+
+.glow-2 {
     animation: glow2 4s linear infinite;
     animation-delay: 100ms;
-  }
-  
-  .glow-3 {
+}
+
+.glow-3 {
     animation: glow3 4s linear infinite;
     animation-delay: 200ms;
-  }
-  
-  .glow-4 {
+}
+
+.glow-4 {
     animation: glow4 4s linear infinite;
     animation-delay: 300ms;
-  }
-  
-  @keyframes glow1 {
+}
+
+@keyframes glow1 {
     0% {
-      transform: translate(10%, 10%) scale(1);
+        transform: translate(10%, 10%) scale(1);
     }
+
     25% {
-      transform: translate(-10%, 10%) scale(1);
+        transform: translate(-10%, 10%) scale(1);
     }
+
     50% {
-      transform: translate(-10%, -10%) scale(1);
+        transform: translate(-10%, -10%) scale(1);
     }
+
     75% {
-      transform: translate(10%, -10%) scale(1);
+        transform: translate(10%, -10%) scale(1);
     }
+
     100% {
-      transform: translate(10%, 10%) scale(1);
+        transform: translate(10%, 10%) scale(1);
     }
-  }
-  
-  @keyframes glow2 {
+}
+
+@keyframes glow2 {
     0% {
-      transform: translate(-10%, -10%) scale(1);
+        transform: translate(-10%, -10%) scale(1);
     }
+
     25% {
-      transform: translate(10%, -10%) scale(1);
+        transform: translate(10%, -10%) scale(1);
     }
+
     50% {
-      transform: translate(10%, 10%) scale(1);
+        transform: translate(10%, 10%) scale(1);
     }
+
     75% {
-      transform: translate(-10%, 10%) scale(1);
+        transform: translate(-10%, 10%) scale(1);
     }
+
     100% {
-      transform: translate(-10%, -10%) scale(1);
+        transform: translate(-10%, -10%) scale(1);
     }
-  }
-  
-  @keyframes glow3 {
+}
+
+@keyframes glow3 {
     0% {
-      transform: translate(-10%, 10%) scale(1);
+        transform: translate(-10%, 10%) scale(1);
     }
+
     25% {
-      transform: translate(-10%, -10%) scale(1);
+        transform: translate(-10%, -10%) scale(1);
     }
+
     50% {
-      transform: translate(10%, -10%) scale(1);
+        transform: translate(10%, -10%) scale(1);
     }
+
     75% {
-      transform: translate(10%, 10%) scale(1);
+        transform: translate(10%, 10%) scale(1);
     }
+
     100% {
-      transform: translate(-10%, 10%) scale(1);
+        transform: translate(-10%, 10%) scale(1);
     }
-  }
-  
-  @keyframes glow4 {
+}
+
+@keyframes glow4 {
     0% {
-      transform: translate(10%, -10%) scale(1);
+        transform: translate(10%, -10%) scale(1);
     }
+
     25% {
-      transform: translate(10%, 10%) scale(1);
+        transform: translate(10%, 10%) scale(1);
     }
+
     50% {
-      transform: translate(-10%, 10%) scale(1);
+        transform: translate(-10%, 10%) scale(1);
     }
+
     75% {
-      transform: translate(-10%, -10%) scale(1);
+        transform: translate(-10%, -10%) scale(1);
     }
+
     100% {
-      transform: translate(10%, -10%) scale(1);
+        transform: translate(10%, -10%) scale(1);
     }
-  }
+}
+
+.bold {
+    font-weight: 700;
+}
