@@ -1,5 +1,7 @@
 package com.example.janackoverflow.main.service;
 
+import com.example.janackoverflow.community.service.LikesService;
+import com.example.janackoverflow.issue.domain.IssueDTO;
 import com.example.janackoverflow.issue.domain.response.IssueResponseDTO;
 import com.example.janackoverflow.issue.entity.Issue;
 import com.example.janackoverflow.issue.repository.IssueRepository;
@@ -29,6 +31,8 @@ public class MainService {
 
     @Autowired
     private UsersRepository usersRepository;
+    @Autowired
+    private LikesService likesService;
 
     //적금 호출 status= "01", user 같은 경우
     public NowAccountResponseDTO readNowAccount(Long userId){
@@ -54,9 +58,12 @@ public class MainService {
                 .toList();
     }
     //최근 이슈 10개
-    public List<IssueResponseDTO> readRecent10Issues(){
+    public List<IssueDTO.ResponseDTO> readRecent10Issues(){
+//        return issueRepository.findTop10ByOrderByCreatedAtDesc()
+//                .stream().map(IssueResponseDTO::toDto)
+//                .toList();
         return issueRepository.findTop10ByOrderByCreatedAtDesc()
-                .stream().map(IssueResponseDTO::toDto)
+                .stream().map(issue -> issue.toDto(likesService.getIssueLikes(issue.getId()), usersRepository.findById(issue.getUsers().getId()).get().toIssueDto()))
                 .toList();
     }
 

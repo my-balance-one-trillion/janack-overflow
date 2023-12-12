@@ -46,7 +46,7 @@ public class SecurityConfig {
         corsConfiguration.setAllowedHeaders(List.of("Authorization", "Cache-Control", "Content-Type"));
 
         //허용된 오리진(출처)설정 - 임의로 모든 도메인 요청 허용 *
-        corsConfiguration.setAllowedOrigins(List.of("*"));
+        corsConfiguration.setAllowedOrigins(List.of("*", "http://localhost:5173"));
 
         //허용된 HTTP 메서드 설정
         corsConfiguration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "PUT","OPTIONS","PATCH", "DELETE"));

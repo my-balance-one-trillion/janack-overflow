@@ -1,5 +1,6 @@
 package com.example.janackoverflow.main.controller;
 
+import com.example.janackoverflow.issue.domain.IssueDTO;
 import com.example.janackoverflow.issue.domain.response.IssueResponseDTO;
 import com.example.janackoverflow.issue.entity.Issue;
 import com.example.janackoverflow.main.domain.NowAccountResponseDTO;
@@ -29,7 +30,7 @@ public class MainController {
     //비로그인 시 메인페이지
     @GetMapping
     private ResponseEntity<?> getUnLoggedInMainPage(){
-        List<IssueResponseDTO> issueResponseDTOList = mainService.readRecent10Issues();
+        List<IssueDTO.ResponseDTO> issueResponseDTOList = mainService.readRecent10Issues();
         return ResponseEntity.ok(issueResponseDTOList);
     }
     //로그인 시 메인페이지
