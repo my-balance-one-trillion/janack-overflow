@@ -7,7 +7,7 @@
             <div class="mx-auto">
                 <button><i class="fa-regular fa-circle-user fa-2xl"></i></button>
             </div>
-            <div class="mx-auto">
+            <div class="mx-auto bars-wrap">
                 <button id="menu">
                     <div ref="menuBar" id="menu-bar" @click="menuOnClick">
                         <div id="bar1" class="bar"></div>
@@ -29,15 +29,15 @@
     </div>
 </template>
 <script setup>
-    import { ref } from 'vue';
+import { ref } from 'vue';
 
-    const menuBar = ref(null);
-    const nav = ref(null);
-    const menuBg = ref(null);
+const menuBar = ref(null);
+const nav = ref(null);
+const menuBg = ref(null);
 
-    function menuOnClick() {
-        menuBar.value.classList.toggle("change");
-        nav.value.classList.toggle("change");
-        menuBg.value.classList.toggle("change-bg");
-    }
+function menuOnClick() {
+    menuBar.value.classList.toggle("change");
+    nav.value.classList.toggle("change");
+    menuBg.value.classList.toggle("change-bg");
+}
 </script>

@@ -16,6 +16,7 @@ module.exports = {
             'main-sm-text': '#AAB4DA',
             'white': '#ffffff',
             'black': '#000000',
+            'badge-bg' : '#F6F2F2'
         },
     },
   },
