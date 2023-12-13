@@ -1,5 +1,5 @@
 <template>
-  <div class="min-h-screen bg-gray-100 py-6 flex flex-col justify-center sm:py-12">
+  <div class="min-h-screen bg-gray-100 py-6 flex flex-col  sm:py-12">
     <div class="relative py-3 sm:max-w-xl sm:mx-auto">
       <div class="absolute inset-0 bg-gradient-to-r 
       from-red-300 to-red-600 shadow-lg transform 
@@ -14,9 +14,10 @@
           <div class="divide-y divide-gray-200">
             <div class="py-8 text-base leading-6 space-y-4 text-gray-700 sm:text-lg sm:leading-7">
               <div class="relative">
+                <form>
                 <div class="relative">
                   <input autocomplete="off" id="email" name="email" type="text" v-model="state.input.email"
-                  class="peer placeholder-transparent h-10 w-full border-t-0 border-l-0 border-r-0 border-b-2
+                  class="focus:ouline-none focus:ring-0 peer placeholder-transparent h-10 w-full border-t-0 border-l-0 border-r-0 border-b-2
                   border-red-700 text-gray-900 
                   focus:outline-none focus:borer-rose-600" placeholder="Email" required/>
                   <label for="email" 
@@ -29,51 +30,84 @@
                 
                 <div class="relative">
                   <input autocomplete="off" id="password" name="password" type="password" v-model="state.input.password"
-                  class="peer placeholder-transparent h-10 w-full border-t-0 border-l-0 border-r-0 border-b-2 
+                  class="focus:ouline-none focus:ring-0 peer placeholder-transparent h-10 w-full border-t-0 border-l-0 border-r-0 border-b-2 
                   border-red-700 text-gray-900 focus:outline-none focus:borer-rose-600" placeholder="Password" required/>
                   <label for="password" 
-                  class="absolute left-0 -top-3.5 text-gray-600 text-sm peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-440 peer-placeholder-shown:top-2 transition-all peer-focus:-top-3.5 peer-focus:text-gray-600 peer-focus:text-sm">Password</label>
+                  class="absolute left-0 -top-3.5 text-gray-600 text-sm peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-440 peer-placeholder-shown:top-2 transition-all peer-focus:-top-3.5 peer-focus:text-gray-600 peer-focus:text-sm">패스워드</label>
                 </div>
 
                 <br>
                 
                 <div class="relative">
                   <input autocomplete="off" id="name" name="name" type="text" v-model="state.input.name"
-                  class="peer placeholder-transparent h-10 w-full border-t-0 border-l-0 border-r-0 border-b-2 
+                  class="focus:ouline-none focus:ring-0 peer placeholder-transparent h-10 w-full border-t-0 border-l-0 border-r-0 border-b-2 
                   border-red-700 text-gray-900 focus:outline-none focus:borer-rose-600" placeholder="Name" required/>
                   <label for="name" 
-                  class="absolute left-0 -top-3.5 text-gray-600 text-sm peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-440 peer-placeholder-shown:top-2 transition-all peer-focus:-top-3.5 peer-focus:text-gray-600 peer-focus:text-sm">Name</label>
+                  class="absolute left-0 -top-3.5 text-gray-600 text-sm peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-440 peer-placeholder-shown:top-2 transition-all peer-focus:-top-3.5 peer-focus:text-gray-600 peer-focus:text-sm">이름</label>
                 </div>
 
                 <br>
                 
                 <div class="relative">
                   <input autocomplete="off" id="nickName" name="nickName" type="text" v-model="state.input.nickname"
-                  class="peer placeholder-transparent h-10 w-full border-t-0 border-l-0 border-r-0 border-b-2 
+                  class="focus:ouline-none focus:ring-0 peer placeholder-transparent h-10 w-full border-t-0 border-l-0 border-r-0 border-b-2 
                   border-red-700 text-gray-900 focus:outline-none focus:borer-rose-600" placeholder="Nick Name" required/>
                   <label for="nickName" 
-                  class="absolute left-0 -top-3.5 text-gray-600 text-sm peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-440 peer-placeholder-shown:top-2 transition-all peer-focus:-top-3.5 peer-focus:text-gray-600 peer-focus:text-sm">Nick Name</label>
+                  class="absolute left-0 -top-3.5 text-gray-600 text-sm peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-440 peer-placeholder-shown:top-2 transition-all peer-focus:-top-3.5 peer-focus:text-gray-600 peer-focus:text-sm">닉네임</label>
                 </div>
 
                 <br>
                 
                 <div class="relative">
                   <input autocomplete="off" id="digit" name="digit" type="text" v-model="state.input.digit"
-                  class="peer placeholder-transparent h-10 w-full border-t-0 border-l-0 border-r-0 border-b-2 
+                  class="focus:ouline-none focus:ring-0 peer placeholder-transparent h-10 w-full border-t-0 border-l-0 border-r-0 border-b-2 
                   border-red-700 text-gray-900 focus:outline-none focus:borer-rose-600" placeholder="Digit" required/>
                   <label for="digit" 
-                  class="absolute left-0 -top-3.5 text-gray-600 text-sm peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-440 peer-placeholder-shown:top-2 transition-all peer-focus:-top-3.5 peer-focus:text-gray-600 peer-focus:text-sm">Digit</label>
+                  class="absolute left-0 -top-3.5 text-gray-600 text-sm peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-440 peer-placeholder-shown:top-2 transition-all peer-focus:-top-3.5 peer-focus:text-gray-600 peer-focus:text-sm">전화번호</label>
                 </div>
+
+                <br>
+
+                <div class="flex justify-between gap-3">
+                  <div class="relative">
+                    <input autocomplete="off" id="bankName" name="bankName" type="text" v-model="state.input.bankName"
+                    class="focus:ouline-none focus:ring-0 peer placeholder-transparent h-10 w-full border-t-0 border-l-0 border-r-0 border-b-2 
+                    border-red-700 text-gray-900 focus:outline-none focus:borer-rose-600" placeholder="bankName" required/>
+                    <label for="bankName" 
+                    class="absolute left-0 -top-3.5 text-gray-600 text-sm peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-440 peer-placeholder-shown:top-2 transition-all peer-focus:-top-3.5 peer-focus:text-gray-600 peer-focus:text-sm">은행명</label>
+                  </div>
+
+                  <div class="relative">
+                    <input autocomplete="off" id="holder" name="holder" type="text" v-model="state.input.holder"
+                    class="focus:ouline-none focus:ring-0 peer placeholder-transparent h-10 w-full border-t-0 border-l-0 border-r-0 border-b-2 
+                    border-red-700 text-gray-900 focus:outline-none focus:borer-rose-600" placeholder="holder" required/>
+                    <label for="holder" 
+                    class="absolute left-0 -top-3.5 text-gray-600 text-sm peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-440 peer-placeholder-shown:top-2 transition-all peer-focus:-top-3.5 peer-focus:text-gray-600 peer-focus:text-sm">예금주</label>
+                  </div>
+                </div>
+
+                  <br>
+
+                  <div class="relative">
+                    <input autocomplete="off" id="outputAcntNum" name="outputAcntNum" type="text" v-model="state.input.outputAcntNum"
+                    class="focus:ouline-none focus:ring-0 peer placeholder-transparent h-10 w-full border-t-0 border-l-0 border-r-0 border-b-2 
+                    border-red-700 text-gray-900 focus:outline-none focus:borer-rose-600" placeholder="outputAcntNum" required/>
+                    <label for="outputAcntNum" 
+                    class="absolute left-0 -top-3.5 text-gray-600 text-sm peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-440 peer-placeholder-shown:top-2 transition-all peer-focus:-top-3.5 peer-focus:text-gray-600 peer-focus:text-sm">계좌번호</label>
+                  </div>
+                
+              </form>
+
               </div>
               
-              <div class="relative flex justify-center"> 
+              <div class="relative flex "> 
                 <button class="bg-red-700 text-white rounded-3xl px-28 py-1" @click = "signup">회원가입</button>
               </div>
               
             </div>
           </div>
         </div>
-          <div class="flex justify-center">
+          <div class="flex ">
                 <p class="pl-5 text-sm">이미 회원이신가요?</p>
                 <router-link to="/login" 
                 class="pl-2 text-sm text-red-700">로그인</router-link>
@@ -110,9 +144,12 @@ export default {
       input: {
         email: "",
         password: "",
-        name:"",
-        nickname:"",
-        digit:""
+        name: "",
+        nickname: "",
+        digit: "",
+        bankName: "",
+        holder: "",
+        outputAcntNum: ""
       }
     })
 
@@ -140,8 +177,6 @@ export default {
     return {state, signup}
   }
 }
-
-
 
 // data() {
 //   return {

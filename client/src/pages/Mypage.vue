@@ -132,7 +132,7 @@ onMounted(async () => {
   
 });
 async function getUserInfo(){
-  const response = await axios.get('/community/myinfo/16', {
+  const response = await axios.get('/mypage/myinfo', {
     headers: {
       'authorization': localStorageToken,
     },
