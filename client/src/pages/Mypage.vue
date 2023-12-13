@@ -22,7 +22,7 @@
         <ul class="flex flex-col py-4">
           <li>
             <div
-              class="flex flex-row items-center h-12 transform hover:translate-x-2 transition-transform ease-in duration-200 text-xl hover:text-black-800"
+              class="flex flex-row items-center h-12 transform hover:translate-x-2 transition-transform ease-in duration-200 text-xl hover:text-black-800 cursor-pointer"
               @click="changeComponent('dashboard')"
             >
               <span
@@ -34,7 +34,7 @@
           </li>
           <li>
             <div
-              class="flex flex-row items-center h-12 transform hover:translate-x-2 transition-transform ease-in duration-200 text-lg hover:text-gray-800"
+              class="flex flex-row items-center h-12 transform hover:translate-x-2 transition-transform ease-in duration-200 text-lg hover:text-gray-800 cursor-pointer"
               @click="changeComponent('updateinfo')"
             >
               <span
@@ -46,7 +46,7 @@
           </li>
           <li>
             <div
-              class="flex flex-row items-center h-12 transform hover:translate-x-2 transition-transform ease-in duration-200 text-lg hover:text-gray-800"
+              class="flex flex-row items-center h-12 transform hover:translate-x-2 transition-transform ease-in duration-200 text-lg hover:text-gray-800 cursor-pointer"
               @click="changeComponent('profileimage')"
             >
               <span
@@ -58,7 +58,7 @@
           </li>
           <li>
             <div
-              class="flex flex-row items-center h-12 transform hover:translate-x-2 transition-transform ease-in duration-200 text-lg hover:text-gray-800"
+              class="flex flex-row items-center h-12 transform hover:translate-x-2 transition-transform ease-in duration-200 text-lg hover:text-gray-800 cursor-pointer"
               @click="changeComponent('myissue')"
             >
               <span
@@ -70,7 +70,7 @@
           </li>
           <li>
             <div
-              class="flex flex-row items-center h-12 transform hover:translate-x-2 transition-transform ease-in duration-200 text-xl hover:text-gray-800"
+              class="flex flex-row items-center h-12 transform hover:translate-x-2 transition-transform ease-in duration-200 text-xl hover:text-gray-800 cursor-pointer"
               @click="changeComponent('mycomment')"
             >
               <span
@@ -82,14 +82,14 @@
           </li>
           <li>
             <Router-link to="/saving"
-              class="flex flex-row items-center h-12 transform hover:translate-x-2 transition-transform ease-in duration-200 text-lg hover:text-gray-800"
+              class="flex flex-row items-center h-12 transform hover:translate-x-2 transition-transform ease-in duration-200 text-lg hover:text-gray-800 cursor-pointer"
             >
 
               <span
                 class="inline-flex items-center justify-center h-12 w-9 text-lg"
                 ><i class="bx bx-chat"></i
               ></span>
-              <span class="text-lg font-medium text-sub-red">내 적금 <i class="fa-solid fa-arrow-up-right-from-square text-gray-500 text-sm"></i></span>
+              <span class="text-lg font-medium text-sub-red">내 적금 <i class="fa-solid fa-arrow-up-right-from-square text-gray-500 text-sm cursor-pointer"></i></span>
             </router-link>
           </li>
           
@@ -132,14 +132,12 @@ onMounted(async () => {
   
 });
 async function getUserInfo(){
-  const response = await axios.get('/community/myinfo/16', {
+  const response = await axios.get('/mypage/myinfo', {
     headers: {
       'authorization': localStorageToken,
     },
   });
   userInfo.value = response.data;
-
-  console.log("ok")
 }
 
 

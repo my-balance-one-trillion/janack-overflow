@@ -51,12 +51,11 @@ body {
 }
 #menu {
   z-index: 2;
+  right: 5px;
+  position: absolute;
 }
 
 #menu-bar {
-  top: 0;
-  right: 0;
-  position: absolute;
   width: 35px;
   height: 40px;
   margin: 30px 0 70px 20px;
@@ -84,7 +83,7 @@ body {
   margin-top: 65px;
   transition: 0.3s ease;
   display: none;
-  width: 16rem;
+  width: 10rem;
 }
 
 .nav ul {
@@ -108,9 +107,9 @@ body {
 }
 
 .menu-bg,
-#menu {
+ {
   top: -25px;
-  right: -15px;
+  right: 0;
   position: absolute;
 }
 

@@ -3,10 +3,14 @@
     <div class="w-32 bg-slate-300">
       <img src="/images/logo.svg" alt="" class="object-contain" />
     </div>
-    <div class="flex justify-around h-auto w-28 bg-slate-200">
+    <div class="flex justify-between gap-2 h-auto bg-slate-200">
       <div class="mx-auto">
         <button><i class="fa-regular fa-circle-user fa-2xl"></i></button>
       </div>
+      <div class="mx-auto">
+        <button><i class="fa-solid fa-door-open fa-2xl"></i></button>
+      </div>  
+      <div class="w-8"></div>
       <div class="mx-auto bars-wrap">
         <button id="menu">
           <div ref="menuBar" id="menu-bar" @click="menuOnClick">
@@ -19,7 +23,7 @@
               <li><a href="#">메인</a></li>
               <li><a href="#">적금</a></li>
               <li><a href="#">커뮤니티</a></li>
-              <li><a href="#">마이페이지</a></li>
+              <li><a href="#">채팅</a></li>
             </ul>
           </nav>
         </button>
