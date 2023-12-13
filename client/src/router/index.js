@@ -16,7 +16,7 @@ const routes = [
   { path: "/saving", component: Saving },
   { path: "/signup", component: SignUp },
   { path: "/community", component: Community },
-  { path: '/community/detail', component: Detail },
+  { path: '/community/detail/:id', component: Detail },
   { path: "/mypage", component: Mypage },
 ];
 
