@@ -5,7 +5,7 @@
 <template>
   <div class="w-full space-y-20 text-center">
     <div class="flex justify-center mt-20">
-      <img class="w-44 h-44" src="@/assets/images/emojiSad.svg"  alt="emoji"/>
+      <img class="w-44 h-44" src="/images/emojiSad.svg"  alt="emoji"/>
     </div>
     <div class="space-y-8">
       <div class="text-2xl">적금을 삭제하면 해당 적금에 대한 모든 데이터는 보존되나, 적금 상태는 <span class="text-main-red font-bold">포기</span>로 변경됩니다.</div>

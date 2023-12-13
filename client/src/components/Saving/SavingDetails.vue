@@ -1,8 +1,10 @@
 <script setup>
-import { ref } from 'vue';
+import {ref} from 'vue';
+import HorizontalBarChart from "./component/HorizontalBarChart.vue";
+import LineChart from "./component/LineChart.vue";
 
-const now = new Date().getFullYear()+"-"+(new Date().getMonth()+1);
-const current = ref(new Date().getFullYear()+"-"+(new Date().getMonth()+1));
+const now = new Date().getFullYear() + "-" + (new Date().getMonth() + 1);
+const current = ref(new Date().getFullYear() + "-" + (new Date().getMonth() + 1));
 
 // 이전 월 조회
 const prevMonth = () => {
@@ -18,6 +20,8 @@ const nextMonth = () => {
   current.value = `${nextDate.getFullYear()}-${nextDate.getMonth() + 1}`;
 };
 
+const depositCounts = [10, 15, 8, 12, 20]; // 월별 적금 횟수 데이터
+const depositAmounts = [0, 20000, 40000, 50000, 100000]; // 월별 누적 금액
 </script>
 
 <template>
@@ -25,7 +29,8 @@ const nextMonth = () => {
   <div class="w-full space-y-14">
     <!--    나의 적금-->
     <div class="my-10 text-3xl text-main-red">나의 적금</div>
-    <div class="w-2/3 px-10 py-10 m-auto mb-20 bg-gray-100 rounded-3xl shadow text-center flex justify-between items-center gap-7">
+    <div
+        class="w-2/3 px-10 py-10 m-auto mb-20 bg-gray-100 rounded-3xl shadow text-center flex justify-between items-center gap-7">
       <div class="text-left space-y-3">
         <div class="inline-flex items-center bg-red-100 text-main-red text-xs px-4 py-2 rounded-full shadow">Day 2</div>
         <div class="text-2xl">스프링 적금</div>
@@ -38,9 +43,9 @@ const nextMonth = () => {
     <div>
       <div class="mt-20 text-3xl text-main-red">월별 내역 조회</div>
       <div class="my-10 flex justify-center gap-7 items-center">
-        <button @click="prevMonth" class="px-4 py-2 bg-main-red text-white rounded">&lt</button>
-        <div class="text-2xl w-40 text-center">{{ current.split('-')[0]+"년 "+current.split('-')[1]+"월"}}</div>
-        <button v-show="current!==now" @click="nextMonth" class="px-4 py-2 bg-main-red text-white rounded">&gt</button>
+        <button class="px-4 py-2 bg-main-red text-white rounded" @click="prevMonth">&lt</button>
+        <div class="text-2xl w-40 text-center">{{ current.split('-')[0] + "년 " + current.split('-')[1] + "월" }}</div>
+        <button v-show="current!==now" class="px-4 py-2 bg-main-red text-white rounded" @click="nextMonth">&gt</button>
         <button v-show="current===now" class="px-4 py-2 bg-btn-grey text-white rounded" disabled>&gt</button>
       </div>
       <table class="w-full border-gray-300 border-t-4 border-b-4">
@@ -93,9 +98,23 @@ const nextMonth = () => {
       </table>
     </div>
 
-
-
-
+    <!--  대시보드 -->
+    <div>
+      <div class="flex justify-center  p-7 bg-gray-100 rounded-3xl shadow">
+        <div class="p-4 border m-auto bg-white rounded-xl">
+          <div class="text-2xl">월별 적금 횟수</div>
+          <div class="">
+            <HorizontalBarChart :depositCounts="depositCounts"/>
+          </div>
+        </div>
+        <div class="p-4 border m-auto bg-white rounded-xl">
+          <div class="text-2xl">월별 적금 추이</div>
+          <div class="">
+            <LineChart :depositAmounts="depositAmounts"/>
+          </div>
+        </div>
+      </div>
+    </div>
 
   </div>
 

@@ -18,7 +18,7 @@ const navigateTo = (path) => {
     <div class="p-4 h-full rounded-3xl shadow-md bg-red-50 sticky">
       <!--      로고-->
       <div class="p-4 border-b-4 border-b-main-red">
-        <img class="w-32" src="@/assets/images/logo.svg">
+        <img class="w-32" src="/images/logo.svg">
       </div>
       <!--적금 관리-->
       <div class="text-4xl font-bold p-6">적금</div>

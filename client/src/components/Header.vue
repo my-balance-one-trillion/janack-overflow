@@ -1,7 +1,7 @@
 <template>
   <div class="flex items-center justify-between h-10 bg-red-200">
     <div class="w-32 bg-slate-300">
-      <img src="../assets/images/logo.svg" alt="" class="object-contain" />
+      <img src="../../public/images/logo.svg" alt="" class="object-contain" />
     </div>
     <div class="flex justify-around h-auto w-28 bg-slate-200">
       <div class="mx-auto">

@@ -1,5 +1,5 @@
 <script setup>
-import ProgressBar from "@/components/Saving/ProgressBar.vue";
+import ProgressBar from "@/components/Saving/component/ProgressBar.vue";
 import {ref} from "vue";
 import router from "../../router";
 
@@ -36,7 +36,7 @@ const goOpenAccountFinish = () => {
 
 <template>
   <div >
-    <div class="text-black mt-20 mb-10 text-5xl font-bold ">잔액오버플로우 시작하기</div>
+    <div class="text-black mt-20 mb-7 text-5xl font-bold ">잔액오버플로우 시작하기</div>
 
     <!-- 1단계: 적금명 입력 -->
     <div v-show="currentStep === 1">

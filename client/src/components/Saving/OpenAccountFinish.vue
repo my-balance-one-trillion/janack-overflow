@@ -4,7 +4,7 @@
 
 <template>
   <div class="flex justify-center my-20">
-    <img class="w-1/4 object-center" src="@/assets/images/logo.svg" alt="">
+    <img class="w-1/4 object-center" src="/images/logo.svg" alt="">
   </div>
 
   <div class="flex justify-center items-center gap-7">
@@ -13,7 +13,7 @@
       <div class="text-4xl my-2  font-medium">개발자로서의 성장과 재미있는 적금 생활을 즐겨보세요!</div>
     </div>
     <div>
-      <img src="@/assets/images/congrats.svg">
+      <img src="/images/congrats.svg">
     </div>
   </div>
 

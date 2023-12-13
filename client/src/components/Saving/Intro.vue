@@ -11,7 +11,7 @@ const goOpenAccount = () => {
 <template>
 
   <div class="my-20 flex-col content-center">
-    <img class="w-1/4 object-center" src="@/assets/images/logo.svg">
+    <img class="w-1/4 object-center" src="/images/logo.svg">
   <div class="my-8">
     <div class="text-3xl my-2  font-medium">에러노트를 기록하며 동시에 목표를 향한 적금을 시작하세요.</div>
     <div class="text-3xl my-2  font-medium">에러를 기록하는 만큼 내 통장에 돈이 쌓여요.</div>
