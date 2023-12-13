@@ -41,7 +41,6 @@ public class MypageService {
         Users users = usersRepository.findById(usersId).orElseThrow(RuntimeException::new);
         if(passwordEncoder.matches(usersRequestDTO.getPassword(), users.getPassword())){
             Users updatedUser = users.toBuilder()
-//                    .email(usersRequestDTO.getEmail())
                     .digit(usersRequestDTO.getDigit())
                     .birth(usersRequestDTO.getBirth())
                     .name(usersRequestDTO.getName())

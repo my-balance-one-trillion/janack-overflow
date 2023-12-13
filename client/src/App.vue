@@ -1,7 +1,4 @@
-<script setup>
-import Header from "@/components/Header.vue";
 
-</script>
 
 <template>
   <div class="page-wrapper">
@@ -9,6 +6,11 @@ import Header from "@/components/Header.vue";
     <Router-View />
   </div>
 </template>
+
+<script setup>
+import Header from "@/components/Header.vue";
+
+</script>
 
 <style scoped>
 @import "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css";

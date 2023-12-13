@@ -4,15 +4,15 @@
       <div class="flex flex-col w-56 bg-white rounded-3xl overflow-hidden border border-sub-red">
         <div class="mt-6 mx-auto">
           <img
-            src="https://api.lorem.space/image/face?w=120&h=120&hash=bart89fe"
-            class="rounded-full w-20"
+            id="profileimg"
+            :src="`/images/${userInfo.profileImage}`"
+            class="rounded-full w-32"
             alt="profile picture"
-            srcset=""
           />
         </div>
 
-        <div class="mt-8 mx-auto">
-          <h2 class="text-lg tracking-wide">개발왕</h2>
+        <div class="mt-5 mx-auto">
+          <h2 id="profilenick" class="text-lg tracking-wide">{{userInfo.nickname}}</h2>
         </div>
         <div class="border-b-4 border-main-red w-40 mx-auto my-4"></div>
 
@@ -89,7 +89,7 @@
                 class="inline-flex items-center justify-center h-12 w-9 text-lg"
                 ><i class="bx bx-chat"></i
               ></span>
-              <span class="text-lg font-medium">내 적금 <i class="fa-solid fa-arrow-up-right-from-square text-gray-500 text-sm"></i></span>
+              <span class="text-lg font-medium text-sub-red">내 적금 <i class="fa-solid fa-arrow-up-right-from-square text-gray-500 text-sm"></i></span>
             </router-link>
           </li>
           
@@ -98,29 +98,50 @@
     </aside>
     <section class="ml-10 w-full">
       <!-- <component :is="currentComponent" /> -->
-      <dashboard v-if="currentComponent === 'dashboard'" />
-      <updateinfo v-if="currentComponent === 'updateinfo'" />
-      <myissue v-if="currentComponent === 'myissue'" />
-      <mycomment v-if="currentComponent === 'mycomment'" />
-      <profileimage v-if="currentComponent === 'profileimage'" />
+      <dashboard v-if="currentComponent === 'dashboard'" :token="localStorageToken" :info="userInfo"/>
+      <updateinfo v-if="currentComponent === 'updateinfo'" :token="localStorageToken" :info="userInfo"/>
+      <myissue v-if="currentComponent === 'myissue'" :token="localStorageToken" :info="userInfo"/>
+      <mycomment v-if="currentComponent === 'mycomment'" :token="localStorageToken" :info="userInfo"/>
+      <profileimage v-if="currentComponent === 'profileimage'" :token="localStorageToken" :info="userInfo"
+      @update="getUserInfo"/>
     </section>
   </main>
 </template>
 <script setup>
-import { ref } from 'vue';
+import { ref,onMounted } from 'vue';
+import { RouterLink } from 'vue-router';
+import axios from 'axios';
+
 import dashboard from "../components/mypage/dashboard.vue";
 import profileimage from "../components/mypage/profileimage.vue";
 import updateinfo from "../components/mypage/updateinfo.vue";
 import myissue from "../components/mypage/myissue.vue";
 import mycomment from "../components/mypage/mycomment.vue";
-import { RouterLink } from 'vue-router';
 
+const localStorageToken  = localStorage.getItem('token');
 const currentComponent  = ref('dashboard');
+const userInfo = ref("");
+
 
 const changeComponent  = (component) =>{
   currentComponent.value = component;
-  console.log(component);
 };
+
+onMounted(async () => {
+  await getUserInfo();
+  
+});
+async function getUserInfo(){
+  const response = await axios.get('/community/myinfo/16', {
+    headers: {
+      'authorization': localStorageToken,
+    },
+  });
+  userInfo.value = response.data;
+
+  console.log("ok")
+}
+
 
 </script>
 <style scoped></style>

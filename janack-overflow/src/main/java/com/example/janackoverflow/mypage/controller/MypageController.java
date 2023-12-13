@@ -24,7 +24,7 @@ public class MypageController {
         this.usersService = usersService;
     }
 
-    //    마이페이지에서 비밀번호 재설정
+    //    마이페이지에서 회원정보 수정
     @GetMapping("/mypage/myinfo")
     public ResponseEntity readUser(@AuthenticationPrincipal NowUserDetails nowUserDetails){
         Long usersId = nowUserDetails.getId();
