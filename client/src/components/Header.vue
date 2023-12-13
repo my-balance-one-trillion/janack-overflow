@@ -1,16 +1,24 @@
 <template>
-  <div class="flex items-center justify-between h-10 bg-red-200">
-    <div class="w-32 bg-slate-300">
+  <div class="flex items-center justify-between py-2">
+    <div class="w-32">
       <img src="/images/logo.svg" alt="" class="object-contain" />
     </div>
-    <div class="flex justify-between gap-2 h-auto bg-slate-200">
+    <div class="flex justify-between gap-4 h-auto">
       <div class="mx-auto">
-        <button><i class="fa-regular fa-circle-user fa-2xl"></i></button>
+        <router-link to="/mypage"
+          ><i class="fa-regular fa-circle-user fa-xl"></i
+        ></router-link>
       </div>
       <div class="mx-auto">
-        <button><i class="fa-solid fa-door-open fa-2xl"></i></button>
-      </div>  
-      <div class="w-8"></div>
+        <router-link to="/logout"
+          ><i class="fa-solid fa-door-open fa-xl"></i
+        ></router-link>
+      </div>
+
+      <div class="mx-auto">
+        <i class="fa-solid fa-right-to-bracket fa-2xl"></i>
+      </div>
+      <div class="w-7"></div>
       <div class="mx-auto bars-wrap">
         <button id="menu">
           <div ref="menuBar" id="menu-bar" @click="menuOnClick">
@@ -20,10 +28,10 @@
           </div>
           <nav ref="nav" class="nav" id="nav">
             <ul>
-              <li><a href="#">메인</a></li>
-              <li><a href="#">적금</a></li>
-              <li><a href="#">커뮤니티</a></li>
-              <li><a href="#">채팅</a></li>
+              <li><router-link to="/">메인</router-link></li>
+              <li><router-link to="/saving">적금</router-link></li>
+              <li><router-link to="/community">커뮤니티</router-link></li>
+              <li><router-link to="/chat">채팅</router-link></li>
             </ul>
           </nav>
         </button>

@@ -4,7 +4,6 @@
 @import "tailwindcss/utilities";
 
 /* 폰트모음 */
-@import "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css";
 
 @font-face {
   font-family: "GongGothicMedium";
@@ -28,21 +27,6 @@ body {
   font-family: "GongGothicMedium";
 }
 
-.page-wrapper {
-  @media (min-width: 1300px) {
-    max-width: 1300px;
-    margin-left: auto;
-    margin-right: auto;
-  }
-}
-
-.bold {
-  font-weight: 700;
-}
-
-.esa-light {
-  font-weight: 300;
-}
 /* 
 헤더 nav transform 
 */
@@ -106,8 +90,7 @@ body {
   font-weight: bold;
 }
 
-.menu-bg,
- {
+.menu-bg {
   top: -25px;
   right: 0;
   position: absolute;
