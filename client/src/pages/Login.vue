@@ -50,10 +50,12 @@
         </div>
           <div class="flex justify-center">
                 <p class="text-sm">첫 방문이신가요?</p>
-                <p class="pl-2 text-sm text-red-700">회원가입</p>
+                <router-link to="/signup" 
+                class="pl-2 text-sm text-red-700">회원가입</router-link>
       
                 <p class="pl-5 text-sm">비밀번호를 잊으셨나요?</p>
-                <p class="pl-2 text-sm text-red-700">비밀번호 찾기</p>
+                <router-link to="/" 
+                class="pl-2 text-sm text-red-700">비밀번호 찾기</router-link>
           </div>
       </div>
     </div>
@@ -65,8 +67,6 @@ import { reactive } from "vue";
 import axios from "axios";
 import { useRouter } from "vue-router";
 
-// 리소스 접근 허용
-axios.defaults.headers['Access-Control-Allow-Origin'] = '*';
 axios.defaults.withCredentials = true;
 
 export default {
@@ -74,13 +74,13 @@ export default {
     const router = useRouter();
     const state = reactive({
       input: {
-        email: "test@email",
-        password: "123"
+        email: "",
+        password: ""
       }
     })
 
     const login = async () => {      
-      const response = await axios.post('http://localhost:8081/login', state.input, 
+      const response = axios.post('http://localhost:8081/login', state.input, 
         {
           headers : {
           "Content-Type": "application/json",
@@ -107,7 +107,6 @@ export default {
     return {state, login}
   }
 }
-
 </script>
 
 <style scoped>

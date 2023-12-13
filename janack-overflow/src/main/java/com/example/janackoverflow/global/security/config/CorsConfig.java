@@ -1,4 +1,4 @@
-package com.example.janackoverflow.global.security;
+package com.example.janackoverflow.global.security.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -25,6 +25,8 @@ public class CorsConfig {
 
         //허용된 오리진(출처) 도메인 설정
         corsConfiguration.addAllowedOrigin("http://localhost:5173");
+
+        corsConfiguration.addAllowedOriginPattern("/**");
 
         //허용된 HTTP 메서드 설정
         corsConfiguration.addAllowedMethod("GET");

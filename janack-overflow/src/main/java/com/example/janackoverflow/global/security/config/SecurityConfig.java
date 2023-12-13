@@ -1,10 +1,10 @@
-package com.example.janackoverflow.global.security;
+package com.example.janackoverflow.global.security.config;
 
+import com.example.janackoverflow.global.security.config.CorsConfig;
 import com.example.janackoverflow.global.security.jwt.JwtAuthenticationFilter;
 import com.example.janackoverflow.global.security.jwt.JwtAuthorizationFilter;
 import jakarta.servlet.DispatcherType;
 import lombok.RequiredArgsConstructor;
-import org.apache.catalina.filters.CorsFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -13,18 +13,10 @@ import org.springframework.security.config.annotation.authentication.configurati
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
-import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.web.cors.CorsConfiguration;
-import org.springframework.web.cors.CorsConfigurationSource;
-import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
-
-import java.util.List;
-
-import static org.springframework.security.config.Customizer.withDefaults;
 
 @Configuration
 @EnableWebSecurity
@@ -53,8 +45,8 @@ public class SecurityConfig {
         http.cors();
 
         // Spring Security에서 session을 생성하거나 사용하지 않도록 설정
-        http.sessionManagement(httpSecuritySessionManagementConfigurer
-                -> httpSecuritySessionManagementConfigurer.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
+//        http.sessionManagement(httpSecuritySessionManagementConfigurer
+//                -> httpSecuritySessionManagementConfigurer.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
 
         // jwt Filter 적용
         http.addFilterBefore(jwtAuthorizationFilter, UsernamePasswordAuthenticationFilter.class);
@@ -66,15 +58,24 @@ public class SecurityConfig {
         http.authorizeHttpRequests((authorizeRequests) ->
                         authorizeRequests
                                 .dispatcherTypeMatchers(DispatcherType.FORWARD).permitAll()
-                                .requestMatchers("/image/**", "/css/**", "/", "/login", "/logout", "/signup", "/main/**", "/community/**", "/saving/**").permitAll() //화이트리스트
-                                .requestMatchers("/mypage", "/mypage/**").hasRole("USER") //USER만 접근 가능
-                                .requestMatchers("/mypage", "/mypage/**", "/admin", "/admin/**").hasRole("ADMIN") //ADMIN만 접근 가능
-                                .anyRequest().authenticated()
+
+                                //화이트 리스트
+                                .requestMatchers("/image/**", "/css/**", "/", "/login", "/logout", "/signup/**",
+                                        "/main/**", "/community/**", "/saving/**").permitAll()
+
+                                //USER만 접근 가능
+                                .requestMatchers("/mypage", "/mypage/**").hasRole("USER")
+
+                                //ADMIN만 접근 가능
+                                .requestMatchers("/mypage", "/mypage/**", "/admin", "/admin/**").hasRole("ADMIN")
+
                                 //위에 작성된 url을 제외한 나머지는 인증절차 필요 (403 발생)
+                                .anyRequest().authenticated()
+
                 ).exceptionHandling((exceptionHandling) ->
                         exceptionHandling
                                 .accessDeniedPage("/login"));
-                                //권한이 없는 사용자를 '/login' 으로 이동
+                                //권한이 없는 사용자를 '/login' 으로 이동 (현재 작동 안함)
 
         http.formLogin(AbstractHttpConfigurer::disable);
 
