@@ -30,9 +30,6 @@ public class JwtAuthenticationFilter extends AbstractAuthenticationProcessingFil
 									// '/login' URL 접근 시 필터 실행
 
 	@Autowired
-	private UsersService usersService;
-
-	@Autowired
 	private JwtProperties jwtProperties;
 
 	private LoginRequestDTO loginRequestDTO;
@@ -100,8 +97,6 @@ public class JwtAuthenticationFilter extends AbstractAuthenticationProcessingFil
 		
 		NowUserDetails principalDetailis = (NowUserDetails) authResult.getPrincipal();
 
-		System.out.println("로그인 시도 계정 : " + principalDetailis.getUsername());
-
 		// JWT Token 생성해서 response에 담아주기
 		String jwtToken = JWT.create()
 				.withSubject(principalDetailis.getUsername()) //현재 주체가 되는 사용자 (Subject)
@@ -109,7 +104,17 @@ public class JwtAuthenticationFilter extends AbstractAuthenticationProcessingFil
 				.withClaim("email", principalDetailis.getUsername()) //email값
 				.sign(Algorithm.HMAC512(jwtProperties.getSecret())); //시크릿 키 이용하여 HMAC512 알고리즘 적용
 
+		//헤더에 접근 권한 정보를 추가해 브라우저에서 차단하지 못하게 방지
+		response.setHeader("Access-Control-Allow-Origin", "http://localhost:5173");
+		response.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
+		response.setHeader("Access-Control-Allow-Headers", "Authorization, Content-Type, X-Requested-With, Pragma");
+		response.setHeader("Access-Control-Allow-Credentials", "true");
+		response.setHeader("Access-Control-Max-Age", "3600");
+
+		//헤더에 토큰값 추가
 		response.addHeader(jwtProperties.getHeader(), "Bearer " + jwtToken);
+
+		System.out.println("jwtToken : " + jwtToken);
 
 		System.out.println("login complete");
 	}

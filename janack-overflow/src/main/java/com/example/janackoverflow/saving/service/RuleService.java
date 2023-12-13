@@ -1,5 +1,7 @@
 package com.example.janackoverflow.saving.service;
 
+import com.example.janackoverflow.global.exception.BusinessLogicException;
+import com.example.janackoverflow.global.exception.ExceptionCode;
 import com.example.janackoverflow.saving.domain.request.InputAccountRequestDTO;
 import com.example.janackoverflow.saving.domain.request.RuleRequestDTO;
 import com.example.janackoverflow.saving.domain.request.SavingRequestDTO;
@@ -22,19 +24,21 @@ public class RuleService {
     // 규칙 생성
     @Transactional
     public Rule createRule(RuleRequestDTO ruleRequestDTO, InputAccount inputAccount, Users users) {
+        if(ruleRepository.findByInputAccountIdAndUsersId(inputAccount.getId(), users.getId()).isPresent()){
+            throw new BusinessLogicException(ExceptionCode.RULE_NOT_FOUND);
+        }
         return ruleRepository.save(ruleRequestDTO.toEntity(inputAccount, users));
     }
 
     // 규칙 수정
     @Transactional
-    public Rule updateRule(RuleRequestDTO ruleRequestDTO, long accountId){
-        Rule updateRule = ruleRepository.findByInputAccountId(accountId);
-
-        updateRule.setUnderThirty(ruleRequestDTO.getUnderThirty());
-        updateRule.setUnderHour(ruleRequestDTO.getUnderHour());
-        updateRule.setUnderThreeHour(ruleRequestDTO.getUnderThreeHour());
-        updateRule.setOverThreeHour(ruleRequestDTO.getOverThreeHour());
-
+    public Rule updateRule(RuleRequestDTO ruleRequestDTO, Long userId, Long accountId){
+        Rule updateRule = ruleRepository.findByInputAccountIdAndUsersId(accountId, userId)
+                .orElseThrow(() -> new BusinessLogicException(ExceptionCode.RULE_NOT_FOUND));
+        updateRule.updateRule(ruleRequestDTO.getUnderThirty(),
+                ruleRequestDTO.getUnderHour(),
+                ruleRequestDTO.getUnderThreeHour(),
+                ruleRequestDTO.getUnderThreeHour());
         return ruleRepository.save(updateRule);
     }
 }

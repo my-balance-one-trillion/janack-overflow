@@ -1,5 +1,7 @@
 package com.example.janackoverflow.saving.service;
 
+import com.example.janackoverflow.global.exception.BusinessLogicException;
+import com.example.janackoverflow.global.exception.ExceptionCode;
 import com.example.janackoverflow.issue.domain.response.IssueResponseDTO;
 import com.example.janackoverflow.saving.domain.request.InputAccountRequestDTO;
 import com.example.janackoverflow.saving.domain.request.SavingRequestDTO;
@@ -33,16 +35,10 @@ public class InputAccountService {
     // 입금 계좌(적금 계좌) 개설
     @Transactional
     public InputAccount createInputAccount(InputAccountRequestDTO inputAccountRequestDTO, Users users) {
-        if (inputAccountRequestDTO.getAcntName().isEmpty()) {
-            throw new IllegalArgumentException("적금명 입력");
-        }
-        if (inputAccountRequestDTO.getGoalName().isEmpty()) {
-            throw new IllegalArgumentException("목표명 입력");
-        }
-        if (inputAccountRequestDTO.getGoalAmount() < 1000) {
-            throw new IllegalArgumentException("목표 금액은 1000원 이상");
-        }
 
+        if(inputAccountRepository.findByUsersIdAndStatus(users.getId(), "01").isPresent()){
+            throw new BusinessLogicException(ExceptionCode.ACCOUNT_EXIST);
+        }
         // 회원 정보 확인
 //        Users users = userRepository.findById(users);
 
@@ -88,9 +84,9 @@ public class InputAccountService {
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "진행 중인 적금 없음"));
 
         // 적금 정보 수정 (적금 이름, 적금 목표명, 적금 목표 금액)
-        updateAccount.updateAcntName(inputAccountRequestDTO.getAcntName());
-        updateAccount.updateGoalName(inputAccountRequestDTO.getGoalName());
-        updateAccount.updateGoalNum(inputAccountRequestDTO.getGoalAmount());
+        updateAccount.updateInputAccount(inputAccountRequestDTO.getAcntName(),
+                inputAccountRequestDTO.getGoalName(),
+                inputAccountRequestDTO.getGoalAmount());
 
         return inputAccountRepository.save(updateAccount);
     }

@@ -64,32 +64,6 @@ public class UsersService {
 //
 //    }
 
-    public void updateUser(UsersRequestDTO usersRequestDTO, long id){ //회원 정보 수정
-        Users users = usersRepository.findById(id).orElseThrow(RuntimeException::new);
-        if(passwordEncoder.matches(usersRequestDTO.getPassword(), users.getPassword())){
-            Users updatedUser = users.toBuilder()
-                    .email(usersRequestDTO.getEmail())
-                    .digit(usersRequestDTO.getDigit())
-                    .birth(usersRequestDTO.getBirth())
-                    .name(usersRequestDTO.getName())
-                    .nickname(usersRequestDTO.getNickname())
-                    .holder(usersRequestDTO.getHolder())
-                    .bankName(usersRequestDTO.getBankName())
-                    .outputAcntNum(usersRequestDTO.getOutputAcntNum())
-                    .build();
-            if(usersRequestDTO.getNewPassword() != null){
-                if(usersRequestDTO.getNewPassword().equals(usersRequestDTO.getNewPasswordConfirm())){
-                    updatedUser.updatePassword(usersRequestDTO.getNewPassword());
-                }else{
-                    throw new RuntimeException("패스워드와 패스워드확인이 다릅니다.");
-                }
-            }
-            usersRepository.save(updatedUser);
-        }else{
-            throw new RuntimeException("패스워드가 틀렸습니다.");
-        }
-    }
-
     public void updateProfileImage(UsersRequestDTO usersRequestDTO, long id){ // 프로필사진만 교체
         Users users = usersRepository.findById(id).orElseThrow(RuntimeException::new);
         Users updatedUser = users.toBuilder()
