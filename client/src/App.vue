@@ -3,7 +3,7 @@ import Header from "@/components/Header.vue";
 </script>
 
 <template>
-  <div class="bg-blue-200 page-wrapper">
+  <div class=" page-wrapper">
     <Header></Header>
     <Router-View />
     <div class="test">

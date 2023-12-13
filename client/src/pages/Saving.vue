@@ -1,10 +1,18 @@
 <template>
-  <intro></intro>
-  <open-account></open-account>
+  <div class="flex my-10 gap-12">
+    <saving-side-bar class="w-1/4"></saving-side-bar>
+    <router-view class="w-3/4 "></router-view>
+  </div>
 </template>
 
 <script setup>
-import Intro from "@/components/Saving/Intro.vue";
-import openAccount from "@/components/Saving/OpenAccount.vue";
+import SavingSideBar from "@/components/Saving/SavingSideBar.vue";
 </script>
-<style scoped></style>
+<style scoped>
+aside{
+  width: 20%;
+}
+section{
+  width: 80%;
+}
+</style>
