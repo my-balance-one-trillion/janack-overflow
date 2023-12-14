@@ -8,7 +8,6 @@ import router from "./router";
 axios.defaults.baseURL = "http://localhost:8081";
 //pinia 기본설정
 const pinia = createPinia();
-
 const app = createApp(App);
 app.config.globalProperties.$axios = axios;
 app.use(pinia);

@@ -1,5 +1,14 @@
-<template></template>
+<template>
+  <LoggedInMain v-if="isLoggedIn"/>
+  <LoggedOutMain v-else />
+</template>
 
-<script setup></script>
+<script setup>
+  import LoggedInMain from '../components/main/LoggedInMain.vue';
+  import LoggedOutMain from '../components/main/LoggedOutMain.vue';
+  const isLoggedIn = false;
 
-<style scoped></style>
+</script>
+
+<style scoped>
+</style>

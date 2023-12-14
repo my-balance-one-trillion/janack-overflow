@@ -15,6 +15,9 @@ import Intro from "@/components/Saving/Intro.vue";
 import OpenAccountFinish from "@/components/Saving/OpenAccountFinish.vue";
 import SavingDelete from "@/components/Saving/SavingDelete.vue";
 import SavingRecord from "../components/Saving/SavingRecord.vue";
+import Chat from "@/pages/chat/Chat.vue";
+import ChatMain from "@/pages/chat/ChatMain.vue"
+import MyChat from "@/pages/chat/MyChat.vue"
 
 const routes = [
     {path: "/", component: Main},
@@ -36,6 +39,10 @@ const routes = [
     {path: "/community", component: Community},
     {path: '/community/detail/:id', component: Detail },
     {path: "/mypage", component: Mypage},
+    {path: "/chat/:chatId", component: Chat},
+    {path: "/chat", component: ChatMain},
+    {path: "/chat/my/:userId", component: MyChat}
+
 ];
 
 const router = createRouter({

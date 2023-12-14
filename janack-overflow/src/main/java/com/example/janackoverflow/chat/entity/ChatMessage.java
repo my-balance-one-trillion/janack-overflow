@@ -1,18 +1,38 @@
 package com.example.janackoverflow.chat.entity;
 
+import com.example.janackoverflow.chat.domain.ChatMessageDTO;
+import com.example.janackoverflow.global.entity.AuditingFields;
+import com.example.janackoverflow.user.entity.Users;
+import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 
+import java.time.LocalDateTime;
+
+@Entity
 @Builder
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class ChatMessage {
-    public enum MessageType{
-        ENTER, TALK, QUIT;
-    }
-    private MessageType type;
-    private int roomId;
-    private String sender;
-    private String message;
+@ToString
+public class ChatMessage extends AuditingFields {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Enumerated(value = EnumType.STRING)
+    private ChatMessageDTO.MessageType type;
+
+    @NotBlank
+    private String content;
+
+    @ManyToOne
+    @JoinColumn(name = "users_id")
+    private Users users;
+
+    @ManyToOne
+    @JoinColumn(name = "room_id")
+    private ChatRoom chatRoom;
+
 }
