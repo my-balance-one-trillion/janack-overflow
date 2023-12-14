@@ -7,6 +7,7 @@ import com.example.janackoverflow.community.repository.CommunityRepositoryImpl;
 import com.example.janackoverflow.issue.domain.IssueDTO;
 import com.example.janackoverflow.issue.entity.Issue;
 import com.example.janackoverflow.issue.repository.IssueRepository;
+import com.example.janackoverflow.issue.service.SolutionService;
 import com.example.janackoverflow.user.repository.UsersRepository;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -27,6 +28,8 @@ import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 @Service
@@ -37,6 +40,11 @@ public class CommunityService {
     private final UsersRepository usersRepository;
     private final LikesService likesService;
 
+    private final SolutionService solutionService;
+
+    Map<Long, List<MediumArticle>> articleMap = new HashMap<>();
+    List<MediumArticle> mediumArticleList = new ArrayList<>();
+
     @Value("${external.medium.medium-key}")
     private String apikey;
     private final CommunityRepositoryImpl communityRepositoryImpl;
@@ -45,17 +53,21 @@ public class CommunityService {
                              IssueRepository issueRepository,
                              LikesService likesService,
                              UsersRepository usersRepository,
+                             SolutionService solutionService,
                              CommunityRepositoryImpl communityRepositoryImpl) {
 
         this.commentRepository = commentRepository;
         this.issueRepository = issueRepository;
         this.likesService = likesService;
         this.usersRepository = usersRepository;
+        this.solutionService = solutionService;
         this.communityRepositoryImpl = communityRepositoryImpl;
     }
 
-    public Page<IssueDTO.ResponseDTO> getSolvedIssueList(String order, String category) {
-        Pageable pageable = PageRequest.of(0, 10, Sort.by(Sort.Direction.DESC, order));
+    public Page<IssueDTO.ResponseDTO> getSolvedIssueList(String order, String category, int pageNo) {
+        log.info("pageNo : " + pageNo);
+        Pageable pageable = null;
+        pageable = PageRequest.of(pageNo, 10, Sort.by(Sort.Direction.DESC, Objects.requireNonNullElse(order, "id")));
         // 페이져블 객체와 errorId로 모든 comment를 들고온다.
         Page<Issue> issueList = issueRepository.findAll(pageable);
         // 댓글DtoList
@@ -63,7 +75,7 @@ public class CommunityService {
 
         Page<IssueDTO.ResponseDTO> issuePage = new PageImpl<>(issueResponseDtoList, pageable, issueList.getTotalElements());
 
-        log.info("get Content : " + issuePage.getContent().get(0));
+//        log.info("get Content : " + issuePage.getContent().get(0));
         log.info("page : " + issuePage.getTotalPages());
         log.info("total : " + issuePage.getTotalElements());
 
@@ -79,6 +91,7 @@ public class CommunityService {
     }
 
     public Page<IssueDTO.ResponseDTO> search(String title, String category) {
+        log.info("!!!!!!!title : " + title);
         List<String> categories = new ArrayList<>();
         if(category != null){
             categories = Arrays.asList(category.split(","));
@@ -102,21 +115,26 @@ public class CommunityService {
         Pageable pageable = PageRequest.of(0, 5, Sort.by(Sort.Direction.DESC, "id"));
         Optional<Issue> optIssue = issueRepository.findById(issueId);
 
+        // TODO map 에 있는지 없는지 확인
+        if( articleMap.get(issueId) == null ) {
+            try {
+                mediumArticleList = getMediumApi(optIssue.orElseThrow(() -> new IllegalArgumentException("해당 이슈를 찾을 수 없습니다.")).getCategory());
+                articleMap.put(issueId, mediumArticleList);
+            } catch (IOException | InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+        }
+
+        // TODO solutionDTO 추가
         IssueDTO.ResponseDTO responseDTO = optIssue.
-                map(issue -> {
-                            try {
-                                return issue.
-                                        toDetailDto(
-                                                likesService.getIssueLikes(issue.getId()),
-                                                usersRepository.findById(issue.getUsers().getId()).orElseThrow(() ->
-                                                        new IllegalArgumentException("해당 유저를 찾을 수 없습니다.")).toIssueDto(),
-                                                commentRepository.findAllByIssue_IdOrderByCreatedAtDesc(issueId, pageable).stream().map(Comment::toDto).toList(),
-                                                getMediumApi(optIssue.get().getKeyword())
-                                        );
-                            } catch (IOException | InterruptedException e) {
-                                throw new RuntimeException(e);
-                            }
-                        }
+                map(issue -> issue.
+                        toDetailDto(
+                                likesService.getIssueLikes(issue.getId()),
+                                usersRepository.findById(issue.getUsers().getId()).orElseThrow(() ->
+                                        new IllegalArgumentException("해당 유저를 찾을 수 없습니다.")).toIssueDto(),
+                                commentRepository.findAllByIssue_IdOrderByCreatedAtDesc(issueId, pageable).stream().map(Comment::toDto).toList(),
+                                articleMap.get(issueId), solutionService.getSolution(issueId)
+                        )
                 ).orElseThrow(() -> new IllegalArgumentException("없는 이슈번호입니다."));
 
         return responseDTO;
@@ -131,16 +149,18 @@ public class CommunityService {
      * @throws InterruptedException
      */
     public List<MediumArticle> getMediumApi(String query) throws IOException, InterruptedException {
+        log.info("@@@@@@@@@@ + " + apikey);
         HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create("https://medium2.p.rapidapi.com/topfeeds/" + query + "/top_month?count=3"))
+                .uri(URI.create("https://medium2.p.rapidapi.com/topfeeds/" + query.toLowerCase() + "/top_month?count=3&after=0"))
                 .header("X-RapidAPI-Key", apikey)
                 .header("X-RapidAPI-Host", "medium2.p.rapidapi.com")
                 .method("GET", HttpRequest.BodyPublishers.noBody())
                 .build();
         HttpResponse<String> response = HttpClient.newHttpClient().send(request, HttpResponse.BodyHandlers.ofString());
-
+        log.info("@@@@@@@@@@@ body : " + response.body());
+        log.info("@@@@@@@@@@@ query : " + query);
         JSONParser parser = new JSONParser();
-        JSONObject obj = null;
+        JSONObject obj;
         List<String> relatedArticlesId = null;
         List<MediumArticle> articleList = new ArrayList<>();
 
@@ -161,10 +181,7 @@ public class CommunityService {
         return articleList;
     }
 
-
     public MediumArticle getArticlesInfo(String articleId) throws IOException, InterruptedException {
-
-
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create("https://medium2.p.rapidapi.com/article/" + articleId))
                 .header("X-RapidAPI-Key", apikey)
@@ -178,7 +195,10 @@ public class CommunityService {
 
         try {
             JsonNode jsonNode = objectMapper.readTree(response.body());
-            article = new MediumArticle(jsonNode.get("title").asText(), jsonNode.get("subtitle").asText(), jsonNode.get("image_url").asText(), jsonNode.get("url").asText());
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+
+            article = new MediumArticle(jsonNode.get("title").asText(), jsonNode.get("subtitle").asText(), jsonNode.get("image_url").asText(), jsonNode.get("url").asText(), jsonNode.get("claps").asInt(), LocalDateTime.from(formatter.parse(jsonNode.get("published_at").asText())));
+
         } catch (JsonMappingException e) {
             throw new RuntimeException(e);
         }

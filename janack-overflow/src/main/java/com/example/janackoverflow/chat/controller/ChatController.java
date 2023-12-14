@@ -19,9 +19,7 @@ public class ChatController {
     @GetMapping("/chatList")
     public ResponseEntity<?> chatList(){
         List<ChatRoom> chatRoomList = chatService.findAllRoom();
-
         return ResponseEntity.ok().body(chatRoomList);
-
     }
 //    @PostMapping
 //    public ResponseEntity<?> createRoom(){

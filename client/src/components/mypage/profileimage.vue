@@ -7,56 +7,57 @@
     <div class="grid grid-cols-4 gap-10">
       <div>
         <img
-          class="h-auto max-w-full rounded-lg border-yellow-400"
+          class="h-auto max-w-full rounded-lg border-yellow-400 cursor-pointer"
+          
           src="/images/default.png"
           alt="" @click="setImgName"
         />
       </div>
       <div>
         <img
-          class="h-auto max-w-full rounded-lg border-yellow-400"
+          class="h-auto max-w-full rounded-lg border-yellow-400 cursor-pointer"
           src="/images/money.png"
           alt="" @click="setImgName"
         />
       </div>
       <div>
         <img
-          class="h-auto max-w-full rounded-lg border-yellow-400"
+          class="h-auto max-w-full rounded-lg border-yellow-400 cursor-pointer"
           src="/images/saving.png"
           alt="" @click="setImgName"
         />
       </div>
       <div>
         <img
-          class="h-auto max-w-full rounded-lg border-yellow-400"
+          class="h-auto max-w-full rounded-lg border-yellow-400 cursor-pointer"
           src="/images/coding.png"
           alt="" @click="setImgName"
         />
       </div>
       <div>
         <img
-          class="h-auto max-w-full rounded-lg border-yellow-400"
+          class="h-auto max-w-full rounded-lg border-yellow-400 cursor-pointer"
           src="/images/dev.png"
           alt="" @click="setImgName"
         />
       </div>
       <div>
         <img
-          class="h-auto max-w-full rounded-lg border-yellow-400"
+          class="h-auto max-w-full rounded-lg border-yellow-400 cursor-pointer"
           src="/images/codebug.png"
           alt="" @click="setImgName"
         />
       </div>
       <div>
         <img
-          class="h-auto max-w-full rounded-lg border-yellow-400"
+          class="h-auto max-w-full rounded-lg border-yellow-400 cursor-pointer"
           src="/images/bankbook.png"
           alt="" @click="setImgName"
         />
       </div>
       <div>
         <img
-          class="h-auto max-w-full rounded-lg border-yellow-400"
+          class="h-auto max-w-full rounded-lg border-yellow-400 cursor-pointer"
           src="/images/error.png"
           alt="" @click="setImgName"
         />
@@ -92,7 +93,7 @@ onMounted(()=>{
 async function setImgName(e){
   let imgName = e.target.src.split('/').pop();
   let updateimage = {"profileImage": imgName };
-  await axios.put('/community/profileimage/16',updateimage,{
+  await axios.put('/mypage/profileimage',updateimage,{
     headers:{
       'content-type':'application/json',
       'authorization': props.token

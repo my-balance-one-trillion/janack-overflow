@@ -1,6 +1,7 @@
 package com.example.janackoverflow.community.service;
 
 import com.example.janackoverflow.community.domain.likes.LikesDTO;
+import com.example.janackoverflow.community.entity.Likes;
 import com.example.janackoverflow.community.repository.LikesRepository;
 import com.example.janackoverflow.issue.entity.Issue;
 import com.example.janackoverflow.issue.repository.IssueRepository;
@@ -55,5 +56,13 @@ public class LikesService {
     @Transactional
     public long deleteLike(long issueId, long usersId) {
         return likesRespository.deleteByIssueIdAndUsersId(issueId, usersId);
+    }
+
+    public long selectLikes(Long usersId, Long issueId) {
+        return likesRespository.countByIssueIdAndUsersId(issueId, usersId);
+    }
+
+    public long selectLikesCnt(Long issueId) {
+        return likesRespository.countByIssueId(issueId);
     }
 }

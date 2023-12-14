@@ -25,10 +25,8 @@ import java.util.stream.Collectors;
 public class InputAccountService {
 
     private final InputAccountRepository inputAccountRepository;
-    private final RuleRepository ruleRepository;
-    public InputAccountService(InputAccountRepository inputAccountRepository, RuleRepository ruleRepository){
+    public InputAccountService(InputAccountRepository inputAccountRepository){
         this.inputAccountRepository = inputAccountRepository;
-        this.ruleRepository = ruleRepository;
     }
 
 
@@ -57,8 +55,8 @@ public class InputAccountService {
 
     // 현재 진행 중인 계좌 정보만 조회
     @Transactional(readOnly = true)
-     public Optional<InputAccountResponseDTO> getInProgressAccountByUser(Long userId) {
-        return Optional.ofNullable(inputAccountRepository.findByUsersIdAndStatus(userId, "01")
+     public Optional<InputAccountResponseDTO> getInProgressAccountByUser(Users users) {
+        return Optional.ofNullable(inputAccountRepository.findByUsersIdAndStatus(users.getId(), "01")
                 .map(InputAccountResponseDTO::toDto)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "진행 중인 적금 없음")));
     }
