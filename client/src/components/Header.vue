@@ -1,22 +1,23 @@
 <template>
   <div class="flex items-center justify-between py-2">
     <div class="w-32">
-      <img src="/images/logo.svg" alt="" class="object-contain" />
+      <router-link to="/">
+        <img src="/images/logo.svg" alt="" class="object-contain" />
+      </router-link>
     </div>
     <div class="flex justify-between gap-4 h-auto">
-      <div class="mx-auto">
-        <router-link to="/mypage"
-          ><i class="fa-regular fa-circle-user fa-xl"></i
-        ></router-link>
+      <div class="mx-auto" @click="removeToken">
+        <router-link to="" class="text-gray-600 text-xl">LOGOUT</router-link>
       </div>
       <div class="mx-auto">
-        <router-link to="/logout"
-          ><i class="fa-solid fa-door-open fa-xl"></i
-        ></router-link>
+        <router-link to="/login" class="text-gray-600 text-xl">
+          LOGIN
+        </router-link>
       </div>
-
       <div class="mx-auto">
-        <i class="fa-solid fa-right-to-bracket fa-2xl"></i>
+        <router-link to="/mypage">
+          <i class="fa-regular fa-circle-user fa-2xl"></i>
+        </router-link>
       </div>
       <div class="w-7"></div>
       <div class="mx-auto bars-wrap">

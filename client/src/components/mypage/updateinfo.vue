@@ -185,13 +185,12 @@
 </template>
 
 <script setup>
-import { ref, defineEmits, defineProps } from 'vue';
+import { useAuthStore } from '@/stores/auth'
+import { ref } from 'vue';
 import axios from 'axios';
 
-const props = defineProps(["token", "info"]);
-const emit = defineEmits(['update']);
-
-const userInfo = ref("");
+const authStore = useAuthStore();
+const userInfo = authStore.userInfo;
 const inputPassword = ref("");
 const inputUpdatePassword = ref("");
 const inputUpdatePasswordConfirm = ref("");
@@ -200,7 +199,6 @@ const inputUpdatePasswordConfirm = ref("");
 // 기존 정보 불러오기
 // ----------------------------
 
-userInfo.value = props.info;
 
 // ----------------------------
 // 회원정보 수정하기
@@ -208,22 +206,21 @@ userInfo.value = props.info;
 
 async function updateInfo(e){
   let updateInfo = {
-    "name": userInfo.value.name,
+    "name": userInfo.name,
     "password": inputPassword.value,
-    "digit": userInfo.value.digit,
-    "birth": userInfo.value.birth,
-    "nickname": userInfo.value.nickname,
-    "holder": userInfo.value.holder,
-    "bankName": userInfo.value.bankName,
-    "outputAcntNum": userInfo.value.outputAcntNum
+    "digit": userInfo.digit,
+    "birth": userInfo.birth,
+    "nickname": userInfo.nickname,
+    "holder": userInfo.holder,
+    "bankName": userInfo.bankName,
+    "outputAcntNum": userInfo.outputAcntNum
   };
   await axios.put('/community/myinfo/16',updateInfo,{
     headers:{
       'content-type':'application/json',
-      'authorization': props.token
+      'authorization': authStore.token
     }
   });
-  emit('update','updated');
 }
 
 </script>

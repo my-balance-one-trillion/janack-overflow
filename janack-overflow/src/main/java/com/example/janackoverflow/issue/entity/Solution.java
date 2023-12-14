@@ -17,10 +17,10 @@ public class Solution extends AuditingFields {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
+    @Column(nullable = false, length = 1500)
     private String content;
 
-    @Column(nullable = false)
+    @Column(nullable = false, length = 1500)
     private String code;
 
     @ManyToOne

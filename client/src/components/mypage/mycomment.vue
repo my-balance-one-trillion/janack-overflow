@@ -42,116 +42,29 @@
               </tr>
             </thead>
             <tbody>
-              <tr class="bg-gray-100 border-b">
+              <tr class="border-b" v-for="item in myCommentList.content">
                 <td
                   class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap"
                 >
-                  Mark
+                  {{ item.comment }}
                 </td>
                 <td
                   class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap"
                 >
-                  Otto
+                  {{ item.issue_title }}
                 </td>
                 <td
                   class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap"
                 >
-                  @mdo
+                  {{ item.createdAt }}
                 </td>
                 <td
                   class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap"
                 >
-                  @mdo
-                </td>
-              </tr>
-              <tr class="bg-white border-b">
-                <td
-                  class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap"
-                >
-                  Jacob
-                </td>
-                <td
-                  class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap"
-                >
-                  Dillan
-                </td>
-                <td
-                  class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap"
-                >
-                  @fat
-                </td>
-                <td
-                  class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap"
-                >
-                  @fat
+                  <span class="text-main-red font-bold cursor-pointer" @click="deleteMyComment(item.id)">Delete</span>
                 </td>
               </tr>
-              <tr class="bg-gray-100 border-b">
-                <td
-                  class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap"
-                >
-                  Mark
-                </td>
-                <td
-                  class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap"
-                >
-                  Twen
-                </td>
-                <td
-                  class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap"
-                >
-                  @twitter
-                </td>
-                <td
-                  class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap"
-                >
-                  @twitter
-                </td>
-              </tr>
-              <tr class="bg-white border-b">
-                <td
-                  class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap"
-                >
-                  Bob
-                </td>
-                <td
-                  class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap"
-                >
-                  Dillan
-                </td>
-                <td
-                  class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap"
-                >
-                  @fat
-                </td>
-                <td
-                  class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap"
-                >
-                  @fat
-                </td>
-              </tr>
-              <tr class="bg-white border-b">
-                <td
-                  class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap"
-                >
-                  Bob
-                </td>
-                <td
-                  class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap"
-                >
-                  Dillan
-                </td>
-                <td
-                  class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap"
-                >
-                  @fat
-                </td>
-                <td
-                  class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap"
-                >
-                  @fat
-                </td>
-              </tr>
+
             </tbody>
           </table>
         </div>
@@ -213,5 +126,45 @@
     </div>
   </article>
 </template>
-<script setup></script>
+<script setup>
+import { ref } from 'vue';
+import axios from 'axios';
+import { useAuthStore } from "@/stores/auth";
+
+const myCommentList = ref([]);
+
+// ----------------------------
+// 댓글 불러오기
+// ----------------------------
+
+getMyCommentList();
+async function getMyCommentList(){
+  const response = await axios.get("/mypage/mycomment",{
+    headers:{
+      "Authorization": useAuthStore().token
+    }
+  });
+  myCommentList.value = response.data;
+  console.log(myCommentList.value.content)
+}
+
+// ----------------------------
+// 댓글 지우기
+// ----------------------------
+
+async function deleteMyComment(commentid){
+  let deleteConfirm = window.confirm("정말 삭제하시겠습니까?");
+  if(deleteConfirm){
+    await axios.delete(`/mypage/mycomment/${commentid}`,{
+      headers:{
+        "Authorization":useAuthStore().token
+      }
+    });
+    getMyCommentList();
+  }else{
+    return;
+  }
+}
+
+</script>
 <style scoped></style>

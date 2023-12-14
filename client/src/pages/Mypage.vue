@@ -105,68 +105,31 @@
       </div>
     </aside>
     <section class="ml-10 w-full">
-      <dashboard
-        v-if="currentComponent === 'dashboard'"
-        :token="localStorageToken"
-        :info="userInfo"
-      />
-      <updateinfo
-        v-if="currentComponent === 'updateinfo'"
-        :token="localStorageToken"
-        :info="userInfo"
-      />
-      <myissue
-        v-if="currentComponent === 'myissue'"
-        :token="localStorageToken"
-        :info="userInfo"
-      />
-      <mycomment
-        v-if="currentComponent === 'mycomment'"
-        :token="localStorageToken"
-        :info="userInfo"
-      />
-      <profileimage
-        v-if="currentComponent === 'profileimage'"
-        :token="localStorageToken"
-        :info="userInfo"
-        @update="getUserInfo"
-      />
+      <dashboard v-if="currentComponent === 'dashboard'"/>
+      <updateinfo v-if="currentComponent === 'updateinfo'"/>
+      <myissue v-if="currentComponent === 'myissue'"/>
+      <mycomment v-if="currentComponent === 'mycomment'"/>
+      <profileimage v-if="currentComponent === 'profileimage'"/>
     </section>
   </main>
 </template>
 <script setup>
-import { ref, onMounted } from "vue";
+import { ref } from "vue";
 import { RouterLink } from "vue-router";
 import { useAuthStore } from "@/stores/auth"; 
 
-import dashboard from "../components/mypage/dashboard.vue";
-import profileimage from "../components/mypage/profileimage.vue";
-import updateinfo from "../components/mypage/updateinfo.vue";
-import myissue from "../components/mypage/myissue.vue";
-import mycomment from "../components/mypage/mycomment.vue";
+import dashboard from "@/components/mypage/dashboard.vue";
+import profileimage from "@/components/mypage/profileimage.vue";
+import updateinfo from "@/components/mypage/updateinfo.vue";
+import myissue from "@/components/mypage/myissue.vue";
+import mycomment from "@/components/mypage/mycomment.vue";
 
-const token = ref(useAuthStore().token);
 const userInfo = ref(useAuthStore().userInfo);
 const currentComponent = ref("dashboard");
 
 const changeComponent = (component) => {
   currentComponent.value = component;
 };
-console.log(useAuthStore().userInfo);
-console.log(useAuthStore().token);
-onMounted(async () => {
-  await getUserInfo();
-});
-async function getUserInfo(){
-  const response = await axios.get('/mypage/myinfo', {
-    headers: {
-      'authorization': localStorageToken,
-    },
-  });
-  userInfo.value = response.data;
-
-  console.log("ok")
-}
 
 </script>
 <style scoped></style>

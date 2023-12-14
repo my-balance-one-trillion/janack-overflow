@@ -17,6 +17,6 @@ export const useAuthStore = defineStore('auth', {
     },
     setUserInfo(userInfo) {
       this.userInfo = userInfo;
-    }
+    },
   },
 });

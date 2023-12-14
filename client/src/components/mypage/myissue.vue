@@ -8,7 +8,7 @@
       class="w-full xl:w-8/12 m-12 xl:mb-0 px-4 mx-auto mt-2 flex flex-col items-center"
     >
       <div
-        class="relative flex flex-col min-w break-words bg-white w-full my-12 shadow-lg rounded"
+        class="relative flex flex-col min-w break-words bg-white w-full my-12 shadow-lg"
       >
         <div class="block overflow-x-auto">
           <table class="min-w-full">
@@ -18,19 +18,19 @@
                   scope="col"
                   class="text-m font-medium text-sub-red px-6 py-4 text-left w-1/12"
                 >
-                  #
+                  에러명
                 </th>
                 <th
                   scope="col"
                   class="text-m font-medium text-sub-red px-6 py-4 text-left w-5/12"
                 >
-                  에러명
+                  등록일
                 </th>
                 <th
                   scope="col"
                   class="text-sm font-medium text-sub-red px-6 py-4 text-left w-2/12"
                 >
-                  등록일
+                  카테고리
                 </th>
                 <th
                   scope="col"
@@ -47,141 +47,38 @@
               </tr>
             </thead>
             <tbody>
-              <tr class="bg-gray-100 border-b">
+              <tr class="bg-white border-b" v-for="item in issueList.content">
+         
                 <td
-                  class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900"
+                  class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap"
                 >
-                  1
+                  {{ item.title }}
                 </td>
                 <td
                   class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap"
                 >
-                  Mark
+                  {{ item.createdAt }}
+
                 </td>
                 <td
                   class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap"
                 >
-                  Otto
+                  {{ item.category }}
                 </td>
                 <td
                   class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap"
                 >
-                  @mdo
+                  {{ item.views }}
                 </td>
                 <td
                   class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap"
                 >
-                  @mdo
+                  <span v-if="item.status == '01'" class="bg-main-red text-white rounded-lg p-1"> 진행중</span>
+                  <span v-if="item.status == '02'" class="bg-yellow-300 text-white rounded-lg p-1"> 포기</span>
+                  <span v-if="item.status == '03'" class="bg-main-grn text-white rounded-lg p-1"> 해결</span>
                 </td>
               </tr>
-              <tr class="bg-white border-b">
-                <td
-                  class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900"
-                >
-                  2
-                </td>
-                <td
-                  class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap"
-                >
-                  Jacob
-                </td>
-                <td
-                  class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap"
-                >
-                  Dillan
-                </td>
-                <td
-                  class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap"
-                >
-                  @fat
-                </td>
-                <td
-                  class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap"
-                >
-                  @fat
-                </td>
-              </tr>
-              <tr class="bg-gray-100 border-b">
-                <td
-                  class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900"
-                >
-                  3
-                </td>
-                <td
-                  class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap"
-                >
-                  Mark
-                </td>
-                <td
-                  class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap"
-                >
-                  Twen
-                </td>
-                <td
-                  class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap"
-                >
-                  @twitter
-                </td>
-                <td
-                  class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap"
-                >
-                  @twitter
-                </td>
-              </tr>
-              <tr class="bg-white border-b">
-                <td
-                  class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900"
-                >
-                  4
-                </td>
-                <td
-                  class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap"
-                >
-                  Bob
-                </td>
-                <td
-                  class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap"
-                >
-                  Dillan
-                </td>
-                <td
-                  class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap"
-                >
-                  @fat
-                </td>
-                <td
-                  class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap"
-                >
-                  @fat
-                </td>
-              </tr>
-              <tr class="bg-white border-b">
-                <td
-                  class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900"
-                >
-                  5
-                </td>
-                <td
-                  class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap"
-                >
-                  Bob
-                </td>
-                <td
-                  class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap"
-                >
-                  Dillan
-                </td>
-                <td
-                  class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap"
-                >
-                  @fat
-                </td>
-                <td
-                  class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap"
-                >
-                  @fat
-                </td>
-              </tr>
+
             </tbody>
           </table>
         </div>
@@ -243,5 +140,23 @@
     </div>
   </article>
 </template>
-<script setup></script>
+<script setup>
+import { ref } from 'vue';
+import axios from 'axios';
+import { useAuthStore } from "@/stores/auth";
+ 
+const issueList = ref([]);
+
+getIssueList();
+async function getIssueList(){
+  const response = await axios.get("/mypage/myissue",{
+    headers:{
+      "Authorization": useAuthStore().token
+    }
+  });
+  issueList.value = response.data;
+  console.log(issueList.value.content);
+}
+
+</script>
 <style scoped></style>

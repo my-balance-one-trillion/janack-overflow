@@ -67,10 +67,10 @@
 </template>
 <script setup>
 import axios from 'axios';
-import { defineProps, defineEmits, onMounted } from 'vue';
+import { onMounted } from 'vue';
+import { useAuthStore } from "@/stores/auth"; 
 
-const props = defineProps(["token", "info"]);
-const emit = defineEmits(['update']);
+const authStore = useAuthStore();
 
 // ---------------------------
 // 프로필 이미지 확인
@@ -80,7 +80,7 @@ onMounted(()=>{
   const imgArr = document.querySelectorAll(".grid img");
   for(let img of imgArr){
     img.classList.remove('border-4')
-    if(props.info.profileImage == img.src.split("/").pop()){
+    if(authStore.userInfo.profileImage == img.src.split("/").pop()){
       img.classList.add('border-4');
     }
   }
@@ -96,7 +96,7 @@ async function setImgName(e){
   await axios.put('/mypage/profileimage',updateimage,{
     headers:{
       'content-type':'application/json',
-      'authorization': props.token
+      'authorization': authStore.token
     }
   });
   const imgArr = document.querySelectorAll(".grid img");
@@ -106,7 +106,6 @@ async function setImgName(e){
   e.target.classList.add('border-4');
   emit('update','updated');
 }
-
 
 </script>
 <style scoped></style>

@@ -3,6 +3,8 @@ package com.example.janackoverflow.mypage.controller;
 import com.example.janackoverflow.community.domain.CommentDTO;
 import com.example.janackoverflow.global.security.auth.NowUserDetails;
 import com.example.janackoverflow.issue.domain.response.IssueResponseDTO;
+import com.example.janackoverflow.mypage.domain.response.myCommentResponseDTO;
+import com.example.janackoverflow.mypage.domain.response.myIssueResponseDTO;
 import com.example.janackoverflow.user.service.UsersService;
 import com.example.janackoverflow.mypage.service.MypageService;
 import com.example.janackoverflow.user.domain.request.UsersRequestDTO;
@@ -52,14 +54,14 @@ public class MypageController {
     @GetMapping("mypage/myissue")
     public ResponseEntity readMyIssue( @AuthenticationPrincipal NowUserDetails nowUserDetails){
         Long usersId = nowUserDetails.getId();
-        Page<IssueResponseDTO> myIssueList = mypageService.readMyIssue(usersId);
+        Page<myIssueResponseDTO> myIssueList = mypageService.readMyIssue(usersId);
         return new ResponseEntity(myIssueList, HttpStatus.OK);
     }
 //    내가쓴 댓글 보기
     @GetMapping("/mypage/mycomment")
     public ResponseEntity readMyComment( @AuthenticationPrincipal NowUserDetails nowUserDetails){
         Long usersId = nowUserDetails.getId();
-        Page<CommentDTO.ResponseDto> myCommentList = mypageService.readMyComment(usersId);
+        Page<myCommentResponseDTO> myCommentList = mypageService.readMyComment(usersId);
         return new ResponseEntity(myCommentList ,HttpStatus.OK);
     }
 
