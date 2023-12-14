@@ -6,6 +6,7 @@ import Login from "@/pages/Login.vue";
 import Saving from "@/pages/Saving.vue";
 import SignUp from "@/pages/SignUp.vue";
 import Community from "@/pages/Community.vue";
+import Detail from "@/pages/CommunityDetail.vue";
 import Mypage from "@/pages/Mypage.vue";
 import SavingDetails from "@/components/Saving/SavingDetails.vue";
 import OpenAccount from "@/components/Saving/OpenAccount.vue";
@@ -33,6 +34,7 @@ const routes = [
     {path: "/open/finish", component: OpenAccountFinish},
     {path: "/signup", component: SignUp},
     {path: "/community", component: Community},
+    {path: '/community/detail/:id', component: Detail },
     {path: "/mypage", component: Mypage},
 ];
 
