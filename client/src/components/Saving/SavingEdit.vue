@@ -1,5 +1,32 @@
 <script setup>
+// 적금 정보
+import {onMounted, ref} from "vue";
+import axios from "axios";
+import dayjs from "dayjs";
 
+const accountInfo = ref({
+  anctName: '',
+  acntNum: '',
+  acntAmount: 0,
+  goalName: '',
+  goalAmount: 0,
+  createdAt: '',
+});
+
+onMounted(async () => {
+  try {
+    const response = await axios.get('/savings/progress');
+    const data = response.data;
+    accountInfo.value.anctName = data.acntName;
+    accountInfo.value.acntNum = data.acntNum;
+    accountInfo.value.acntAmount = data.acntAmount;
+    accountInfo.value.goalName = data.goalName;
+    accountInfo.value.goalAmount = data.goalAmount;
+    accountInfo.value.createdAt = dayjs(data.createdAt).format('YYYY년 MM월 DD일');
+  } catch (error) {
+    console.error(error);
+  }
+});
 </script>
 
 <template>
@@ -13,7 +40,7 @@
         <div class="px-14 py-8 bg-gray-100 rounded-3xl shadow">
           <input
               class="w-1/2 text-gray-700 text-2xl font-light bg-transparent border-0 border-b-4 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-red-400"
-              placeholder="적금명을 입력해주세요."
+              :placeholder="accountInfo.anctName"
               required type="text"/>
         </div>
       </div>
@@ -29,7 +56,7 @@
             <div class="text-red-500 text-2xl font-medium ">목표명</div>
             <input
                 class="my-5 w-full text-gray-700 text-2xl font-light bg-transparent border-0 border-b-4 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-red-400"
-                placeholder="목표명을 입력해주세요."
+                :placeholder="accountInfo.goalName"
                 required type="text"/>
             <div>
             </div>
@@ -37,7 +64,7 @@
               <div class="text-red-500 text-2xl font-medium ">목표 금액</div>
               <input
                   class="my-5 w-1/2 text-gray-700 text-2xl font-light bg-transparent border-0 border-b-4 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-red-400"
-                  placeholder="목표 금액을 입력해주세요."
+                  :placeholder="Number(accountInfo.goalAmount).toLocaleString()"
                   required type="number"/>
               <span class="text-gray-800 text-3xl font-light">원</span>
               <div>
@@ -57,7 +84,9 @@
           <div class="flex justify-center items-center">
             <div class="w-1/4 text-gray-800 text-2xl font-medium">30분 미만</div>
             <div>
-              <input class="mr-3 px-6 py-3 w-1/2 text-gray-700 text-2xl font-light bg-gray-200 border-0 focus:outline-none focus:ring-0 focus:border-red-400" type="text"/>
+              <input class="mr-3 px-6 py-3 w-1/2 text-gray-700 text-2xl font-light bg-gray-200 border-0 focus:outline-none focus:ring-0 focus:border-red-400"
+                     :placeholder="accountInfo.rule"
+                     type="text"/>
               <span class="px-6 py-3 text-gray-800 text-2xl font-light">원</span>
             </div>
           </div>

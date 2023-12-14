@@ -21,6 +21,7 @@ const routes = [
     {path: "/login", component: Login},
     {path: "/saving", component:Saving,
         children:[
+            { path: '', component: SavingDetails },
             {path:'details', component: SavingDetails},
             {path:'record', component: SavingRecord},
             {path:'edit', component: SavingEdit},

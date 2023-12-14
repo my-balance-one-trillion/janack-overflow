@@ -1,6 +1,32 @@
 <script setup>
+import axios from 'axios';
+import { ref, onMounted } from 'vue';
+import dayjs from "dayjs";
+
+const accountInfo = ref({
+  anctName: '',
+  goalName: '',
+  goalAmount: 0,
+  acntNum: '',
+  createdAt: '',
+});
+
+onMounted(async () => {
+  try {
+    const response = await axios.get('/savings/progress');
+    const data = response.data;
+    accountInfo.value.anctName = data.acntName;
+    accountInfo.value.goalName = data.goalName;
+    accountInfo.value.goalAmount = data.goalAmount;
+    accountInfo.value.acntNum = data.acntNum;
+    accountInfo.value.createdAt = dayjs(data.createdAt).format('YYYY년 MM월 DD일');
+  } catch (error) {
+    console.error(error);
+  }
+});
 
 </script>
+
 
 <template>
   <div class="flex justify-center my-20">
@@ -18,18 +44,22 @@
   </div>
 
   <div class="w-9/12 m-auto px-32 py-10 my-10 bg-gray-100 rounded-3xl shadow text-center">
-    <div class="mt-5 text-center text-4xl font-bold">스프링마스터 적금</div>
+    <div class="mt-5 text-center text-4xl text-main-red font-bold">{{  accountInfo.anctName}} <span class="text-black">적금</span></div>
+    <div class="my-16 flex justify-between">
+      <div class="text-3xl font-medium">목표</div>
+      <div class="text-3xl text-gray-700 font-light">{{ accountInfo.goalName }}</div>
+    </div>
     <div class="my-16 flex justify-between">
       <div class="text-3xl font-medium">목표 금액</div>
-      <div class="text-3xl text-gray-700 font-light">200,000원</div>
+      <div class="text-3xl text-gray-700 font-light">{{ accountInfo.goalAmount }}원</div>
     </div>
     <div class="my-16 flex justify-between">
       <div class="text-3xl font-medium">적금 계좌</div>
-      <div class="text-3xl text-gray-700 font-light">1234-5678-0000000</div>
+      <div class="text-3xl text-gray-700 font-light">{{ accountInfo.acntNum }}</div>
     </div>
     <div class="my-16 mb-10 flex justify-between">
       <div class="text-3xl font-medium">가입일</div>
-      <div class="text-3xl text-gray-700 font-light">2023. 12. 12</div>
+      <div class="text-3xl text-gray-700 font-light">{{ accountInfo.createdAt }}</div>
     </div>
   </div>
 

@@ -19,6 +19,7 @@ public class IssueResponseDTO {
     private String category;
     private String code;
     private LocalDateTime createdAt;
+    private int amount;
 
     public static IssueResponseDTO toDto(Issue issue){
         return IssueResponseDTO.builder()
@@ -27,6 +28,7 @@ public class IssueResponseDTO {
                 .category(issue.getCategory())
                 .code(issue.getCode())
                 .createdAt(issue.getCreatedAt())
+                .amount(issue.getAmount())
                 .build();
     }
 }
