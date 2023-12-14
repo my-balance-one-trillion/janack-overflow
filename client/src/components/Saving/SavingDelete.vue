@@ -1,5 +1,24 @@
 <script setup>
 
+import axios from "axios";
+import {useAuthStore} from "../../stores/auth";
+import router from "../../router";
+
+const deleteAccount = async () => {
+  try {
+    await axios.put('/savings/giveup', {},
+         {
+          headers: {
+            Authorization: useAuthStore().token,
+          }
+        });
+    await router.push({
+      path: "/",
+    });
+  } catch (error) {
+    console.log(error);
+  }
+}
 </script>
 
 <template>
@@ -13,7 +32,7 @@
       <div class="text-3xl text-rose-950">정말로 적금을 삭제하시겠습니까? </div>
     </div>
     <div>
-      <button type="button" class="bg-rose-950 hover:bg-rose-900 m-2 px-10 py-5 rounded-xl ">
+      <button @click="deleteAccount" type="button" class="bg-rose-950 hover:bg-rose-900 m-2 px-10 py-5 rounded-xl ">
         <div class="text-white text-3xl font-bold ">적금 삭제</div>
       </button>
     </div>

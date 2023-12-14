@@ -144,7 +144,7 @@ public class IssueService {
                     // 해당 에러에 대한 해결책 조회
                     List<Solution> solutions = solutionRepository.findByIssueId(issue.getId());
 
-                    // 각 해결책에 대해 년도와 월을 비교
+                    // 각 해결에 대해 년도와 월을 비교
                     return solutions.stream().anyMatch(solution ->
                             solution.getCreatedAt().getYear() == year && solution.getCreatedAt().getMonthValue() == month);
                 })

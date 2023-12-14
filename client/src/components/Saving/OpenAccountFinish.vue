@@ -2,6 +2,7 @@
 import axios from 'axios';
 import { ref, onMounted } from 'vue';
 import dayjs from "dayjs";
+import {useAuthStore} from "../../stores/auth";
 
 const accountInfo = ref({
   anctName: '',
@@ -13,8 +14,12 @@ const accountInfo = ref({
 
 onMounted(async () => {
   try {
-    const response = await axios.get('/savings/progress');
-    const data = response.data;
+    const response = await axios.get('/savings/progress',{
+      headers: {
+        Authorization: useAuthStore().token,
+      }
+    });
+    const data = response.data.inProgressAccount;
     accountInfo.value.anctName = data.acntName;
     accountInfo.value.goalName = data.goalName;
     accountInfo.value.goalAmount = data.goalAmount;
@@ -51,7 +56,7 @@ onMounted(async () => {
     </div>
     <div class="my-16 flex justify-between">
       <div class="text-3xl font-medium">목표 금액</div>
-      <div class="text-3xl text-gray-700 font-light">{{ accountInfo.goalAmount }}원</div>
+      <div class="text-3xl text-gray-700 font-light">{{ Number(accountInfo.goalAmount).toLocaleString() }}원</div>
     </div>
     <div class="my-16 flex justify-between">
       <div class="text-3xl font-medium">적금 계좌</div>

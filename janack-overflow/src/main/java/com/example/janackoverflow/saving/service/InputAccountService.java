@@ -37,8 +37,6 @@ public class InputAccountService {
         if(inputAccountRepository.findByUsersIdAndStatus(users.getId(), "01").isPresent()){
             throw new BusinessLogicException(ExceptionCode.ACCOUNT_EXIST);
         }
-        // 회원 정보 확인
-//        Users users = userRepository.findById(users);
 
         InputAccount inputAccount = inputAccountRequestDTO.toEntity(users);
         InputAccount savedInputAccount = inputAccountRepository.save(inputAccount);
@@ -63,8 +61,8 @@ public class InputAccountService {
 
     // 사용자의 모든 입금 계좌(적금 계좌) 조회
     @Transactional(readOnly = true)
-    public List<InputAccountResponseDTO> getAccountsByUser(Long id){
-        List<InputAccount> allAccountsByUser =  inputAccountRepository.findByUsersId(id);
+    public List<InputAccountResponseDTO> getAccountsByUser(Users users){
+        List<InputAccount> allAccountsByUser =  inputAccountRepository.findByUsersIdOrderByCreatedAtDesc(users.getId());
 
         if (allAccountsByUser.isEmpty()) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "적금 없음");
@@ -77,8 +75,8 @@ public class InputAccountService {
 
     // 계좌 정보 수정
     @Transactional
-    public InputAccount updateInputAccount(InputAccountRequestDTO inputAccountRequestDTO, Long userId) {
-        InputAccount updateAccount = inputAccountRepository.findByUsersIdAndStatus(userId, "01")
+    public InputAccount updateInputAccount(InputAccountRequestDTO inputAccountRequestDTO, Users users) {
+        InputAccount updateAccount = inputAccountRepository.findByUsersIdAndStatus(users.getId(), "01")
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "진행 중인 적금 없음"));
 
         // 적금 정보 수정 (적금 이름, 적금 목표명, 적금 목표 금액)

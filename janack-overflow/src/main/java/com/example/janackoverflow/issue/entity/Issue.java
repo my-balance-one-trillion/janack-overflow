@@ -6,6 +6,7 @@ import com.example.janackoverflow.global.entity.AuditingFields;
 import com.example.janackoverflow.issue.domain.IssueDTO;
 import com.example.janackoverflow.issue.domain.SolutionDTO;
 import com.example.janackoverflow.issue.domain.request.CreateIssueRequestDTO;
+import com.example.janackoverflow.saving.entity.InputAccount;
 import com.example.janackoverflow.user.entity.Users;
 import jakarta.persistence.*;
 import lombok.*;
@@ -35,10 +36,10 @@ public class Issue extends AuditingFields {
     @Column(nullable = false)
     private String title;
 
-    @Column(nullable = false)
+    @Column(nullable = false, length = 1500)
     private String content;
 
-    @Column(nullable = false)
+    @Column(nullable = false, length = 1500)
     private String code;
 
     @Column(nullable = false)
@@ -56,7 +57,11 @@ public class Issue extends AuditingFields {
 
     @ColumnDefault(value = "0")
     private Integer views;
-  
+
+    @ManyToOne
+    @JoinColumn(name="inputAccount_id")
+    private InputAccount inputAccount;
+
     public IssueDTO.ResponseDTO toDto(long likes, CommunityUsersDTO communityUsersDTO) {
         return IssueDTO.ResponseDTO.builder()
                 .id(id)
