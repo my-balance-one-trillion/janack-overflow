@@ -7,6 +7,7 @@ import com.example.janackoverflow.issue.domain.response.IssueResponseDTO;
 import com.example.janackoverflow.issue.domain.response.StackOverflowResponse;
 import com.example.janackoverflow.issue.entity.Issue;
 import com.example.janackoverflow.issue.repository.IssueRepository;
+import com.example.janackoverflow.saving.entity.InputAccount;
 import com.example.janackoverflow.saving.repository.InputAccountRepository;
 import com.example.janackoverflow.user.entity.Users;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -16,10 +17,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.reactive.function.client.WebClient;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class IssueService {
@@ -46,6 +47,13 @@ public class IssueService {
         return issueRepository.save(issueRequestDTO.toEntity(users));
     }
 
+    // 사용자별 에러 전체 조회
+    @Transactional(readOnly = true)
+    public List<IssueResponseDTO> getAllIssuesByUserId(Users users) {
+        return issueRepository.findByUsersId(users.getId()).stream()
+                .map(IssueResponseDTO::toDto)
+                .collect(Collectors.toList());
+    }
     // 에러 조회
     @Transactional(readOnly = true)
     public Optional<IssueResponseDTO> getIssueById(Long issueId){
@@ -121,4 +129,5 @@ public class IssueService {
         issue.updateStatus("02");
         return issueRepository.save(issue);
     }
+
 }
