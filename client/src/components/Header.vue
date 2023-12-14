@@ -6,10 +6,10 @@
       </router-link>
     </div>
     <div class="flex justify-between gap-4 h-auto">
-      <div class="mx-auto" @click="removeToken">
+      <div class="mx-auto" @click="removeToken" v-if="useAuthStore().token">
         <router-link to="" class="text-gray-600 text-xl">LOGOUT</router-link>
       </div>
-      <div class="mx-auto">
+      <div class="mx-auto" v-else>
         <router-link to="/login" class="text-gray-600 text-xl">
           LOGIN
         </router-link>
@@ -43,10 +43,20 @@
 </template>
 <script setup>
 import { ref } from 'vue';
+import { useAuthStore } from '@/stores/auth';
 
 const menuBar = ref(null);
 const nav = ref(null);
 const menuBg = ref(null);
+
+const authStore = useAuthStore();
+
+
+function removeToken(){
+  localStorage.removeItem('token');
+  authStore.clearToken();
+  alert("로그아웃되었습니다.");
+}
 
 function menuOnClick() {
     menuBar.value.classList.toggle("change");

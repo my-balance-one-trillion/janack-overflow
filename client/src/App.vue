@@ -1,26 +1,39 @@
 <template>
   <div class="container mx-auto max-w-custom">
     <Header></Header>
-    <Router-View v-if="userInfoLoaded" />
+    <Router-View />
   </div>
 </template>
 
 <script setup>
 import axios from "axios";
-import { onBeforeMount ,ref } from "vue";
+import { onBeforeMount } from "vue";
 import Header from "@/components/Header.vue";
 import { useAuthStore } from "@/stores/auth";
+import { useRouter } from "vue-router";
 
 const authStore = useAuthStore();
-const userInfoLoaded = ref(false);
+const router = useRouter();
 
-onBeforeMount (async () => {
-  if (authStore.token) {
-    await getUserInfo();
-    console.log("사용자 정보가 스토어에 등록되었습니다.")
-    userInfoLoaded.value = true;
-  }
+onBeforeMount(async () => {
+  await handleRouteLogic();
 });
+
+router.beforeEach(async (to, from, next) => {
+  await handleRouteLogic();
+  next();
+});
+
+async function handleRouteLogic() {
+  try {
+    if (authStore.token) {
+      await getUserInfo();
+      console.log("사용자 정보가 스토어에 등록되었습니다.");
+    }
+  } catch (error) {
+    console.error("getUserInfo 오류:", error);
+  }
+}
 
 async function getUserInfo() {
   const response = await axios.get("/mypage/myinfo", {
@@ -29,9 +42,7 @@ async function getUserInfo() {
     },
   });
   authStore.setUserInfo(response.data);  
-  console.log("함수 내 유저 인포 생성.")
 }
-console.log("함수 외 유저 인포 생성.")
 </script>
 
 <style scoped>

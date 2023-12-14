@@ -1,5 +1,5 @@
 <template>
-  <main class="my-10 flex items-start">
+  <main class="my-10 flex items-start" v-if="authStore.token">
     <aside class="flex flex-row">
       <div
         class="flex flex-col w-56 bg-white rounded-3xl overflow-hidden border border-sub-red"
@@ -112,10 +112,11 @@
       <profileimage v-if="currentComponent === 'profileimage'"/>
     </section>
   </main>
+  <main v-else></main>
 </template>
 <script setup>
-import { ref } from "vue";
-import { RouterLink } from "vue-router";
+import { onBeforeMount, ref } from "vue";
+import { useRouter } from "vue-router";
 import { useAuthStore } from "@/stores/auth"; 
 
 import dashboard from "@/components/mypage/dashboard.vue";
@@ -124,12 +125,21 @@ import updateinfo from "@/components/mypage/updateinfo.vue";
 import myissue from "@/components/mypage/myissue.vue";
 import mycomment from "@/components/mypage/mycomment.vue";
 
-const userInfo = ref(useAuthStore().userInfo);
+const authStore = useAuthStore();
+const router = useRouter();
+
+const userInfo = ref(authStore.userInfo);
 const currentComponent = ref("dashboard");
 
 const changeComponent = (component) => {
   currentComponent.value = component;
 };
 
+onBeforeMount(()=>{
+  if(!authStore.token){
+    alert("로그인이 필요합니다.");
+    router.push("/login");
+  }
+});
 </script>
 <style scoped></style>
