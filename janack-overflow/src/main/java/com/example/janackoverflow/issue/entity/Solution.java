@@ -1,6 +1,7 @@
 package com.example.janackoverflow.issue.entity;
 
 import com.example.janackoverflow.global.entity.AuditingFields;
+import com.example.janackoverflow.issue.domain.SolutionDTO;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -25,4 +26,12 @@ public class Solution extends AuditingFields {
     @ManyToOne
     @JoinColumn(name = "issue_id")
     private Issue issue;
+
+    public SolutionDTO toDto() {
+        return SolutionDTO.builder()
+                .id(id)
+                .content(content)
+                .code(code)
+                .build();
+    }
 }
