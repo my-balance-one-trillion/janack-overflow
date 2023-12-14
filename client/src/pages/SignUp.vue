@@ -73,7 +73,7 @@
                     <div class="relative">
                       <input autocomplete="off" id="birth" name="birth" type="text" v-model="state.input.birth"
                       class="focus:ouline-none focus:ring-0 peer placeholder-transparent h-10 w-full border-t-0 border-l-0 border-r-0 border-b-2 
-                      border-red-700 text-gray-900 focus:outline-none focus:borer-rose-600" placeholder="birth" required/>
+                      border-red-700 text-gray-900 focus:outline-none focus:borer-rose-600" placeholder="Birth" required/>
                       <label for="birth" 
                       class="absolute left-0 -top-3.5 text-gray-600 text-sm peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-440 peer-placeholder-shown:top-2 transition-all peer-focus:-top-3.5 peer-focus:text-gray-600 peer-focus:text-sm">생년월일</label>
                     </div>
@@ -160,7 +160,7 @@ export default {
         name: "",
         nickname: "",
         digit: "",
-        birth: "",
+        birth: "2023-12-12",
         bankName: "",
         holder: "",
         outputAcntNum: ""

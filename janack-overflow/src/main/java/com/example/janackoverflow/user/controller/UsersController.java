@@ -24,8 +24,8 @@ public class UsersController {
         || usersRequestDTO.getPassword().isEmpty()
         || usersRequestDTO.getName().isEmpty()
         || usersRequestDTO.getNickname().isEmpty()
-        || usersRequestDTO.getDigit().isEmpty()
-        || usersRequestDTO.getBirth() == null){
+        || usersRequestDTO.getDigit().isEmpty()){
+        //|| usersRequestDTO.getBirth() == null){
             return new ResponseEntity<>("필수 입력 항목입니다", HttpStatus.FORBIDDEN);
         }
 

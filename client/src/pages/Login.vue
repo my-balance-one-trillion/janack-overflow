@@ -96,7 +96,7 @@ export default {
           localStorage.setItem('token',response.headers.authorization);
           
           window.alert(`로그인이 수행되었습니다`);
-          router.push('/')
+          router.push('/');
 
         }).catch( () => {
           console.log("로그인 실패");
