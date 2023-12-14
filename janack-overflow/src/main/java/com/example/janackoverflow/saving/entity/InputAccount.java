@@ -4,6 +4,7 @@ import com.example.janackoverflow.global.entity.AuditingFields;
 import com.example.janackoverflow.user.entity.Users;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.ColumnDefault;
 
 import java.time.LocalDateTime;
 
@@ -32,6 +33,7 @@ public class InputAccount extends AuditingFields {
 
     private LocalDateTime completedAt;
 
+    @ColumnDefault(value = "'01'")
     @Column(length = 2, nullable = false)
     private String status;
 
@@ -39,6 +41,7 @@ public class InputAccount extends AuditingFields {
     @JoinColumn(name = "users_id", nullable = false)
     private Users users;
 
+    @ColumnDefault(value = "0")
     private int acntAmount;
 
 

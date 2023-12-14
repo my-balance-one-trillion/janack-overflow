@@ -2,15 +2,19 @@ package com.example.janackoverflow.saving.service;
 
 import com.example.janackoverflow.global.exception.BusinessLogicException;
 import com.example.janackoverflow.global.exception.ExceptionCode;
-import com.example.janackoverflow.saving.domain.request.InputAccountRequestDTO;
 import com.example.janackoverflow.saving.domain.request.RuleRequestDTO;
-import com.example.janackoverflow.saving.domain.request.SavingRequestDTO;
+import com.example.janackoverflow.saving.domain.response.InputAccountResponseDTO;
+import com.example.janackoverflow.saving.domain.response.RuleResponseDTO;
 import com.example.janackoverflow.saving.entity.InputAccount;
 import com.example.janackoverflow.saving.entity.Rule;
 import com.example.janackoverflow.saving.repository.RuleRepository;
 import com.example.janackoverflow.user.entity.Users;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.server.ResponseStatusException;
+
+import java.util.Optional;
 
 @Service
 public class RuleService {
@@ -40,5 +44,16 @@ public class RuleService {
                 ruleRequestDTO.getUnderThreeHour(),
                 ruleRequestDTO.getUnderThreeHour());
         return ruleRepository.save(updateRule);
+    }
+
+    // 규칙 조회
+    @Transactional(readOnly = true)
+    public Optional<RuleResponseDTO> getInProgressRuleByUser(Users users, Optional<InputAccountResponseDTO> inProgressAccount) {
+        if(inProgressAccount.isPresent()){
+            throw new BusinessLogicException(ExceptionCode.RULE_NOT_FOUND);
+        }
+        return Optional.ofNullable(ruleRepository.findByUsersIdAndInputAccountId(users.getId(), inProgressAccount.get().getId())
+                .map(RuleResponseDTO::toDto)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "규칙 없음")));
     }
 }
