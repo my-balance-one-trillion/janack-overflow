@@ -1,8 +1,11 @@
 package com.example.janackoverflow.saving.controller;
 
 import com.example.janackoverflow.global.security.auth.NowUserDetails;
+import com.example.janackoverflow.issue.domain.response.IssueResponseDTO;
+import com.example.janackoverflow.issue.service.IssueService;
 import com.example.janackoverflow.saving.domain.request.SavingRequestDTO;
 import com.example.janackoverflow.saving.domain.response.InputAccountResponseDTO;
+import com.example.janackoverflow.saving.domain.response.RuleResponseDTO;
 import com.example.janackoverflow.saving.entity.InputAccount;
 import com.example.janackoverflow.saving.entity.Rule;
 import com.example.janackoverflow.saving.service.InputAccountService;
@@ -25,17 +28,21 @@ public class SavingController {
 
     private final InputAccountService inputAccountService;
     private final RuleService ruleService;
+    private final IssueService issueService;
 
-    public SavingController(InputAccountService inputAccountService, RuleService ruleService){
+    public SavingController(InputAccountService inputAccountService, RuleService ruleService, IssueService issueService){
         this.inputAccountService = inputAccountService;
         this.ruleService = ruleService;
+        this.issueService = issueService;
     }
 
     // 적금 개설
     @PostMapping
-    public ResponseEntity<?> createAccount(@Validated @RequestBody SavingRequestDTO savingRequestDTO,
-                                           @AuthenticationPrincipal NowUserDetails userDetails){
-        Users users = userDetails.getUser();
+    public ResponseEntity<?> createAccount(@Validated @RequestBody SavingRequestDTO savingRequestDTO){
+//                                           @AuthenticationPrincipal NowUserDetails userDetails){
+//        Users users = userDetails.getUser();
+        Users users = new Users();
+        users.setId(1L);
 
         try {
             InputAccount inputAccount = inputAccountService.createInputAccount(savingRequestDTO.getInputAccountRequestDTO(), users);
@@ -57,10 +64,28 @@ public class SavingController {
 
     // 적금 내역 (진행 중인 적금 정보)
     @GetMapping("/progress")
-    public ResponseEntity<?> getUserAccountProgress(@AuthenticationPrincipal NowUserDetails userDetails){
-        Long userId = userDetails.getUser().getId();
-        Optional<InputAccountResponseDTO> inProgressAccount = inputAccountService.getInProgressAccountByUser(userId);
-        return new ResponseEntity<>(inProgressAccount, HttpStatus.OK);
+    public ResponseEntity<?> getUserAccountInProgress(){
+//            @AuthenticationPrincipal NowUserDetails userDetails){
+//        Long userId = userDetails.getUser().getId();
+        Users users = new Users();
+        users.setId(1L);
+        Optional<InputAccountResponseDTO> inProgressAccount = inputAccountService.getInProgressAccountByUser(users);
+        Optional<RuleResponseDTO> inProgressRule = ruleService.getInProgressRuleByUser(users, inProgressAccount);
+
+        Map<String, Object> response = new HashMap<>();
+        response.put("inProgressAccount", inProgressAccount);
+        response.put("inProgressRule", inProgressRule);
+
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+    // 월별 내역 조회 (사용자 에러 내역 월별 조회)
+    @GetMapping("/monthly")
+    public ResponseEntity<?> getAllIssues(){
+        Users users = new Users();
+        users.setId(1L);
+        List<IssueResponseDTO> issue = issueService.getAllIssuesByUserId(users);
+        return new ResponseEntity<>(issue, HttpStatus.OK);
     }
 
     // 적금 기록 (사용자 적금 전부 조회)

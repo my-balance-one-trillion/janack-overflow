@@ -41,15 +41,15 @@
   </div>
 </template>
 <script setup>
-import { ref } from "vue";
+import { ref } from 'vue';
 
 const menuBar = ref(null);
 const nav = ref(null);
 const menuBg = ref(null);
 
 function menuOnClick() {
-  menuBar.value.classList.toggle("change");
-  nav.value.classList.toggle("change");
-  menuBg.value.classList.toggle("change-bg");
+    menuBar.value.classList.toggle("change");
+    nav.value.classList.toggle("change");
+    menuBg.value.classList.toggle("change-bg");
 }
 </script>
