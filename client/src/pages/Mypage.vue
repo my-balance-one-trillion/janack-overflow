@@ -157,5 +157,16 @@ console.log(useAuthStore().token);
 onMounted(async () => {
   await getUserInfo();
 });
+async function getUserInfo(){
+  const response = await axios.get('/mypage/myinfo', {
+    headers: {
+      'authorization': localStorageToken,
+    },
+  });
+  userInfo.value = response.data;
+
+  console.log("ok")
+}
+
 </script>
 <style scoped></style>
