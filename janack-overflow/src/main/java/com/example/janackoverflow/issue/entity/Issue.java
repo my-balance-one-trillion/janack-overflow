@@ -35,10 +35,10 @@ public class Issue extends AuditingFields {
     @Column(nullable = false)
     private String title;
 
-    @Column(nullable = false)
+    @Column(nullable = false, length = 1500)
     private String content;
 
-    @Column(nullable = false)
+    @Column(nullable = false, length = 1500)
     private String code;
 
     @Column(nullable = false)
@@ -66,6 +66,7 @@ public class Issue extends AuditingFields {
                 .category(category)
                 .code(code)
                 .keyword(keyword)
+                .createdAt(getCreatedAt())
                 .status(status)
                 .publicStatus(publicStatus)
                 .amount(amount)

@@ -67,6 +67,7 @@ public class CommunityService {
     public Page<IssueDTO.ResponseDTO> getSolvedIssueList(String order, String category, int pageNo) {
         log.info("pageNo : " + pageNo);
         Pageable pageable = null;
+
         pageable = PageRequest.of(pageNo, 10, Sort.by(Sort.Direction.DESC, Objects.requireNonNullElse(order, "id")));
         // 페이져블 객체와 errorId로 모든 comment를 들고온다.
         Page<Issue> issueList = issueRepository.findAll(pageable);
@@ -80,6 +81,18 @@ public class CommunityService {
         log.info("total : " + issuePage.getTotalElements());
 
         return issuePage;
+    }
+
+    public Page<IssueDTO.ResponseDTO> getIssueBySelectedCategory(String category, int pageNo) {
+
+        Pageable pageable = PageRequest.of(pageNo, 10, Sort.by(Sort.Direction.DESC, "id"));
+        List<IssueDTO.ResponseDTO> issuePageList = communityRepositoryImpl.findAllByCategoryName(category, pageable).map(issue ->
+                issue.toDto(likesService.getIssueLikes(issue.getId()),
+                        usersRepository.findById(issue.getUsers().getId()).orElseThrow(() ->
+                                new IllegalArgumentException("해당 유저를 찾을 수 없습니다.")).toIssueDto())).toList();
+
+        // TODO pageImpl 하나만 사용해서 구현하기 현재 repo안에서도 사용중
+        return new PageImpl<>(issuePageList, pageable, issuePageList.size());
     }
 
     public Page<IssueDTO.ResponseDTO> searchKeyword(String keyword, String title) {

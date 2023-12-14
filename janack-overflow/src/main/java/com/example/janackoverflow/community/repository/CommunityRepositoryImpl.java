@@ -45,6 +45,18 @@ public class CommunityRepositoryImpl implements CommunityRepository {
         return new PageImpl<>(Issues, pageable, getCategoryCount(title, category));
     }
 
+    @Override
+    public Page<Issue> findAllByCategoryName(String category, Pageable pageable) {
+        List<Issue> Issues = jpaQueryFactory.selectFrom(issue)
+                .where(eqCategory(category))
+                .orderBy(new OrderSpecifier<>(Order.DESC, issue.createdAt))
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize())
+                .fetch();
+
+        return new PageImpl<>(Issues, pageable, getCategoryCount(category));
+    }
+
     private Long getCount(String keyword) {
         return jpaQueryFactory.select(issue.count())
                 .from(issue)
@@ -56,6 +68,13 @@ public class CommunityRepositoryImpl implements CommunityRepository {
         return jpaQueryFactory.select(issue.count())
                 .from(issue)
                 .where(eqCategories(category).or(eqTitle(title)))
+                .fetchOne();
+    }
+
+    private Long getCategoryCount(String category) {
+        return jpaQueryFactory.select(issue.count())
+                .from(issue)
+                .where(eqCategory(category))
                 .fetchOne();
     }
 
@@ -78,6 +97,17 @@ public class CommunityRepositoryImpl implements CommunityRepository {
         for (String category : categories){
             booleanBuilder.or(issue.category.contains(category));
         }
+
+        return booleanBuilder;
+    }
+
+    private BooleanBuilder eqCategory(String category){
+        if(category == null){
+            return null;
+        }
+
+        BooleanBuilder booleanBuilder = new BooleanBuilder();
+        booleanBuilder.or(issue.category.eq(category));
 
         return booleanBuilder;
     }

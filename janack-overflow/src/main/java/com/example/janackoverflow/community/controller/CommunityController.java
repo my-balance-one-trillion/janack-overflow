@@ -9,6 +9,7 @@ import com.example.janackoverflow.community.service.LikesService;
 import com.example.janackoverflow.issue.domain.IssueDTO;
 import com.example.janackoverflow.issue.service.IssueService;
 import jakarta.annotation.Nullable;
+import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -93,7 +94,6 @@ public class CommunityController {
                                                                    @RequestParam(name = "category", required = false) String category,
                                                                    @RequestParam(required = false, defaultValue = "0", name = "pageNo") int pageNo) {
 //        long allLikes = likesService.getIssueLikes(1L);
-
         return ResponseEntity.ok(communityService.getSolvedIssueList(order, category, pageNo));
     }
 
@@ -102,12 +102,15 @@ public class CommunityController {
         return ResponseEntity.ok(communityService.detailSolvedIssue(issueId));
     }
 
+    @Transactional
     @DeleteMapping(value = "likes/{issueId}/{usersId}")
     public ResponseEntity<String> deleteLike(@PathVariable(value = "issueId") long issueId,
                                              @PathVariable(value = "usersId") long usersId) {
         if ( likesService.deleteLike(issueId, usersId ) < 0 ) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("좋아요 취소가 실패하였습니다.");
         };
+        long cnt = likesService.selectLikes(usersId, issueId);
+        log.info("@@@@@@@@@like cnt :" + cnt);
         return ResponseEntity.ok("좋아요가 취소되었습니다.");
     }
 
@@ -124,10 +127,10 @@ public class CommunityController {
     }
 
     @GetMapping(value = "/solvedissue/filter")
-    public ResponseEntity<Page<IssueDTO.ResponseDTO>> filterCategory(@RequestParam(value = "title", required = false) String title,
-                                                                     @RequestParam(value = "category", required = false) String category) {
-
-        return null;
+    public ResponseEntity<Page<IssueDTO.ResponseDTO>> filterCategory(@RequestParam(value = "category", required = false) String category,
+                                                                     @RequestParam(required = false, defaultValue = "0", name = "pageNo") int pageNo) {
+        log.info("category : " + category);
+        return ResponseEntity.ok(communityService.getIssueBySelectedCategory(category, pageNo));
     }
 }
 
