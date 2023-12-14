@@ -6,9 +6,11 @@
 </template>
 
 <script setup>
+import axios from "axios";
 import { onMounted } from "vue";
 import Header from "@/components/Header.vue";
 import { useAuthStore } from "./stores/auth";
+
 
 onMounted(async () => {
   if (useAuthStore().token) {
@@ -22,8 +24,10 @@ async function getUserInfo() {
       authorization: useAuthStore().token,
     },
   });
-  useAuthStore().setUserInfo = response.data;
+  useAuthStore().setUserInfo(response.data);
+  console.log(useAuthStore().userInfo)
 }
+console.log(useAuthStore().userInfo)
 </script>
 
 <style scoped>

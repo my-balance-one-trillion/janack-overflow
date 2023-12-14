@@ -137,6 +137,7 @@
 <script setup>
 import { ref, onMounted } from "vue";
 import { RouterLink } from "vue-router";
+import { useAuthStore } from "@/stores/auth"; 
 
 import dashboard from "../components/mypage/dashboard.vue";
 import profileimage from "../components/mypage/profileimage.vue";
@@ -151,7 +152,8 @@ const currentComponent = ref("dashboard");
 const changeComponent = (component) => {
   currentComponent.value = component;
 };
-
+console.log(useAuthStore().userInfo);
+console.log(useAuthStore().token);
 onMounted(async () => {
   await getUserInfo();
 });
