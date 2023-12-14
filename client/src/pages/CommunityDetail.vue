@@ -19,9 +19,8 @@
                     <h1 class="py-4 text-3xl font-bold">{{ issue.title }}</h1>
                     <div class="flex justify-between mb-4">
                         <div class="flex">
-                            <fwb-badge class="px-2 mx-1 font-bold text-black rounded bg-badge-bg">{{ issue.keywords
+                            <fwb-badge v-for="keyword of keywords" class="px-2 mx-1 text-lg font-bold text-black rounded bg-badge-bg">{{ keyword
                             }}</fwb-badge>
-                            <fwb-badge class="px-2 mx-1 font-bold text-black rounded bg-badge-bg">Vue.js</fwb-badge>
                         </div>
                         <div class="w-fit">
                             <fwb-badge class="px-4 mx-1 text-lg font-bold text-white rounded-full bg-main-red">{{
@@ -38,7 +37,7 @@
                                     @click="copyToClipboard" @mouseover="hovered = true" @mouseout="hovered = false"></i>
                                 <!-- <i class=" fa-solid fa-copy"></i> -->
                             </div>
-                            <code v-highlightjs class="javascript" ref="issueCodeBlock">{{ issue.code }}</code>
+                            <code class="java" ref="issueCodeBlock">{{ issue.code }}</code>
                         </div>
                     </div>
                 </div>
@@ -52,7 +51,7 @@
                                     @click="copyToClipboard" @mouseover="hovered = true" @mouseout="hovered = false"></i>
                                 <!-- <i class=" fa-solid fa-copy"></i> -->
                             </div>
-                            <code v-highlightjs class="javascript" ref="solutionCodeBlock">{{ solution.code }}</code>
+                            <code class="javascript" ref="solutionCodeBlock">{{ solution.code }}</code>
                         </div>
                     </div>
                 </div>
@@ -161,11 +160,21 @@ import { FwbBadge } from 'flowbite-vue';
 import { FwbCard } from 'flowbite-vue'
 import { FwbButton, FwbTextarea } from 'flowbite-vue'
 import ClipboardJS from 'clipboard';
-import javascript from 'highlight.js/lib/languages/javascript';
+
+import java from 'highlight.js/lib/languages/java';
 import 'highlight.js/styles/default.css';
-import HighlightJS from 'highlight.js';
+import hljs from 'highlight.js/lib/core';
+
 import axios from 'axios';
 import { useRoute } from 'vue-router';
+import { useAuthStore } from '@/stores/auth';
+import { storeToRefs } from 'pinia';
+
+const authStore = useAuthStore()
+const { userInfo } = storeToRefs(authStore);
+
+// const authStore = ref();
+// const userInfo = ref({});
 
 const activeTab = ref(0);
 
@@ -179,7 +188,7 @@ const solutionCodeBlock = ref(null);
 const hovered = ref(false);
 const likeHovered = ref(false);
 // TODO keywords split 해서 저장
-const keywords = ref(null);
+const keywords = ref([]);
 
 const route = useRoute();
 const issue = ref({});
@@ -201,6 +210,7 @@ async function getIssueDetail() {
             issueCodeBlock.value = response.data.code;
             solutionCodeBlock.value = response.data.solutionDTO.code;
             commentList.value = response.data.commentResponseDtoList;
+            keywords.value = response.data.keyword.split(',').map(keyword => keyword.trim());
         });
 }
 
@@ -210,7 +220,8 @@ async function getLikesCnt() {
             "/community/likes/" + route.params.id
         )
         .then((response) => {
-            if(response.status === 200){
+            if (response.status === 200) {
+                console.log("likesCnt : " + response.data);
                 likeCnt.value = response.data;
             } else {
                 alert("좋아요 갯수를 불러오는데 실패하였습니다.");
@@ -218,11 +229,11 @@ async function getLikesCnt() {
         })
 }
 
-const getCommentListAPI = async() => {
-    const url = "/community/comment/"+route.params.id;
+const getCommentListAPI = async () => {
+    const url = "/community/comment/" + route.params.id;
     const resp = await axios.get(url);
     console.log(resp);
-    if(resp.status === 200) {
+    if (resp.status === 200) {
         commentList.value = resp.data;
     } else {
         alert("댓글 불러오는데 실패하였습니다.");
@@ -231,7 +242,8 @@ const getCommentListAPI = async() => {
 
 const commentAPI = async () => {
     console.log(message);
-    const url = "/community/comment/" + route.params.id + "/" + 10;
+    const url = `/community/comment/${route.params.id}/${userInfo.value.id}`;
+    console.log(url);
     let data = {
         content: message.value,
     };
@@ -278,9 +290,8 @@ function copyToClipboard(event) {
 }
 
 const getLikesAPI = async () => {
-    const url = `/community/likes/${route.params.id}/10`; //usersId
-    console.log(url);
-    // const resp = await axios.get(url);
+    // console.log(userInfo.value);
+    const url = `/community/likes/${route.params.id}/${userInfo.value.id}`; //usersId
 
     try {
         const resp = await axios.get(url);
@@ -288,7 +299,7 @@ const getLikesAPI = async () => {
         if (resp.status === 200) {
             isLike.value = true;
 
-        } else if(resp.status === 204){
+        } else if (resp.status === 204) {
             isLike.value = false;
         }
     } catch (error) {
@@ -301,7 +312,7 @@ const getLikesAPI = async () => {
 
 const likeAPI = async () => {
     console.log(isLike.value);
-    const url = `/community/likes/${route.params.id}/10`;
+    const url = `/community/likes/${route.params.id}/${userInfo.value.id}`;
     const resp = await axios.post(url);
 
     console.log(resp);
@@ -318,7 +329,7 @@ const likeAPI = async () => {
 
 const cancleLikeAPI = async () => {
     console.log(isLike.value);
-    const url = `/community/likes/${route.params.id}/10`;
+    const url = `/community/likes/${route.params.id}/${userInfo.value.id}`;
     const resp = await axios.delete(url);
     console.log(resp);
     if (resp.status === 200) {
@@ -331,14 +342,10 @@ const cancleLikeAPI = async () => {
     }
 };
 
-
 onMounted(() => {
-    HighlightJS.registerLanguage('javascript', javascript);
     getLikesAPI();
-    
-    getIssueDetail(() => {
-        HighlightJS.highlightElement([issueCodeBlock.value, solutionCodeBlock.value]);
-    });
+    getIssueDetail();
+    hljs.highlightAll();
 });
 
 </script>

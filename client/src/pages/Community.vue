@@ -1,6 +1,6 @@
 <template>
     <div class="w-full pt-20 mx-auto">
-        <div class="relative w-full p-12 sm:max-w-2xl sm:mx-auto">
+        <div class="relative w-full p-7 sm:max-w-2xl sm:mx-auto">
             <div class="relative z-0 p-1 overflow-hidden rounded-full">
                 <div class="relative z-50 flex bg-white rounded-full">
                     <input type="text" id="searchInput" placeholder="검색어를 입력해 주세요"
@@ -15,11 +15,11 @@
                 <div class="absolute z-40 bg-sub-grn glow glow-4"></div>
             </div>
         </div>
-        <div class="flex justify-end">
+        <div class="flex justify-end mb-5">
             <button id="dropdownRadioButton" data-dropdown-toggle="dropdownDefaultRadio"
-                class="text-white bg-sub-grn hover:bg-sub-grn focus:ring-4 focus:outline-none focus:ring-main-grn font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center dark:bg-sub-grn dark:hover:bg-sub-grn dark:focus:ring-main-grn"
-                type="button">Dropdown radio <svg class="w-2.5 h-2.5 ms-3" aria-hidden="true"
-                    xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
+                class="text-white bg-main-grn hover:bg-hover-grn focus:ring-4 focus:outline-none focus:ring-sub-grn font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center dark:bg-sub-grn dark:hover:bg-sub-grn dark:focus:ring-sub-grn"
+                type="button">FILTER <svg class="w-2.5 h-2.5 ms-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
+                    fill="none" viewBox="0 0 10 6">
                     <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                         d="m1 1 4 4 4-4" />
                 </svg>
@@ -27,40 +27,61 @@
 
             <!-- Dropdown menu -->
             <div id="dropdownDefaultRadio"
-                class="z-10 hidden w-48 bg-white divide-y divide-gray-100 rounded-lg shadow dark:bg-gray-700 dark:divide-gray-600">
+                class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-36 dark:bg-gray-700 dark:divide-gray-600">
                 <ul class="p-3 space-y-3 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="dropdownRadioButton">
                     <li>
                         <div class="flex items-center">
-                            <input id="default-radio-1" type="radio" value="" name="default-radio"
-                                class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500">
+                            <input checked id="default-radio-0" type="radio" value="default" name="default-radio"
+                                v-model="selectedFilter"
+                                class="w-4 h-4 bg-gray-100 border-gray-300 text-main-red focus:ring-main-red dark:focus:ring-sub-red dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500">
+                            <label for="default-radio-0"
+                                class="text-sm font-medium text-gray-900 ms-2 dark:text-gray-300">default</label>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="flex items-center">
+                            <input id="default-radio-1" type="radio" value="syntax" name="default-radio"
+                                v-model="selectedFilter"
+                                class="w-4 h-4 bg-gray-100 border-gray-300 text-main-red focus:ring-main-red dark:focus:ring-sub-red dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500">
                             <label for="default-radio-1"
-                                class="text-sm font-medium text-gray-900 ms-2 dark:text-gray-300">Default radio</label>
+                                class="text-sm font-medium text-gray-900 ms-2 dark:text-gray-300">syntax</label>
                         </div>
                     </li>
                     <li>
                         <div class="flex items-center">
-                            <input checked id="default-radio-2" type="radio" value="" name="default-radio"
-                                class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500">
+                            <input id="default-radio-2" type="radio" value="language" name="default-radio"
+                                v-model="selectedFilter"
+                                class="w-4 h-4 bg-gray-100 border-gray-300 text-main-red focus:ring-main-red dark:focus:ring-sub-red dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500">
                             <label for="default-radio-2"
-                                class="text-sm font-medium text-gray-900 ms-2 dark:text-gray-300">Checked state</label>
+                                class="text-sm font-medium text-gray-900 ms-2 dark:text-gray-300">language</label>
                         </div>
                     </li>
                     <li>
                         <div class="flex items-center">
-                            <input id="default-radio-3" type="radio" value="" name="default-radio"
-                                class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500">
+                            <input id="default-radio-3" type="radio" value="database" name="default-radio"
+                                v-model="selectedFilter"
+                                class="w-4 h-4 bg-gray-100 border-gray-300 text-main-red focus:ring-main-red dark:focus:ring-sub-red dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500">
                             <label for="default-radio-3"
-                                class="text-sm font-medium text-gray-900 ms-2 dark:text-gray-300">Default radio</label>
+                                class="text-sm font-medium text-gray-900 ms-2 dark:text-gray-300">database</label>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="flex items-center">
+                            <input id="default-radio-3" type="radio" value="os" name="default-radio"
+                                v-model="selectedFilter"
+                                class="w-4 h-4 bg-gray-100 border-gray-300 text-main-red focus:ring-main-red dark:focus:ring-sub-red dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500">
+                            <label for="default-radio-3"
+                                class="text-sm font-medium text-gray-900 ms-2 dark:text-gray-300">os</label>
                         </div>
                     </li>
                 </ul>
             </div>
         </div>
-        <div class="flex flex-wrap justify-center w-10/12 mx-auto space-y-10">
+        <div class="flex flex-wrap justify-center w-11/12 mx-auto space-y-10">
             <div v-for="(issue, index) in solvedIssue"
                 class="w-10/12 max-w-5xl px-10 py-6 my-4 bg-white border border-b-4 rounded-lg shadow-lg min-w-min border-main-grn">
                 <div class="flex items-center justify-between">
-                    <span class="font-light text-gray-600">dec 12, 2023</span>
+                    <span class="font-light text-gray-600">{{ issue.createdAt }}</span>
                     <div class="flex">
                         <fwb-badge class="px-2 py-1 font-bold text-black rounded bg-badge-bg">{{ issue.category
                         }}</fwb-badge>
@@ -79,6 +100,8 @@
                 <div class="flex items-center justify-between mt-4">
                     <div>
                         <a class="flex items-center" href="#">
+
+                            
                             <img class="hidden object-cover w-10 h-10 mr-3 rounded-full sm:block"
                                 src="https://cdn.pixabay.com/photo/2018/03/26/20/49/tiger-3264048_1280.jpg" alt="avatar">
                             <h1 class="font-bold text-gray-700">{{ issue.communityUsersDTO.nickname }}</h1>
@@ -88,30 +111,60 @@
                         :to='`/community/detail/${issue.id}`'>Read more</router-link>
                 </div>
             </div>
-            <fwb-pagination class="py-10" @click="move" v-model="currentPage" :total-items=totalItems></fwb-pagination>
+            <div class="flex justify-center w-full">
+                <fwb-pagination class="py-10" @click="move" v-model="currentPage" :total-items=totalItems></fwb-pagination>
+            </div>
         </div>
     </div>
 </template>
 <script setup>
 import { FwbBadge } from 'flowbite-vue';
 import { FwbPagination } from 'flowbite-vue';
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, watchEffect } from 'vue';
 import { initFlowbite } from 'flowbite'
 import axios from "axios";
+import { useRoute, useRouter } from 'vue-router';
+import { useAuthStore } from '@/stores/auth';
+import { storeToRefs } from 'pinia';
+
+const authStore = useAuthStore()
+const { userInfo } = storeToRefs(authStore);
+
 const currentPage = ref(1);
 const totalPages = ref(0);
 const totalItems = ref(0);
 const page = ref({});
 const solvedIssue = ref(null);
 const pageNo = ref(0);
+const selectedFilter = ref(null);
 
+// console.log(userInfo);
+
+// filter
+
+watchEffect(async () => {
+    if(selectedFilter.value === 'default') {
+        getSolvedIssueList();
+    }
+    const url = '/community/solvedissue/filter?category=' + selectedFilter.value;
+    const resp = await axios.get(url);
+    // console.log(resp.data);
+    if (resp.status === 200) {
+        solvedIssue.value = resp.data.content;
+    } else {
+        alert("게시물을 불러오는데 실패하였습니다.");
+    }
+});
+const router = useRouter();
 
 // move 를 search 일때와 그냥 일때 따로 인자값을 줘야 하나??
-
 const move = async (pageNum) => {
+    console.log(router);
+    console.log(router.currentRoute.value);
     pageNo.value = Number(pageNum.target.innerText);
     getSolvedIssueList(pageNo);
 }
+
 
 const searchIssue = async () => {
     let search = document.querySelector('#searchInput').value;
@@ -156,6 +209,7 @@ async function getSolvedIssueList(pageNo) {
 }
 
 onMounted(() => {
+
     initFlowbite();
     getSolvedIssueList();
 });
