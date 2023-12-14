@@ -1,6 +1,5 @@
 <script setup>
 import Header from "@/components/Header.vue";
-import PrismEditor from "@/components/PrismEditor.vue"
 </script>
 
 <template>
