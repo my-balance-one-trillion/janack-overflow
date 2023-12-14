@@ -1,12 +1,15 @@
 package com.example.janackoverflow.user.controller;
 
+import com.example.janackoverflow.global.security.auth.NowUserDetails;
 import com.example.janackoverflow.user.domain.request.UsersRequestDTO;
-import com.example.janackoverflow.user.domain.response.UsersResponseDTO;
-import com.example.janackoverflow.user.entity.Users;
 import com.example.janackoverflow.user.service.UsersService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 public class UsersController {
@@ -44,9 +47,18 @@ public class UsersController {
         }
 
     }
-//    이메일 인증
 
-//    자체 로그인 기능
+    @GetMapping("/userLogout")
+    public ResponseEntity logout(){
+
+        System.out.println("로그아웃 수행");
+
+        SecurityContextHolder.clearContext();
+
+        return new ResponseEntity("로그아웃을 수행했습니다", HttpStatus.OK);
+    }
+
+//    이메일 인증
 
 //    아이디 찾기
 

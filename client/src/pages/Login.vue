@@ -1,11 +1,11 @@
 <template>
-  <div class="min-h-screen bg-gray-100 py-6 flex flex-col justify-center sm:py-12">
+  <div class="min-h-screen py-6 flex flex-col justify-center sm:py-12">
     <div class="relative py-3 sm:max-w-xl sm:mx-auto">
       <div class="absolute inset-0 bg-gradient-to-r 
       from-red-300 to-red-600 shadow-lg transform 
       -skew-y-6 sm:skew-y-0 sm:-rotate-6 sm:rounded-3xl"></div>
       
-      <div class="relative px-4 py-10 bg-white shadow-lg sm:rounded-3xl sm:p-20">
+      <div class="relative px-4 py-10 bg-gray-100 shadow-lg sm:rounded-3xl sm:p-20">
         <div class="max-w-md mx-auto">
           <div>
             <h1 class="text-3xl text-center font-semibold">Login</h1>
@@ -62,51 +62,50 @@
   </div>
 </template>
 
-<script>
-import { reactive } from "vue";
-import axios from "axios";
-import { useRouter } from "vue-router";
+<script setup>
+import { ref } from 'vue';
+import axios from 'axios';
+import { useRouter } from 'vue-router';
 
 axios.defaults.withCredentials = true;
 
-export default {
-  setup() {
-    const router = useRouter();
-    const state = reactive({
-      input: {
-        email: "",
-        password: ""
+const state = ref({
+  input: {
+    email: '',
+    password: '',
+  },
+});
+
+const router = useRouter();
+
+const login = async () => {
+  try {
+    const response = await axios.post(
+      'http://localhost:8081/login',
+      state.value.input,
+      {
+        headers: {
+          'Content-Type': 'application/json',
+          'X-Requested-With': 'XMLHttpRequest',
+        },
       }
-    })
+    );
 
-    const login = async () => {      
-      const response = axios.post('http://localhost:8081/login', state.input, 
-        {
-          headers : {
-          "Content-Type": "application/json",
-          "X-Requested-With": "XMLHttpRequest"
-          }
-        }
-        ).then((response)=>{
-          console.log("헤더확인");
-          console.log(response);
-          console.log(response.headers);
-          console.log(response.headers.authorization);
+    console.log('헤더확인');
+    console.log(response);
+    console.log(response.headers);
+    console.log(response.headers.authorization);
 
-          localStorage.setItem('token',response.headers.authorization);
-          
-          window.alert(`로그인이 수행되었습니다`);
-          router.push('/');
+    localStorage.setItem('token', response.headers.authorization);
 
-        }).catch( () => {
-          console.log("로그인 실패");
-          window.alert('로그인 실패했습니다');
-        });
-    }
+    window.alert('로그인이 수행되었습니다');
+    router.push('/');
 
-    return {state, login}
+  } catch (error) {
+    console.error('로그인 실패');
+    window.alert('로그인 실패했습니다');
   }
-}
+};
 </script>
 
 <style scoped>

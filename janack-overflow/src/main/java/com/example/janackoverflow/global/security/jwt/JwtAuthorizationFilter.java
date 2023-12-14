@@ -40,8 +40,7 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
 							"/static/**",
 							"/favicon.ico",
 							"/signup",
-							"/login",
-							"/logout"
+							"/login"
 					));
 
 	// Filter에서 제외할 URL 설정 <- 이거 안하면 로그인도 막힐거 같아서 걸어둠

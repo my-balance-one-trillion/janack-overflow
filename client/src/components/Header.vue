@@ -10,9 +10,7 @@
         ></router-link>
       </div>
       <div class="mx-auto">
-        <router-link to="/logout"
-          ><i class="fa-solid fa-door-open fa-xl"></i
-        ></router-link>
+        <i @click="logout" class="fa-solid fa-door-open fa-xl"></i>
       </div>
 
       <div class="mx-auto">
@@ -41,6 +39,7 @@
   </div>
 </template>
 <script setup>
+import axios from 'axios';
 import { ref } from 'vue';
 
 const menuBar = ref(null);
@@ -51,5 +50,28 @@ function menuOnClick() {
     menuBar.value.classList.toggle("change");
     nav.value.classList.toggle("change");
     menuBg.value.classList.toggle("change-bg");
+}
+
+function logout(){
+  try{
+    const res = axios.get('http://localhost:8081/logout',
+      {
+        headers: {
+          'authorization': localStorage.getItem('token')
+        },
+      });
+
+    localStorage.removeItem('token');
+
+    console.log(res);
+
+    window.alert('로그아웃이 수행되었습니다');
+    router.push('/');
+  }
+  catch (error) {
+    console.error('로그아웃 실패');
+    window.alert('로그아웃 실패했습니다');
+    router.push('/');
+  }
 }
 </script>
