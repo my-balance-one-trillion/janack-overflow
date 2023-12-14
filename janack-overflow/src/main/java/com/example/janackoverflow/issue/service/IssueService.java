@@ -4,10 +4,12 @@ import com.example.janackoverflow.global.exception.BusinessLogicException;
 import com.example.janackoverflow.global.exception.ExceptionCode;
 import com.example.janackoverflow.issue.domain.request.CreateIssueRequestDTO;
 import com.example.janackoverflow.issue.domain.response.IssueResponseDTO;
+import com.example.janackoverflow.issue.domain.response.SolutionResponseDTO;
 import com.example.janackoverflow.issue.domain.response.StackOverflowResponse;
 import com.example.janackoverflow.issue.entity.Issue;
+import com.example.janackoverflow.issue.entity.Solution;
 import com.example.janackoverflow.issue.repository.IssueRepository;
-import com.example.janackoverflow.saving.entity.InputAccount;
+import com.example.janackoverflow.issue.repository.SolutionRepository;
 import com.example.janackoverflow.saving.repository.InputAccountRepository;
 import com.example.janackoverflow.user.entity.Users;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -26,10 +28,12 @@ import java.util.stream.Collectors;
 public class IssueService {
     private final IssueRepository issueRepository;
     private final InputAccountRepository inputAccountRepository;
+    private final SolutionRepository solutionRepository;
 
-    public IssueService(IssueRepository issueRepository, InputAccountRepository inputAccountRepository) {
+    public IssueService(IssueRepository issueRepository, InputAccountRepository inputAccountRepository, SolutionRepository solutionRepository) {
         this.issueRepository = issueRepository;
         this.inputAccountRepository = inputAccountRepository;
+        this.solutionRepository = solutionRepository;
     }
 
     public Issue getIssue(Long issueId) {
@@ -129,5 +133,23 @@ public class IssueService {
         issue.updateStatus("02");
         return issueRepository.save(issue);
     }
+
+    // 년도월 별로 에러 조회
+    @Transactional(readOnly = true)
+    public List<IssueResponseDTO> getMonthlyIssuesByUserId(Users users, int year, int month) {
+        List<IssueResponseDTO> resolvedIssues = issueRepository.findByUsersIdAndStatusOrderByCreatedAtDesc(users.getId(), "03");
+
+        return resolvedIssues.stream()
+                .filter(issue -> {
+                    // 해당 에러에 대한 해결책 조회
+                    List<Solution> solutions = solutionRepository.findByIssueId(issue.getId());
+
+                    // 각 해결책에 대해 년도와 월을 비교
+                    return solutions.stream().anyMatch(solution ->
+                            solution.getCreatedAt().getYear() == year && solution.getCreatedAt().getMonthValue() == month);
+                })
+                .collect(Collectors.toList());
+    }
+
 
 }

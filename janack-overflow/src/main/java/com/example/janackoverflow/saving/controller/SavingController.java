@@ -79,14 +79,15 @@ public class SavingController {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
-    // 월별 내역 조회 (사용자 에러 내역 월별 조회)
-    @GetMapping("/monthly")
-    public ResponseEntity<?> getAllIssues(){
+    // 월별 내역 조회 (해결된 에러 내역 월별 조회)
+    @GetMapping("/monthly-issues")
+    public ResponseEntity<?> getMonthlyIssuesByUserAndDate(@RequestParam int year, @RequestParam int month) {
         Users users = new Users();
         users.setId(1L);
-        List<IssueResponseDTO> issue = issueService.getAllIssuesByUserId(users);
-        return new ResponseEntity<>(issue, HttpStatus.OK);
+        List<IssueResponseDTO> monthlyIssues = issueService.getMonthlyIssuesByUserId(users, year, month);
+        return new ResponseEntity<>(monthlyIssues, HttpStatus.OK);
     }
+
 
     // 적금 기록 (사용자 적금 전부 조회)
     @GetMapping
