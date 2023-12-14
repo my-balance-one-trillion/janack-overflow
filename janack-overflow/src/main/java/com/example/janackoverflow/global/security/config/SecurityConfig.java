@@ -1,5 +1,6 @@
-package com.example.janackoverflow.global.security;
+package com.example.janackoverflow.global.security.config;
 
+import com.example.janackoverflow.global.security.config.CorsConfig;
 import com.example.janackoverflow.global.security.jwt.JwtAuthenticationFilter;
 import com.example.janackoverflow.global.security.jwt.JwtAuthorizationFilter;
 import jakarta.servlet.DispatcherType;
@@ -12,15 +13,10 @@ import org.springframework.security.config.annotation.authentication.configurati
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
-import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.web.cors.CorsConfiguration;
-import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
-
-import java.util.List;
 
 @Configuration
 @EnableWebSecurity
@@ -28,6 +24,9 @@ import java.util.List;
 public class SecurityConfig {
 
     private final JwtAuthorizationFilter jwtAuthorizationFilter;
+
+    @Autowired
+    private CorsConfig corsConfig;
 
     @Autowired
     private AuthenticationConfiguration authenticationConfiguration;
@@ -40,56 +39,50 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
-        CorsConfiguration corsConfiguration = new CorsConfiguration();
+        http.httpBasic(AbstractHttpConfigurer::disable);
 
-        //허용된 HTTP 헤더 설정
-        corsConfiguration.setAllowedHeaders(List.of("Authorization", "Cache-Control", "Content-Type"));
-
-        //허용된 오리진(출처)설정 - 임의로 모든 도메인 요청 허용 *
-        corsConfiguration.setAllowedOrigins(List.of("*"));
-
-        //허용된 HTTP 메서드 설정
-        corsConfiguration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "PUT","OPTIONS","PATCH", "DELETE"));
-
-        //Cross 도메인 요청 시 인증 정보를 포함할지 여부 - true로 자격증명 허용
-        corsConfiguration.setAllowCredentials(true);
-
-        //브라우저에 노출할 헤더를 설정 - 클라이언트에서 해당 헤더에 접근할 수 있도록 사용됨
-        corsConfiguration.setExposedHeaders(List.of("Authorization"));
-
-        //모든 URL 패턴 경로 '/**'에 위에 작성된 모든 corsConfiguration 정책을 지정함
-        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/**", corsConfiguration);
+        //HttpSecurity에 CorsConfig 설정 적용 <- Security 7버전부터 지원 중단
+        http.cors();
 
         // Spring Security에서 session을 생성하거나 사용하지 않도록 설정
-        http.sessionManagement(httpSecuritySessionManagementConfigurer
-                -> httpSecuritySessionManagementConfigurer.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
+//        http.sessionManagement(httpSecuritySessionManagementConfigurer
+//                -> httpSecuritySessionManagementConfigurer.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
 
         // jwt Filter 적용
         http.addFilterBefore(jwtAuthorizationFilter, UsernamePasswordAuthenticationFilter.class);
 
-        http.csrf(AbstractHttpConfigurer::disable)
+        // jwt 토큰을 사용하므로 csrf 방식 적용 안함
+        http.csrf(AbstractHttpConfigurer::disable);
 
-                //'USER' 역할 사용자가 '/mypage' URL 패턴에 해당하는 요청 권한을 가진다
-                .authorizeHttpRequests((authorizeRequests) ->
-                        authorizeRequests
-                                .requestMatchers("/mypage", "/mypage/**").hasRole("USER")
-                )
-                //'ADMIN' 역할 사용자가 해당 URL 패턴에 해당하는 요청 권한을 가진다
-                .authorizeHttpRequests((authorizeRequests) ->
-                        authorizeRequests
-                                .requestMatchers("/mypage", "/mypage/**", "/admin", "/admin/**").hasRole("ADMIN")
-                )
-                // 모든 유저에게 해당 URL 패턴 개방 (화이트 리스트)
-                .authorizeHttpRequests((authorizeRequests) ->
+        //'USER' 역할 사용자가 '/mypage' URL 패턴에 해당하는 요청 권한을 가진다
+        http.authorizeHttpRequests((authorizeRequests) ->
                         authorizeRequests
                                 .dispatcherTypeMatchers(DispatcherType.FORWARD).permitAll()
-                                .requestMatchers("/image/**", "/css/**", "/", "/login", "/logout", "/signup", "/community/**", "/savings/**", "/issues/**").permitAll()
+
+                                //화이트 리스트
+                                .requestMatchers("/image/**", "/css/**", "/", "/login", "/logout", "/signup/**",
+                                        "/main/**", "/community/**", "/saving/**").permitAll()
+
+                                //USER만 접근 가능
+                                .requestMatchers("/mypage", "/mypage/**").hasRole("USER")
+
+                                //ADMIN만 접근 가능
+                                .requestMatchers("/mypage", "/mypage/**", "/admin", "/admin/**").hasRole("ADMIN")
+
+                                //위에 작성된 url을 제외한 나머지는 인증절차 필요 (403 발생)
+                                .requestMatchers("/image/**", "/css/**", "/", "/login", "/logout", "/signup", "/community/**", "/saving/**", "/main/**", "/issue/**", "/ws/**", "/chatrooms/**").permitAll()
+
                                 .anyRequest().authenticated()
-                                //해당 url을 제외한 나머지는 인증절차 필요 (403 발생)
-                );
+
+                ).exceptionHandling((exceptionHandling) ->
+                        exceptionHandling
+                                .accessDeniedPage("/login"));
+                                //권한이 없는 사용자를 '/login' 으로 이동 (현재 작동 안함)
+
+        http.formLogin(AbstractHttpConfigurer::disable);
+
                 //폼 기반 로그인 구성 <- 이거 구현하면 REST api 요청 막혀서 주석처리함
-//                .formLogin((formLogin) ->
+//                http.formLogin((formLogin) ->
 //                        formLogin
 //                                .loginPage("/login") // '/login' 경로를 사용자 정의 로그인 페이지로 지정
 //                                .loginProcessingUrl("/login") // submit 받을 url

@@ -2,8 +2,8 @@ package com.example.janackoverflow.global.security.jwt;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
-
 import com.example.janackoverflow.global.security.LoginRequestDTO;
+import com.example.janackoverflow.global.security.auth.NowUserDetails;
 import com.example.janackoverflow.user.service.UsersService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.FilterChain;
@@ -15,7 +15,6 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
@@ -29,9 +28,6 @@ public class JwtAuthenticationFilter extends AbstractAuthenticationProcessingFil
 	private static final AntPathRequestMatcher DEFAULT_ANT_PATH_REQUEST_MATCHER =
 			new AntPathRequestMatcher("/login", "POST");
 									// '/login' URL 접근 시 필터 실행
-
-	@Autowired
-	private UsersService usersService;
 
 	@Autowired
 	private JwtProperties jwtProperties;
@@ -84,9 +80,9 @@ public class JwtAuthenticationFilter extends AbstractAuthenticationProcessingFil
 		Authentication authentication =
 				authenticationManager.authenticate(authenticationToken);
 		
-		UserDetails principalDetailis = (UserDetails) authentication.getPrincipal();
+		NowUserDetails principalDetailis = (NowUserDetails) authentication.getPrincipal();
 
-		System.out.println("Authentication : " + principalDetailis.getUsername());
+		System.out.println("Authentication Id : " + principalDetailis.getId());
 
 		return authentication;
 	}
@@ -99,9 +95,7 @@ public class JwtAuthenticationFilter extends AbstractAuthenticationProcessingFil
 
 		System.out.println("successful Authentication");
 		
-		UserDetails principalDetailis = (UserDetails) authResult.getPrincipal();
-
-		System.out.println("로그인 시도 계정 : " + principalDetailis.getUsername());
+		NowUserDetails principalDetailis = (NowUserDetails) authResult.getPrincipal();
 
 		// JWT Token 생성해서 response에 담아주기
 		String jwtToken = JWT.create()
@@ -110,7 +104,17 @@ public class JwtAuthenticationFilter extends AbstractAuthenticationProcessingFil
 				.withClaim("email", principalDetailis.getUsername()) //email값
 				.sign(Algorithm.HMAC512(jwtProperties.getSecret())); //시크릿 키 이용하여 HMAC512 알고리즘 적용
 
+		//헤더에 접근 권한 정보를 추가해 브라우저에서 차단하지 못하게 방지
+		response.setHeader("Access-Control-Allow-Origin", "http://localhost:5173");
+		response.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
+		response.setHeader("Access-Control-Allow-Headers", "Authorization, Content-Type, X-Requested-With, Pragma");
+		response.setHeader("Access-Control-Allow-Credentials", "true");
+		response.setHeader("Access-Control-Max-Age", "3600");
+
+		//헤더에 토큰값 추가
 		response.addHeader(jwtProperties.getHeader(), "Bearer " + jwtToken);
+
+		System.out.println("jwtToken : " + jwtToken);
 
 		System.out.println("login complete");
 	}

@@ -42,32 +42,11 @@ public class BankingService {
 
 //    계좌 생성
     public String createAccount(Long id) throws JsonProcessingException {
-//        String apiNm = "OpenVirtualAccount";
-//
-//        List<String> timeList = createTime();
-//        ApiHeader apiHeader = new ApiHeader(iscd, accessToken, apiNm, timeList.get(0), timeList.get(1), createIsTuno());
-//
-//        ObjectMapper mapper = new ObjectMapper();
-//        String headerJson = mapper.writeValueAsString(apiHeader);
-//
-//        HttpHeaders httpHeaders = new HttpHeaders();
-//        httpHeaders.setContentType(MediaType.APPLICATION_JSON);
-//
-//        JSONObject request = new JSONObject()
-//                .put("Dpnm", name)
-//                .put("Header", new JSONObject(headerJson));
-//        HttpEntity<String> httpEntity = new HttpEntity<>(request.toString(), httpHeaders);
-//        System.out.println("httpEntity:"+ httpEntity);
-//        ResponseEntity<String> response = restTemplate.exchange(baseURL+apiNm+".nh", HttpMethod.POST, httpEntity, String.class);
-//        JSONObject jsonObject = new JSONObject(response.getBody());
-//        System.out.println(jsonObject.toString());
-//
-//        return jsonObject.get("Vran").toString();
         return ""+id+3020000009687L;
     }
     //계좌 이체
     //에러 해결 시 적금
-    public void transfer(int amount) throws JsonProcessingException {
+    public void transfer(int amount, String acntNum) throws JsonProcessingException {
 
         String apiNm = "ReceivedTransferAccountNumber";
         List<String> timeList = createTime();
@@ -80,7 +59,7 @@ public class BankingService {
         httpHeaders.setContentType(MediaType.APPLICATION_JSON);
         JSONObject request = new JSONObject()
                 .put("Header", new JSONObject(headerJson))
-                .put("Acno", "3020000009689")//InputAccount.getAcntNum()
+                .put("Acno", acntNum)
                 .put("Bncd", "011")
                 .put("Tram", Integer.toString(amount))
                 .put("DractOtlt", "출금테스트")
@@ -92,20 +71,7 @@ public class BankingService {
         System.out.println(jsonObject.toString());
 
     }
-    //잔액조회
 
- //   변경되는 파라미터 : ApiNm, Tsymd, Trtm, Istuno
-//    private JSONObject createRequest(ApiHeader apiHeader, Map<String, String> map) throws JsonProcessingException {
-//
-//
-//        ObjectMapper mapper = new ObjectMapper();
-//        String headerJson = mapper.writeValueAsString(apiHeader);
-//
-//        JSONObject request = new JSONObject()
-//                .put("Header", new JSONObject(headerJson));
-//        return request;
-//
-//    }
 
 //    거래 고유번호 생성
     public String createIsTuno(){

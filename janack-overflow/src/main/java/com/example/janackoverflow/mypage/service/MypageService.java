@@ -3,36 +3,44 @@ package com.example.janackoverflow.mypage.service;
 import com.example.janackoverflow.community.domain.CommentDTO;
 import com.example.janackoverflow.community.entity.Comment;
 import com.example.janackoverflow.community.repository.CommentRepository;
+import com.example.janackoverflow.issue.domain.response.IssueResponseDTO;
 import com.example.janackoverflow.issue.entity.Issue;
+import com.example.janackoverflow.issue.repository.IssueRepository;
 import com.example.janackoverflow.user.domain.request.UsersRequestDTO;
 import com.example.janackoverflow.user.entity.Users;
 import com.example.janackoverflow.user.repository.UsersRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.data.domain.*;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
 
 @Service
 @Slf4j
 public class MypageService {
     private final UsersRepository usersRepository;
     private final CommentRepository commentRepository;
+    private final IssueRepository issueRepository;
+    private final PasswordEncoder passwordEncoder;
 
-    public MypageService(UsersRepository usersRepository, CommentRepository commentRepository){
+    public MypageService(UsersRepository usersRepository,
+                         CommentRepository commentRepository,
+                         IssueRepository issueRepository,
+                         PasswordEncoder passwordEncoder){
         this.usersRepository = usersRepository;
         this.commentRepository =commentRepository;
+        this.issueRepository =  issueRepository;
+        this.passwordEncoder =  passwordEncoder;
     }
 
 //    회원 정보 수정
     public void updateUser(UsersRequestDTO usersRequestDTO, Long usersId){
         Users users = usersRepository.findById(usersId).orElseThrow(RuntimeException::new);
-        if(users.getPassword().equals(usersRequestDTO.getPassword())){
+        if(passwordEncoder.matches(usersRequestDTO.getPassword(), users.getPassword())){
             Users updatedUser = users.toBuilder()
-                    .email(usersRequestDTO.getEmail())
                     .digit(usersRequestDTO.getDigit())
                     .birth(usersRequestDTO.getBirth())
                     .name(usersRequestDTO.getName())
@@ -64,10 +72,22 @@ public class MypageService {
     }
 
 //    내가 쓴글 보기
+    public Page<IssueResponseDTO> readMyIssue(Long usersId){
+        Pageable pageable = PageRequest.of(0,10, Sort.by(Sort.Direction.DESC, "id"));
+        Page<Issue> MyIssueList = issueRepository.findByUsers_id(usersId,pageable);
+        List<IssueResponseDTO> issueResponseDtolist = MyIssueList.stream().map(issue -> IssueResponseDTO.builder()
+                .title(issue.getTitle())
+                .keyword(issue.getKeyword())
+                .category(issue.getCategory())
+                .createdAt(issue.getCreatedAt())
+                .build()).toList();
+        Page<IssueResponseDTO> MyIssuePage = new PageImpl<>(issueResponseDtolist, pageable, MyIssueList.getTotalPages());
+        return MyIssuePage;
+    }
 
 //    내가 쓴 댓글 보기
     public Page<CommentDTO.ResponseDto> readMyComment(Long usersId){
-        Pageable pageable = PageRequest.of(0, 5, Sort.by(Sort.Direction.DESC, "id"));
+        Pageable pageable = PageRequest.of(0, 10, Sort.by(Sort.Direction.DESC, "id"));
         Page<Comment> myCommentList = commentRepository.findAllByUsers_IdOrderByCreatedAtDesc(usersId,pageable);
         // 댓글DtoList
         List<CommentDTO.ResponseDto> commentResponseDtolist = myCommentList.stream().map(comment -> CommentDTO.ResponseDto.builder()
@@ -75,8 +95,8 @@ public class MypageService {
                 .comment(comment.getContent())
                 .build()).toList();
 
-        Page<CommentDTO.ResponseDto> commentPage = new PageImpl<>(commentResponseDtolist, pageable, myCommentList.getTotalElements());
-        return commentPage;
+        Page<CommentDTO.ResponseDto> MyCommentPage = new PageImpl<>(commentResponseDtolist, pageable, myCommentList.getTotalElements());
+        return MyCommentPage;
     }
 //    댓글 삭제
     @Transactional

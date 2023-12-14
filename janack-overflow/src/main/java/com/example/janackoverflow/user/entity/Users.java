@@ -32,7 +32,6 @@ public class Users {
 
     @Column(nullable = false)
     private String digit;
-
     private Date birth;
     private String name;
 
