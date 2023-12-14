@@ -3,7 +3,7 @@ import 'tailwindcss/tailwind.css';
 import { createApp } from "vue";
 import App from "./App.vue";
 import axios from "axios";
-import { createPinia } from "pinia";
+import { createPinia } from 'pinia';
 import router from "./router";
 
 //axios 기본설정
