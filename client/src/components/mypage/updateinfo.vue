@@ -93,13 +93,13 @@
             type="password"
             name="updatePassword"
             id="floating_updatePassword"
-            class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-sub-red appearance-none dark:text-white dark:border-gray-600 dark:focus:border-main-red focus:outline-none focus:ring-0 focus:border-main-red peer"
+            class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-sub-grn appearance-none dark:text-white dark:border-gray-600 dark:focus:border-main-grn focus:outline-none focus:ring-0 focus:border-main-grn peer"
             placeholder=" "
             v-model="inputUpdatePassword"
           />
           <label
             for="floating_updatePassword"
-            class="peer-focus:font-medium absolute text-m text-gray-700 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 peer-focus:border-main-red peer-focus:dark:border-main-red peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
+            class="peer-focus:font-medium absolute text-m text-gray-700 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 peer-focus:border-main-grn peer-focus:dark:border-main-grn peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
             >패스워드 수정</label
           >
         </div>
@@ -108,13 +108,13 @@
             type="password"
             name="updatePasswordConfirm"
             id="floating_updatePasswordConfirm"
-            class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-sub-red appearance-none dark:text-white dark:border-gray-600 dark:focus:border-main-red focus:outline-none focus:ring-0 focus:border-main-red peer"
+            class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-sub-grn appearance-none dark:text-white dark:border-gray-600 dark:focus:border-main-grn focus:outline-none focus:ring-0 focus:border-main-grn peer"
             placeholder=" "
             v-model="inputUpdatePasswordConfirm"
           />
           <label
             for="floating_updatePasswordConfirm"
-            class="peer-focus:font-medium absolute text-m text-gray-700 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 peer-focus:border-main-red peer-focus:dark:border-main-red peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
+            class="peer-focus:font-medium absolute text-m text-gray-700 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 peer-focus:border-main-grn peer-focus:dark:border-main-grn peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
             >패스워드 수정 확인</label
           >
         </div>

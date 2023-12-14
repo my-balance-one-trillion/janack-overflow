@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.event.EventListener;
+import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.messaging.simp.SimpMessageSendingOperations;
@@ -31,11 +32,11 @@ public class SocketController {
 
         LOGGER.info("sessionID Disconnected:" + sessionId);
     }
-    @MessageMapping("/cache")
-    @SendTo("/sub/cache")
-    public void sendMessage(Map<String, Object> params){
+    @MessageMapping("/cache/{roomId}")
+    @SendTo("/sub/cache/{roomId}")
+    public void sendMessage(@DestinationVariable("roomId") String roomId, Map<String, Object> params){
         System.out.println("실행됨");
-        System.out.println("params:"+params+"\ndestination:"+"/sub/cache/"+params.get("channelId"));
-        simpMessageSendingOperations.convertAndSend("/sub/cache/"+params.get("channelId"), params);
+        System.out.println("params:"+params+"\ndestination:"+"/sub/cache/"+roomId);
+        simpMessageSendingOperations.convertAndSend("/sub/cache/"+roomId, params);
     }
 }

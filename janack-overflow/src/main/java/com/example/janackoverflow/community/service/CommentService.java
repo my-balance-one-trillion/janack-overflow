@@ -1,6 +1,7 @@
 package com.example.janackoverflow.community.service;
 
 import com.example.janackoverflow.community.domain.CommentDTO;
+import com.example.janackoverflow.community.entity.Comment;
 import com.example.janackoverflow.community.repository.CommentRepository;
 import com.example.janackoverflow.issue.entity.Issue;
 import com.example.janackoverflow.issue.repository.IssueRepository;
@@ -8,7 +9,12 @@ import com.example.janackoverflow.user.entity.Users;
 import com.example.janackoverflow.user.repository.UsersRepository;
 import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 @Slf4j
@@ -40,5 +46,10 @@ public class CommentService {
                 .build();
 
         commentRepository.save(commentRequestDto.toEntity(issue, users));
+    }
+
+    public List<CommentDTO.ResponseDto> getCommentList(long issueId) {
+        Pageable pageable = PageRequest.of(0, 5, Sort.by(Sort.Direction.DESC, "id"));
+        return commentRepository.findAllByIssue_IdOrderByCreatedAtDesc(issueId, pageable).stream().map(Comment::toDto).toList();
     }
 }

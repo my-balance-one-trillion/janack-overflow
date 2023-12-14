@@ -384,6 +384,14 @@ gradle-app.setting
 !.vscode/extensions.json
 !.vscode/*.code-snippets
 
+### VisualStudioCode ###
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+!.vscode/*.code-snippets
+
 # Local History for Visual Studio Code
 .history/
 
@@ -394,5 +402,3 @@ gradle-app.setting
 # Ignore all local history of files
 .history
 .ionide
-
-# End of https://www.toptal.com/developers/gitignore/api/node,gradle,vuejs,windows,macos,java,intellij

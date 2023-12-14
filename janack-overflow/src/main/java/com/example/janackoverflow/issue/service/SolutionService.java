@@ -2,6 +2,7 @@ package com.example.janackoverflow.issue.service;
 
 import com.example.janackoverflow.global.exception.BusinessLogicException;
 import com.example.janackoverflow.global.exception.ExceptionCode;
+import com.example.janackoverflow.issue.domain.SolutionDTO;
 import com.example.janackoverflow.issue.domain.request.CreateSolutionRequestDTO;
 import com.example.janackoverflow.issue.entity.Issue;
 import com.example.janackoverflow.issue.entity.Solution;
@@ -89,6 +90,11 @@ public class SolutionService {
         } else {
             return rule.getOverThreeHour();
         }
+    }
+
+    public SolutionDTO getSolution(long issueId) {
+        Solution solution = solutionRepository.findByIssue_Id(issueId).orElseThrow(() -> new IllegalArgumentException("해당 해결을 찾을 수 없습니다."));
+        return solution.toDto();
     }
 
 }

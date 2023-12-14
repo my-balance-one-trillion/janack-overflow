@@ -3,14 +3,12 @@
 # Reference: https://intellij-support.jetbrains.com/hc/en-us/articles/206544839
 
 # User-specific stuff
-.idea
 .idea/**/workspace.xml
 .idea/**/tasks.xml
 .idea/**/usage.statistics.xml
 .idea/**/dictionaries
 .idea/**/shelf
 
-bfg-1.14.0.jar
 word.txt
 
 # AWS User-specific
@@ -393,6 +391,8 @@ gradle-app.setting
 ### VisualStudioCode Patch ###
 # Ignore all local history of files
 .history
+
 .ionide
 
 # End of https://www.toptal.com/developers/gitignore/api/node,gradle,vuejs,windows,macos,java,intellij
+
