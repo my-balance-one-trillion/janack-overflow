@@ -1,6 +1,7 @@
 package com.example.janackoverflow.user.domain.request;
 
 import com.example.janackoverflow.user.entity.Users;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
 
@@ -15,9 +16,11 @@ public class UsersRequestDTO {
     private String email;
     private String password;
     private String digit;
+    @JsonFormat(pattern = "yyyy-MM-dd")
     private Date birth;
     private String name;
     @CreatedDate
+    @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDateTime createdAt;
     private String nickname;
     private String role;

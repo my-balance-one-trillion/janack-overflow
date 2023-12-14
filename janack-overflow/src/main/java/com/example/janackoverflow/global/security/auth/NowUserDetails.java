@@ -1,4 +1,5 @@
 package com.example.janackoverflow.global.security.auth;
+
 import com.example.janackoverflow.user.entity.Users;
 import lombok.Getter;
 import lombok.Setter;
@@ -12,13 +13,21 @@ import java.util.List;
 @Getter
 @Setter
 public class NowUserDetails implements UserDetails{
+
     private Users user;
+
     public NowUserDetails(Users user){
         this.user = user;
     }
+
     public Users getUser() {
         return user;
     }
+
+    public long getId(){
+        return user.getId();
+    }
+
     @Override
     public String getPassword() { //인증 정보에 내장된 패스워드
         return user.getPassword();
@@ -43,14 +52,6 @@ public class NowUserDetails implements UserDetails{
     public boolean isEnabled() {
         return true;
     }
-    //권한 식별을 위한 리스트 생성
-    public List<String> getRoleList(){
-        if(!user.getRole().isEmpty()){
-            return Arrays.asList(user.getRole().split(","));
-        }
-        return new ArrayList<>();
-    }
-
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         Collection<GrantedAuthority> authorities = new ArrayList<GrantedAuthority>();
@@ -59,5 +60,13 @@ public class NowUserDetails implements UserDetails{
             authorities.add(authority);
         });
         return authorities;
+    }
+
+    //권한 식별을 위한 리스트 생성
+    public List<String> getRoleList(){
+        if(!user.getRole().isEmpty()){
+            return Arrays.asList(user.getRole().split(","));
+        }
+        return new ArrayList<>();
     }
 }
