@@ -55,7 +55,7 @@ public class SecurityConfig {
         corsConfiguration.setAllowCredentials(true);
 
         //브라우저에 노출할 헤더를 설정 - 클라이언트에서 해당 헤더에 접근할 수 있도록 사용됨
-        corsConfiguration.setExposedHeaders(List.of("Authorization"));
+        corsConfiguration.setExposedHeaders(List.of("Authorization", "Access-Control-Allow-Origin"));
 
         //모든 URL 패턴 경로 '/**'에 위에 작성된 모든 corsConfiguration 정책을 지정함
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
@@ -84,7 +84,8 @@ public class SecurityConfig {
                 .authorizeHttpRequests((authorizeRequests) ->
                         authorizeRequests
                                 .dispatcherTypeMatchers(DispatcherType.FORWARD).permitAll()
-                                .requestMatchers("/image/**", "/css/**", "/", "/login", "/logout", "/signup", "/community/**", "/saving/**", "/main/**").permitAll()
+                                .requestMatchers("/image/**", "/css/**", "/", "/login", "/logout", "/signup", "/community/**", "/saving/**", "/main/**", "/issue/**", "/ws/**", "/chatrooms/**").permitAll()
+
                                 .anyRequest().authenticated()
                                 //해당 url을 제외한 나머지는 인증절차 필요 (403 발생)
                 );

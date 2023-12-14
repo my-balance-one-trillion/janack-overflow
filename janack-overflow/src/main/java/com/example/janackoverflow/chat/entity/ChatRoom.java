@@ -1,35 +1,51 @@
 package com.example.janackoverflow.chat.entity;
 
 import com.example.janackoverflow.chat.config.WebSocketConfig;
+import com.example.janackoverflow.user.entity.Users;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
+import org.hibernate.annotations.ColumnDefault;
 import org.springframework.web.socket.WebSocketSession;
 
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
 
+@Entity
 @Builder
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class ChatRoom {
+@ToString
+public class ChatRoom{
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Column(nullable = false)
     private String roomId;
+
+    @Column(nullable = false)
     private String roomName;
-    private long userCount;
 
-    private HashMap<String, String> userList = new HashMap<String, String>();
+    @ColumnDefault(value = "4")
+    private int max;//최대 유저수
 
-    public ChatRoom create(String roomName){
-        ChatRoom chatRoom = ChatRoom.builder()
-                .roomId(UUID.randomUUID().toString())
-                .roomName(roomName)
-        .build();
 
-        return chatRoom;
-    }
+    //방주인
+    @ManyToOne
+    @JoinColumn(name = "users_id")
+    private Users users;
+
+//    public ChatRoom create(String roomName, Users users){
+//        ChatRoom chatRoom = ChatRoom.builder()
+//                .roomId(UUID.randomUUID().toString())
+//                .roomName(roomName)
+//                .users(users)
+//        .build();
+//
+//        return chatRoom;
+//    }
 }

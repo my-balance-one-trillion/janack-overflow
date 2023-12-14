@@ -16,16 +16,18 @@ public class NowAccountResponseDTO {
     private String acntName;
     private String goalName;
     private int goalAmount;
+    private int acntAmount;
     private long savingCnt;
-    private long dayCnt;
-    public static NowAccountResponseDTO toDto(InputAccount inputAccount, long savingCnt){
+    private int dayCnt;
+    public static NowAccountResponseDTO toDto(InputAccount inputAccount, long savingCnt, int dayCnt){
         return NowAccountResponseDTO.builder()
                 .acntNum(inputAccount.getAcntNum())
                 .acntName(inputAccount.getAcntName())
                 .goalName(inputAccount.getGoalName())
                 .goalAmount(inputAccount.getGoalAmount())
                 .savingCnt(savingCnt)
-                .dayCnt(ChronoUnit.DAYS.between(inputAccount.getCreatedAt(), LocalDateTime.now()))
+                .dayCnt(dayCnt)
+                .acntAmount(inputAccount.getAcntAmount())
                 .build();
 
 

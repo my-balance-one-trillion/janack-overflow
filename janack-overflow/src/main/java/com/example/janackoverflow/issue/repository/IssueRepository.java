@@ -12,7 +12,7 @@ import java.util.Optional;
 public interface IssueRepository extends JpaRepository<Issue, Long> {
     Optional<Object> findByUsersIdAndStatus(Long userId, String status);
 
-    List<Issue> findByUsersIdAndCreatedAtAfter(Long userId, LocalDateTime aWeekAgo);
+    List<Issue> findByUsersIdAndCreatedAtAfterOrderByCreatedAtDesc(Long userId, LocalDateTime aWeekAgo);
     Long countByUsersIdAndCreatedAtAfter(Long userId, LocalDateTime createAt);
 
     List<Issue> findTop10ByOrderByCreatedAtDesc();

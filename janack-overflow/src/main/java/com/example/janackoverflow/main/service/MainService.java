@@ -43,8 +43,8 @@ public class MainService {
         InputAccount inputAccount = inputAccountRepository.findByUsersIdAndStatus(userId, "01")
                 .orElseThrow(() -> new IllegalArgumentException("not found"));
         Long savingCnt = issueRepository.countByUsersIdAndCreatedAtAfter(1L, inputAccount.getCreatedAt());
-
-        return NowAccountResponseDTO.toDto(inputAccount, savingCnt);
+        int dayCnt = LocalDateTime.now().getDayOfYear()-inputAccount.getCreatedAt().getDayOfYear()+1;
+        return NowAccountResponseDTO.toDto(inputAccount, savingCnt, dayCnt);
 
 
     }
@@ -53,7 +53,7 @@ public class MainService {
         Users users = usersRepository.findById(userId)
                 .orElseThrow(() -> new IllegalArgumentException("not found :"+userId));
 
-        return issueRepository.findByUsersIdAndCreatedAtAfter(userId, LocalDateTime.now().minusWeeks(1))
+        return issueRepository.findByUsersIdAndCreatedAtAfterOrderByCreatedAtDesc(userId, LocalDateTime.now().minusWeeks(1).withHour(0).withMinute(0).withSecond(0))
                 .stream().map(IssueResponseDTO::toDto)
                 .toList();
     }

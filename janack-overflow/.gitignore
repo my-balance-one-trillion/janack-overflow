@@ -376,8 +376,11 @@ gradle-app.setting
 # Java heap dump
 *.hprof
 
+<<<<<<< HEAD
 # End of https://www.toptal.com/developers/gitignore/api/node,gradle,vuejs,windows,macos,java,intellij
 
+=======
+>>>>>>> 2d8b0e52037fc7a3705a5ddba89103773771a722
 ### VisualStudioCode ###
 .vscode/*
 !.vscode/settings.json
@@ -395,4 +398,10 @@ gradle-app.setting
 ### VisualStudioCode Patch ###
 # Ignore all local history of files
 .history
+<<<<<<< HEAD
 .ionide
+=======
+.ionide
+
+# End of https://www.toptal.com/developers/gitignore/api/node,gradle,vuejs,windows,macos,java,intellij
+>>>>>>> 2d8b0e52037fc7a3705a5ddba89103773771a722
