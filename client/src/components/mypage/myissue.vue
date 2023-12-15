@@ -28,7 +28,7 @@
               </tr>
             </thead>
             <tbody>
-              <tr class="bg-white border-b" v-for="item in issueList.content">
+              <tr class="bg-white border-b" v-for="item in issueList">
 
                 <td class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
                   {{ item.title }}
@@ -57,32 +57,20 @@
       <nav aria-label="Page navigation example">
         <ul class="inline-flex -space-x-px text-sm">
           <li>
-            <a href="#"
-              class="flex items-center justify-center px-3 h-8 ms-0 leading-tight text-gray-500 bg-white border border-e-0 border-gray-300 rounded-s-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">Previous</a>
+            <div
+              class="flex items-center justify-center px-3 h-8 ms-0 leading-tight text-gray-500 bg-white border border-e-0 border-gray-300 rounded-s-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">
+              Previous</div>
           </li>
-          <li>
-            <a href="#"
-              class="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">1</a>
+          <li v-for="i in pageInt">
+            <div
+              class="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">
+              {{ i + 1 }}</div>
           </li>
+
           <li>
-            <a href="#"
-              class="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">2</a>
-          </li>
-          <li>
-            <a href="#" aria-current="page"
-              class="flex items-center justify-center px-3 h-8 text-main-red border border-gray-300 bg-red-100 hover:bg-red-200 hover:text-hover-red dark:border-gray-700 dark:bg-gray-700 dark:text-white">3</a>
-          </li>
-          <li>
-            <a href="#"
-              class="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">4</a>
-          </li>
-          <li>
-            <a href="#"
-              class="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">5</a>
-          </li>
-          <li>
-            <a href="#"
-              class="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 rounded-e-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">Next</a>
+            <div href="#"
+              class="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 rounded-e-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">
+              Next</div>
           </li>
         </ul>
       </nav>
@@ -96,7 +84,7 @@ import { useAuthStore } from "@/stores/auth";
 
 const issueList = ref([]);
 const pageSet = ref([]);
-const pageInt = reactive([]);
+let pageInt = reactive([]);
 
 getIssueList(0);
 async function getIssueList(i) {
@@ -105,10 +93,11 @@ async function getIssueList(i) {
       "Authorization": useAuthStore().token
     }
   });
-  const { data, pageInfo, pageNumber } = response.data;
+  const { data, pageDTO, pageNumber } = response.data;
   issueList.value = data;
-  pageSet.value = pageInfo;
-  pageInt.value = pageNumber;
+  pageSet.value = pageDTO;
+  pageInt = pageNumber;
+  console.log(pageInt);
   console.log(response.data);
 }
 
