@@ -84,6 +84,9 @@
           class="peer-focus:font-medium absolute text-m text-gray-700 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 peer-focus:border-main-red peer-focus:dark:border-main-red peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
           >수정확인을 위해 패스워드를 입력해주세요</label
         >
+        <p class="text-red-700" :class="{ 'hidden': passwordOk }">
+          패스워드가 일치하지 않습니다.
+        </p>
       </div>
 
       <h4 class="mt-8 mb-3 text-lg">패스워드 변경</h4>
@@ -117,6 +120,9 @@
             class="peer-focus:font-medium absolute text-m text-gray-700 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 peer-focus:border-main-grn peer-focus:dark:border-main-grn peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
             >패스워드 수정 확인</label
           >
+          <p class="text-red-700" :class="{ 'hidden': confirmOk }">
+            수정값과 확인값이 다릅니다.
+          </p>
         </div>
       </div>
 
@@ -163,7 +169,6 @@
             placeholder=" "
             required
             v-model="userInfo.outputAcntNum"
-
           />
           <label
             for="floating_outputAcntNum"
@@ -173,58 +178,73 @@
         </div>
       </div>
       <div class="flex justify-end">
-      <button
-        type="submit"
-        class="text-white bg-main-red hover:bg-hover-red focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-main-red dark:hover:bg-hover-red dark:focus:ring-blue-800"
-      >
-        Submit
-      </button>
-    </div> 
+        <button
+          type="submit"
+          class="text-white bg-main-red hover:bg-hover-red focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-main-red dark:hover:bg-hover-red dark:focus:ring-blue-800"
+        >
+          Submit
+        </button>
+      </div>
     </form>
   </article>
 </template>
 
 <script setup>
-import { ref, defineEmits, defineProps } from 'vue';
-import axios from 'axios';
+import { useAuthStore } from "@/stores/auth";
+import { ref } from "vue";
+import axios from "axios";
 
-const props = defineProps(["token", "info"]);
-const emit = defineEmits(['update']);
-
-const userInfo = ref("");
+const authStore = useAuthStore();
+const userInfo = ref({ ...authStore.userInfo });
 const inputPassword = ref("");
 const inputUpdatePassword = ref("");
 const inputUpdatePasswordConfirm = ref("");
-
-// ----------------------------
-// 기존 정보 불러오기
-// ----------------------------
-
-userInfo.value = props.info;
+const passwordOk = ref('');
+const confirmOk = ref('');
+passwordOk.value = true;
+confirmOk.value = true;
 
 // ----------------------------
 // 회원정보 수정하기
 // ----------------------------
 
-async function updateInfo(e){
-  let updateInfo = {
-    "name": userInfo.value.name,
-    "password": inputPassword.value,
-    "digit": userInfo.value.digit,
-    "birth": userInfo.value.birth,
-    "nickname": userInfo.value.nickname,
-    "holder": userInfo.value.holder,
-    "bankName": userInfo.value.bankName,
-    "outputAcntNum": userInfo.value.outputAcntNum
-  };
-  await axios.put('/community/myinfo/16',updateInfo,{
-    headers:{
-      'content-type':'application/json',
-      'authorization': props.token
+async function updateInfo() {
+  try {
+    let updateInfo = {
+      name: userInfo.value.name,
+      password: inputPassword.value,
+      digit: userInfo.value.digit,
+      birth: userInfo.value.birth,
+      nickname: userInfo.value.nickname,
+      holder: userInfo.value.holder,
+      bankName: userInfo.value.bankName,
+      outputAcntNum: userInfo.value.outputAcntNum,
+      newPassword: inputUpdatePassword.value,
+      newPasswordConfirm: inputUpdatePasswordConfirm.value,
+    };
+    const response = await axios.put("/mypage/myinfo", updateInfo, {
+      headers: {
+        "content-type": "application/json",
+        authorization: authStore.token,
+      },
+    });
+    authStore.getUserInfo();
+    if (response.data == "ok") {
+      alert("수정완료");
+      inputPassword.value = "";
+      inputUpdatePassword.value = "";
+      inputUpdatePasswordConfirm.value = "";
+      passwordOk.value = true;
+      confirmOk.value = true;
+    } else if (response.data == "passwordError") {
+      passwordOk.value = false;    
+    }else{
+      confirmOk.value = false;
     }
-  });
-  emit('update','updated');
+  } catch (error) {
+    alert(response.status, "에러");
+    console.error("에러:", error.message);
+  }
 }
-
 </script>
 <style scoped></style>

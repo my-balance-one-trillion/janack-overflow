@@ -1,20 +1,23 @@
 <template>
-  <div class="flex items-center justify-between py-2">
+  <header class="flex items-center justify-between py-2">
     <div class="w-32">
-      <img src="/images/logo.svg" alt="" class="object-contain" />
+      <router-link to="/">
+        <img src="/images/logo.svg" alt="" class="object-contain" />
+      </router-link>
     </div>
     <div class="flex justify-between gap-4 h-auto">
-      <div class="mx-auto">
-        <router-link to="/mypage"
-          ><i class="fa-regular fa-circle-user fa-xl"></i
-        ></router-link>
+      <div class="mx-auto" @click="removeToken" v-if="useAuthStore().token">
+        <router-link to="" class="text-gray-600 text-xl">LOGOUT</router-link>
       </div>
-      <div class="mx-auto">
-        <i @click="logout" class="fa-solid fa-door-open fa-xl"></i>
+      <div class="mx-auto" v-else>
+        <router-link to="/login" class="text-gray-600 text-xl">
+          LOGIN
+        </router-link>
       </div>
-
-      <div class="mx-auto">
-        <i class="fa-solid fa-right-to-bracket fa-2xl"></i>
+      <div class="mx-auto" v-if="useAuthStore().token">
+        <router-link to="/mypage">
+          <i class="fa-regular fa-circle-user fa-2xl"></i>
+        </router-link>
       </div>
       <div class="w-7"></div>
       <div class="mx-auto bars-wrap">
@@ -36,42 +39,27 @@
         <div ref="menuBg" class="menu-bg" id="menu-bg"></div>
       </div>
     </div>
-  </div>
+  </header>
 </template>
 <script setup>
-import axios from 'axios';
-import { ref } from 'vue';
+import { ref } from "vue";
+import { useAuthStore } from "@/stores/auth";
 
 const menuBar = ref(null);
 const nav = ref(null);
 const menuBg = ref(null);
 
-function menuOnClick() {
-    menuBar.value.classList.toggle("change");
-    nav.value.classList.toggle("change");
-    menuBg.value.classList.toggle("change-bg");
+const authStore = useAuthStore();
+
+function removeToken() {
+  localStorage.removeItem("token");
+  authStore.clearToken();
+  alert("로그아웃되었습니다.");
 }
 
-function logout(){
-  try{
-    const res = axios.get('http://localhost:8081/logout',
-      {
-        headers: {
-          'authorization': localStorage.getItem('token')
-        },
-      });
-
-    localStorage.removeItem('token');
-
-    console.log(res);
-
-    window.alert('로그아웃이 수행되었습니다');
-    router.push('/');
-  }
-  catch (error) {
-    console.error('로그아웃 실패');
-    window.alert('로그아웃 실패했습니다');
-    router.push('/');
-  }
+function menuOnClick() {
+  menuBar.value.classList.toggle("change");
+  nav.value.classList.toggle("change");
+  menuBg.value.classList.toggle("change-bg");
 }
 </script>

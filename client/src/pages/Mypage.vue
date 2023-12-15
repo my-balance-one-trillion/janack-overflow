@@ -1,5 +1,5 @@
 <template>
-  <main class="my-10 flex items-start">
+  <main class="my-10 flex items-start" v-if="authStore.token">
     <aside class="flex flex-row">
       <div
         class="flex flex-col w-56 bg-white rounded-3xl overflow-hidden border border-sub-red"
@@ -7,7 +7,7 @@
         <div class="mt-6 mx-auto">
           <img
             id="profileimg"
-            :src="`/images/${userInfo.profileImage}`"
+            :src="`/images/${authStore.userInfo.profileImage}`"
             class="rounded-full w-32"
             alt="profile picture"
           />
@@ -15,7 +15,7 @@
 
         <div class="mt-5 mx-auto">
           <h2 id="profilenick" class="text-lg tracking-wide">
-            {{ userInfo.nickname }}
+            {{ authStore.userInfo.nickname }}
           </h2>
         </div>
         <div class="border-b-4 border-main-red w-40 mx-auto my-4"></div>
@@ -105,68 +105,39 @@
       </div>
     </aside>
     <section class="ml-10 w-full">
-      <dashboard
-        v-if="currentComponent === 'dashboard'"
-        :token="localStorageToken"
-        :info="userInfo"
-      />
-      <updateinfo
-        v-if="currentComponent === 'updateinfo'"
-        :token="localStorageToken"
-        :info="userInfo"
-      />
-      <myissue
-        v-if="currentComponent === 'myissue'"
-        :token="localStorageToken"
-        :info="userInfo"
-      />
-      <mycomment
-        v-if="currentComponent === 'mycomment'"
-        :token="localStorageToken"
-        :info="userInfo"
-      />
-      <profileimage
-        v-if="currentComponent === 'profileimage'"
-        :token="localStorageToken"
-        :info="userInfo"
-        @update="getUserInfo"
-      />
+      <dashboard v-if="currentComponent === 'dashboard'" />
+      <updateinfo v-if="currentComponent === 'updateinfo'" />
+      <myissue v-if="currentComponent === 'myissue'" />
+      <mycomment v-if="currentComponent === 'mycomment'" />
+      <profileimage v-if="currentComponent === 'profileimage'" />
     </section>
+  </main>
+  <main class="flex flex-col justify-center h-screen" v-else>
+    <div class="flex flex-col justify-center items-center">
+      <p>로그인이 필요한 서비스입니다.</p>
+      <p>
+        <router-link to="/login" class="cursor-pointer text-main-red underline"
+          >로그인</router-link
+        >
+      </p>
+    </div>
   </main>
 </template>
 <script setup>
-import { ref, onMounted } from "vue";
-import { RouterLink } from "vue-router";
-import { useAuthStore } from "@/stores/auth"; 
+import { ref } from "vue";
+import { useAuthStore } from "@/stores/auth";
 
-import dashboard from "../components/mypage/dashboard.vue";
-import profileimage from "../components/mypage/profileimage.vue";
-import updateinfo from "../components/mypage/updateinfo.vue";
-import myissue from "../components/mypage/myissue.vue";
-import mycomment from "../components/mypage/mycomment.vue";
+import dashboard from "@/components/mypage/dashboard.vue";
+import profileimage from "@/components/mypage/profileimage.vue";
+import updateinfo from "@/components/mypage/updateinfo.vue";
+import myissue from "@/components/mypage/myissue.vue";
+import mycomment from "@/components/mypage/mycomment.vue";
 
-const token = ref(useAuthStore().token);
-const userInfo = ref(useAuthStore().userInfo);
+const authStore = useAuthStore();
 const currentComponent = ref("dashboard");
 
 const changeComponent = (component) => {
   currentComponent.value = component;
 };
-console.log(useAuthStore().userInfo);
-console.log(useAuthStore().token);
-onMounted(async () => {
-  await getUserInfo();
-});
-async function getUserInfo(){
-  const response = await axios.get('/mypage/myinfo', {
-    headers: {
-      'authorization': localStorageToken,
-    },
-  });
-  userInfo.value = response.data;
-
-  console.log("ok")
-}
-
 </script>
 <style scoped></style>

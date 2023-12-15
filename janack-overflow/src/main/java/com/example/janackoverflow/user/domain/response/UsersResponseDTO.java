@@ -1,6 +1,7 @@
 package com.example.janackoverflow.user.domain.response;
 
 import com.example.janackoverflow.user.entity.Users;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
@@ -18,6 +19,7 @@ public class UsersResponseDTO {
     private String digit;
     private Date birth;
     private String name;
+    @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDateTime createdAt;
     private String nickname;
     private String status;
