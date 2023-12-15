@@ -7,7 +7,7 @@
         <div class="mt-6 mx-auto">
           <img
             id="profileimg"
-            :src="`/images/${userInfo.profileImage}`"
+            :src="`/images/${authStore.userInfo.profileImage}`"
             class="rounded-full w-32"
             alt="profile picture"
           />
@@ -15,7 +15,7 @@
 
         <div class="mt-5 mx-auto">
           <h2 id="profilenick" class="text-lg tracking-wide">
-            {{ userInfo.nickname }}
+            {{ authStore.userInfo.nickname }}
           </h2>
         </div>
         <div class="border-b-4 border-main-red w-40 mx-auto my-4"></div>
@@ -105,19 +105,27 @@
       </div>
     </aside>
     <section class="ml-10 w-full">
-      <dashboard v-if="currentComponent === 'dashboard'"/>
-      <updateinfo v-if="currentComponent === 'updateinfo'"/>
-      <myissue v-if="currentComponent === 'myissue'"/>
-      <mycomment v-if="currentComponent === 'mycomment'"/>
-      <profileimage v-if="currentComponent === 'profileimage'"/>
+      <dashboard v-if="currentComponent === 'dashboard'" />
+      <updateinfo v-if="currentComponent === 'updateinfo'" />
+      <myissue v-if="currentComponent === 'myissue'" />
+      <mycomment v-if="currentComponent === 'mycomment'" />
+      <profileimage v-if="currentComponent === 'profileimage'" />
     </section>
   </main>
-  <main v-else></main>
+  <main class="flex flex-col justify-center h-screen" v-else>
+    <div class="flex flex-col justify-center items-center">
+      <p>로그인이 필요한 서비스입니다.</p>
+      <p>
+        <router-link to="/login" class="cursor-pointer text-main-red underline"
+          >로그인</router-link
+        >
+      </p>
+    </div>
+  </main>
 </template>
 <script setup>
-import { onBeforeMount, ref } from "vue";
-import { useRouter } from "vue-router";
-import { useAuthStore } from "@/stores/auth"; 
+import { ref } from "vue";
+import { useAuthStore } from "@/stores/auth";
 
 import dashboard from "@/components/mypage/dashboard.vue";
 import profileimage from "@/components/mypage/profileimage.vue";
@@ -126,20 +134,10 @@ import myissue from "@/components/mypage/myissue.vue";
 import mycomment from "@/components/mypage/mycomment.vue";
 
 const authStore = useAuthStore();
-const router = useRouter();
-
-const userInfo = ref(authStore.userInfo);
 const currentComponent = ref("dashboard");
 
 const changeComponent = (component) => {
   currentComponent.value = component;
 };
-
-onBeforeMount(()=>{
-  if(!authStore.token){
-    alert("로그인이 필요합니다.");
-    router.push("/login");
-  }
-});
 </script>
 <style scoped></style>

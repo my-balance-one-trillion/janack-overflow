@@ -1,5 +1,5 @@
 <template>
-  <div class="flex items-center justify-between py-2">
+  <header class="flex items-center justify-between py-2">
     <div class="w-32">
       <router-link to="/">
         <img src="/images/logo.svg" alt="" class="object-contain" />
@@ -14,7 +14,7 @@
           LOGIN
         </router-link>
       </div>
-      <div class="mx-auto">
+      <div class="mx-auto" v-if="useAuthStore().token">
         <router-link to="/mypage">
           <i class="fa-regular fa-circle-user fa-2xl"></i>
         </router-link>
@@ -39,11 +39,11 @@
         <div ref="menuBg" class="menu-bg" id="menu-bg"></div>
       </div>
     </div>
-  </div>
+  </header>
 </template>
 <script setup>
-import { ref } from 'vue';
-import { useAuthStore } from '@/stores/auth';
+import { ref } from "vue";
+import { useAuthStore } from "@/stores/auth";
 
 const menuBar = ref(null);
 const nav = ref(null);
@@ -51,16 +51,15 @@ const menuBg = ref(null);
 
 const authStore = useAuthStore();
 
-
-function removeToken(){
-  localStorage.removeItem('token');
+function removeToken() {
+  localStorage.removeItem("token");
   authStore.clearToken();
   alert("로그아웃되었습니다.");
 }
 
 function menuOnClick() {
-    menuBar.value.classList.toggle("change");
-    nav.value.classList.toggle("change");
-    menuBg.value.classList.toggle("change-bg");
+  menuBar.value.classList.toggle("change");
+  nav.value.classList.toggle("change");
+  menuBg.value.classList.toggle("change-bg");
 }
 </script>

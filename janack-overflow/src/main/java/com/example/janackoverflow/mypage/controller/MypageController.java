@@ -1,6 +1,7 @@
 package com.example.janackoverflow.mypage.controller;
 
 import com.example.janackoverflow.community.domain.CommentDTO;
+import com.example.janackoverflow.global.pagination.PageResponseDTO;
 import com.example.janackoverflow.global.security.auth.NowUserDetails;
 import com.example.janackoverflow.issue.domain.response.IssueResponseDTO;
 import com.example.janackoverflow.mypage.domain.response.myCommentResponseDTO;
@@ -10,6 +11,7 @@ import com.example.janackoverflow.mypage.service.MypageService;
 import com.example.janackoverflow.user.domain.request.UsersRequestDTO;
 import com.example.janackoverflow.user.domain.response.UsersResponseDTO;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -33,12 +35,14 @@ public class MypageController {
         UsersResponseDTO usersResponseDTO =  usersService.readUser(usersId);
         return new ResponseEntity(usersResponseDTO, HttpStatus.OK);
     }
+
     @PutMapping("/mypage/myinfo")
-    public ResponseEntity updateUser(@RequestBody UsersRequestDTO usersRequestDTO,
+    public ResponseEntity<String> updateUser(@RequestBody UsersRequestDTO usersRequestDTO,
                                      @AuthenticationPrincipal NowUserDetails nowUserDetails){
         Long usersId = nowUserDetails.getId();
-        mypageService.updateUser(usersRequestDTO, usersId);
-        return new ResponseEntity(HttpStatus.RESET_CONTENT);
+        String updateStatus = mypageService.updateUser(usersRequestDTO, usersId);
+        System.out.println(updateStatus);
+        return ResponseEntity.accepted().body(updateStatus);
     }
 
     //    마이페이지에서 프로필 이미지 변경
@@ -52,11 +56,14 @@ public class MypageController {
 
 //    내가 쓴 글 보기
     @GetMapping("mypage/myissue")
-    public ResponseEntity readMyIssue( @AuthenticationPrincipal NowUserDetails nowUserDetails){
+    public ResponseEntity readMyIssue( @AuthenticationPrincipal NowUserDetails nowUserDetails,
+                                       Pageable pageable){
+        System.out.println(pageable);
         Long usersId = nowUserDetails.getId();
-        Page<myIssueResponseDTO> myIssueList = mypageService.readMyIssue(usersId);
+        PageResponseDTO<myIssueResponseDTO> myIssueList = mypageService.readMyIssue(usersId, pageable);
         return new ResponseEntity(myIssueList, HttpStatus.OK);
     }
+
 //    내가쓴 댓글 보기
     @GetMapping("/mypage/mycomment")
     public ResponseEntity readMyComment( @AuthenticationPrincipal NowUserDetails nowUserDetails){
