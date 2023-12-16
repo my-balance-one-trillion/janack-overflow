@@ -16,7 +16,7 @@
                             <span class="ml-2">{{ props.issue.likes }}</span>
                         </div>
                     </div>
-                    <p class="mt-2 text-gray-600 overflow-hidden"
+                    <p class="mt-2 overflow-hidden text-gray-600"
                     style="height: 80px; overflow: hidden;">{{ props.issue.content }}</p>
                 </div>
                 <div class="flex items-center justify-between mt-4">
@@ -35,7 +35,7 @@
 </template>
 
 <script setup>
-    import {defineProps} from 'vue';
+    // import {defineProps} from 'vue';
     const props = defineProps({
         issue:{
             type: Object

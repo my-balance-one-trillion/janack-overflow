@@ -1,5 +1,5 @@
 <template>
-  <h3 class="text-3xl text-main-red font-bold mb-7">회원 정보 수정하기</h3>
+  <h3 class="text-3xl font-bold text-main-red mb-7">회원 정보 수정하기</h3>
   <div class="border-b-4 border-main-red"></div>
   <article class="">
     <form class="max-w-md mx-auto my-10" @submit.prevent="updateInfo">
@@ -185,7 +185,7 @@
 </template>
 
 <script setup>
-import { ref, defineEmits, defineProps } from 'vue';
+import { ref } from 'vue';
 import axios from 'axios';
 
 const props = defineProps(["token", "info"]);

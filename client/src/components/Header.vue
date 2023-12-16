@@ -1,18 +1,18 @@
 <template>
-  <div class="flex items-center justify-between py-2">
-    <div class="w-32">
-      <img src="/images/logo.svg" alt="" class="object-contain" />
+  <div class="flex items-center justify-between py-6">
+    <div class="w-48">
+      <img src="/images/logo.svg"  alt="" class="object-contain" />
     </div>
-    <div class="flex justify-between gap-4 h-auto">
+    <div class="flex justify-between h-auto gap-4">
       <div class="mx-auto">
         <router-link to="/mypage"
           ><i class="fa-regular fa-circle-user fa-xl"></i
         ></router-link>
       </div>
       <div class="mx-auto">
-        <router-link to="/logout"
+        <!-- <router-link to="/logout"
           ><i class="fa-solid fa-door-open fa-xl"></i
-        ></router-link>
+        ></router-link> -->
       </div>
 
       <div class="mx-auto">
