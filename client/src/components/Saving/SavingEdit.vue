@@ -5,19 +5,9 @@ import dayjs from "dayjs";
 import {useAuthStore} from "@/stores/auth";
 
 const accountInfo = ref({
-  inputAccountRequestDTO: {
-    acntName: "",
-    goalName: "",
-    goalAmount: 0,
-  },
-  ruleRequestDTO: {
-    underThirty: 0,
-    underHour: 0,
-    underThreeHour: 0,
-    overThreeHour: 0,
-  },
+  inputAccountRequestDTO: {},
+  ruleRequestDTO: {},
 });
-
 
 onMounted(async () => {
   try {
@@ -26,18 +16,11 @@ onMounted(async () => {
         Authorization: useAuthStore().token,
       }
     });
-    // 적금 정보
     const accountdata = response.data.inProgressAccount;
-    accountInfo.value.inputAccountRequestDTO.acntName = accountdata.acntName;
-    accountInfo.value.inputAccountRequestDTO.goalName = accountdata.goalName;
-    accountInfo.value.inputAccountRequestDTO.goalAmount = accountdata.goalAmount;
+    accountInfo.value.inputAccountRequestDTO = accountdata;
     // 규칙 정보
     const ruledata = response.data.inProgressRule;
-    accountInfo.value.ruleRequestDTO.underThirty = ruledata.underThirty;
-    accountInfo.value.ruleRequestDTO.underHour = ruledata.underHour;
-    accountInfo.value.ruleRequestDTO.underThreeHour = ruledata.underThreeHour;
-    accountInfo.value.ruleRequestDTO.overThreeHour = ruledata.overThreeHour;
-
+    accountInfo.value.ruleRequestDTO = ruledata;
   } catch (error) {
     console.error(error);
   }

@@ -5,6 +5,7 @@ import dayjs from "dayjs";
 import {useAuthStore} from "../../../stores/auth";
 
 const issueList = ref([]);
+
 onMounted(async () => {
   getMonthlyIssues();
 });

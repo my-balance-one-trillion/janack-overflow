@@ -2,6 +2,7 @@ package com.example.janackoverflow.saving.controller;
 
 import com.example.janackoverflow.global.security.auth.NowUserDetails;
 import com.example.janackoverflow.issue.domain.response.IssueResponseDTO;
+import com.example.janackoverflow.issue.entity.Issue;
 import com.example.janackoverflow.issue.service.IssueService;
 import com.example.janackoverflow.saving.domain.request.SavingRequestDTO;
 import com.example.janackoverflow.saving.domain.response.InputAccountResponseDTO;
@@ -78,7 +79,7 @@ public class SavingController {
                                                            @RequestParam int year, @RequestParam int month) {
         Users users = userDetails.getUser();
 
-        List<IssueResponseDTO> monthlyIssues = issueService.getMonthlyIssuesByUserId(users, year, month);
+        List<Issue> monthlyIssues = issueService.getMonthlyIssuesByUserId(users, year, month);
         return new ResponseEntity<>(monthlyIssues, HttpStatus.OK);
     }
 

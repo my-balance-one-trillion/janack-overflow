@@ -1,7 +1,6 @@
 package com.example.janackoverflow.issue.domain.response;
 
 import com.example.janackoverflow.issue.entity.Issue;
-import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.*;
 
 import java.time.LocalDateTime;
@@ -18,7 +17,7 @@ public class IssueResponseDTO {
     private String keyword;
     private String category;
     private String code;
-    @JsonFormat(pattern = "yyyy-MM-dd")
+    private String content;
     private LocalDateTime createdAt;
     private String status;
     private int amount;
@@ -30,6 +29,7 @@ public class IssueResponseDTO {
                 .keyword(issue.getKeyword())
                 .category(issue.getCategory())
                 .code(issue.getCode())
+                .content(issue.getContent())
                 .createdAt(issue.getCreatedAt())
                 .status(issue.getStatus())
                 .amount(issue.getAmount())

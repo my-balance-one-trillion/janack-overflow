@@ -5,7 +5,6 @@ import router from "../../router";
 import axios from "axios";
 import {useAuthStore} from "../../stores/auth";
 
-
 let currentStep = ref(1); // 현재 단계
 const nextStep = () => { // 다음 단계 이동
   if (currentStep.value < 3) {
@@ -40,22 +39,23 @@ const accountInfo = ref({
   },
 });
 const goOpenAccountFinish = async () => {
-  try {
-    await axios.post('/savings',
-        {
-          inputAccountRequestDTO: accountInfo.value.inputAccountRequestDTO,
-          ruleRequestDTO: accountInfo.value.ruleRequestDTO,
-        }, {
-          headers: {
-            Authorization: useAuthStore().token,
-          }
-        });
-    await router.push({
-      path: "/open/finish",
-    });
-  } catch (error) {
-    console.log(error);
-  }
+  await axios
+      .post('/savings',
+          {
+            inputAccountRequestDTO: accountInfo.value.inputAccountRequestDTO,
+            ruleRequestDTO: accountInfo.value.ruleRequestDTO,
+          }, {
+            headers: {
+              Authorization: useAuthStore().token,
+            }
+          })
+      .then(() => {
+        router.push({
+          path: "/open/finish",
+        })
+      })
+      .catch(() => {
+      })
 }
 </script>
 

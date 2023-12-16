@@ -42,7 +42,7 @@ public class RuleService {
         updateRule.updateRule(ruleRequestDTO.getUnderThirty(),
                 ruleRequestDTO.getUnderHour(),
                 ruleRequestDTO.getUnderThreeHour(),
-                ruleRequestDTO.getUnderThreeHour());
+                ruleRequestDTO.getOverThreeHour());
         return ruleRepository.save(updateRule);
     }
 
