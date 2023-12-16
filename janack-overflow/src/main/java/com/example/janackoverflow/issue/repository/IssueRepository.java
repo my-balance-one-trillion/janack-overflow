@@ -13,7 +13,7 @@ import java.util.Optional;
 
 @Repository
 public interface IssueRepository extends JpaRepository<Issue, Long> {
-    Optional<Object> findByUsersIdAndStatus(Long userId, String status);
+    Optional<Issue> findByUsersIdAndStatus(Long userId, String status);
     Page<Issue> findAllByUsers_idOrderByCreatedAtDesc(Long id, Pageable pageble);
 
 
