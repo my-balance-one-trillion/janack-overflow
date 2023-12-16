@@ -9,6 +9,7 @@ import org.springframework.stereotype.Component;
 @ConfigurationProperties("jwt")
 public class JwtProperties {
 	private String header;
-	private String secret;
+	private String secret1;
+	private String secret2;
 	private Long tokenValidityInSeconds;
 }

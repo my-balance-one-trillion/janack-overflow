@@ -20,7 +20,7 @@ public interface IssueRepository extends JpaRepository<Issue, Long> {
     List<Issue> findByUsersIdAndCreatedAtAfterOrderByCreatedAtDesc(Long userId, LocalDateTime aWeekAgo);
     Long countByUsersIdAndCreatedAtAfter(Long userId, LocalDateTime createAt);
 
-    List<Issue> findTop10ByOrderByCreatedAtDesc();
+    List<Issue> findTop10ByPublicStatusOrderByCreatedAtDesc(boolean publicStatus);
     List<Issue> findByUsersId(Long userId);
     List<Issue> findByUsersIdAndStatusOrderByCreatedAtDesc(Long userId, String status);
 

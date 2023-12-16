@@ -1,11 +1,12 @@
 <template>
-  <div class="min-h-screen bg-gray-100 py-6 flex flex-col  sm:py-12">
+  <div class="min-h-screen py-6 flex flex-col  sm:py-12">
     <div class="relative py-3 sm:max-w-xl sm:mx-auto">
       <div class="absolute inset-0 bg-gradient-to-r 
       from-red-300 to-red-600 shadow-lg transform 
-      -skew-y-6 sm:skew-y-0 sm:-rotate-6 sm:rounded-3xl"></div>
+      -skew-y-6 sm:skew-y-0 sm:-rotate-6 sm:rounded-3xl">
+      </div>
       
-      <div class="relative px-4 py-10 bg-white shadow-lg sm:rounded-3xl sm:p-20">
+      <div class="relative px-4 py-10 bg-gray-100 shadow-lg sm:rounded-3xl sm:p-20">
         <div class="max-w-md mx-auto">
           <div>
             <h1 class="text-2xl text-center font-semibold">Sign Up</h1>
@@ -71,12 +72,20 @@
                     </div>
 
                     <div class="relative">
+                      <DatePicker class="w-10/12"
+                        v-model="datePic"
+                        label="생년월일"
+                        :typeable="true"
+                      />
+                    </div>
+
+                    <!-- <div class="relative">
                       <input autocomplete="off" id="birth" name="birth" type="text" v-model="state.input.birth"
                       class="focus:ouline-none focus:ring-0 peer placeholder-transparent h-10 w-full border-t-0 border-l-0 border-r-0 border-b-2 
                       border-red-700 text-gray-900 focus:outline-none focus:borer-rose-600" placeholder="Birth" required/>
                       <label for="birth" 
                       class="absolute left-0 -top-3.5 text-gray-600 text-sm peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-440 peer-placeholder-shown:top-2 transition-all peer-focus:-top-3.5 peer-focus:text-gray-600 peer-focus:text-sm">생년월일</label>
-                    </div>
+                    </div> -->
                   </div>
                 </div>
 
@@ -145,13 +154,28 @@
 </template>
 
 <script>
-
-import { reactive } from "vue";
+import { ref, reactive } from "vue";
+import DatePicker from 'vue3-datepicker';
+import {ko} from 'date-fns/locale';
+import dayjs from 'dayjs';
 import axios from "axios";
 import { useRouter } from "vue-router";
 
 export default {
+
+  components: {
+    DatePicker,
+  },
+
   setup() {
+    const datePic = ref(new Date());
+
+    const year = datePic.value.getFullYear();
+    const month = datePic.value.getMonth() + 1;
+    const day = datePic.value.getDate();
+    
+    const locale = reactive(ko); //한글 달력
+
     const router = useRouter();
     const state = reactive({
       input: {
@@ -160,7 +184,7 @@ export default {
         name: "",
         nickname: "",
         digit: "",
-        birth: "2023-12-12",
+        birth: year + '-' + month + '-' + day,
         bankName: "",
         holder: "",
         outputAcntNum: ""
@@ -188,7 +212,15 @@ export default {
         });
     }
 
-    return {state, signup}
+    return {
+      datePic,
+      year,
+      month,
+      day,
+      locale,
+      state, 
+      signup
+    }
   }
 }
 
