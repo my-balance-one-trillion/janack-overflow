@@ -7,6 +7,7 @@
 </template>
 
 <script setup>
+import axios from "axios";
 import { onBeforeMount } from "vue";
 import Header from "@/components/Header.vue";
 import Footer from "@/components/Footer.vue";
@@ -16,9 +17,11 @@ import { useRouter } from "vue-router";
 const authStore = useAuthStore();
 const router = useRouter();
 
+
 // --------------------
 // 유저정보 우선실행 로직
 // --------------------
+
 
 onBeforeMount(async () => {
   await handleRouteLogic();
@@ -30,6 +33,7 @@ router.beforeEach(async (to, from, next) => {
 });
 
 async function handleRouteLogic() {
+
   authStore.initializeTokenFromStorage();
   try {
     if (authStore.token) {
@@ -38,6 +42,17 @@ async function handleRouteLogic() {
   } catch (error) {
     console.error("getUserInfo 오류:", error);
   }
+
+}
+
+async function getUserInfo() {
+  const response = await axios.get("/mypage/myinfo", {
+    headers: {
+      authorization: authStore.token,
+    },
+  });
+  authStore.setUserInfo(response.data);  
+
 }
 </script>
 

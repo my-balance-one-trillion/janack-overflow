@@ -25,8 +25,8 @@ public class ChatMessageService {
     public ChatMessage create(ChatMessageDTO.RequestDTO chatMessageDTO){
         Users users = usersRepository.findById(chatMessageDTO.getUserId())
                         .orElseThrow(() -> new IllegalArgumentException("없음"));
-        ChatRoom chatRoom = chatRoomRepository.findByRoomId(chatMessageDTO.getRoomId())
-                        .orElseThrow(() -> new IllegalArgumentException("없음"));
+        ChatRoom chatRoom = chatRoomRepository.findById(chatMessageDTO.getRoomId())
+                        .orElseThrow(() -> new IllegalArgumentException("없음" + chatMessageDTO.getRoomId()));
 
         ChatMessage chatMessage = chatMessageDTO.toEntity(users, chatRoom);
         chatMessageRepository.save(chatMessage);
@@ -34,8 +34,10 @@ public class ChatMessageService {
         return chatMessage;
     }
     //해당 채팅방 채팅 전체 불러오기
-    public List<ChatMessage> readAll(Long roomId){
-        return chatMessageRepository.findByChatRoomIdOrderByCreatedAtDesc(roomId);
+    public List<ChatMessageDTO.ResponseDTO> readAll(Long roomId){
+        return chatMessageRepository.findByChatRoomIdOrderByCreatedAt(roomId)
+                .stream().map(ChatMessageDTO.ResponseDTO::fromEntity)
+                .toList();
     }
     //채팅 삭제
 

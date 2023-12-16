@@ -10,5 +10,5 @@ import java.util.List;
 @Repository
 public interface ChatMessageRepository extends JpaRepository<ChatMessage, Long> {
     //채팅 내역 불러오기
-    public List<ChatMessage> findByChatRoomIdOrderByCreatedAtDesc(Long roomId);
+    public List<ChatMessage> findByChatRoomIdOrderByCreatedAt(Long roomId);
 }

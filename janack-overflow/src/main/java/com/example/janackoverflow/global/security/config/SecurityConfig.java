@@ -92,6 +92,7 @@ public class SecurityConfig {
                                 .requestMatchers("/image/**", "/css/**", "/", "/login", "/signup", "/community/**", "/saving/**", "/main/**", "/issue/**", "/ws/**", "/chatrooms/**").permitAll()
                                 
                                 //위에 작성된 url을 제외한 나머지는 인증절차 필요 (403 발생)
+                                .requestMatchers("/image/**", "/css/**", "/", "/login", "/logout", "/signup", "/community/**", "/saving/**", "/main/**", "/issue/**", "/ws/**", "/chatrooms/**", "/message/**").permitAll()
                                 .anyRequest().authenticated()
 
                 );
