@@ -23,7 +23,7 @@
     </div>
   </div>
   <div class="w-9/12 mx-auto flex justify-end">
-  <button class="rounded-[25px] bg-main-red text-white w-[180px] h-[70px]" style="font-size: 31px;">이슈 등록</button>
+    <button class="rounded-[25px] bg-main-red text-white w-[180px] h-[70px]" style="font-size: 31px;"><router-link to="/issue">이슈 등록</router-link></button>
 </div>
   <div class="border rounded-[25px] w-9/12 mx-auto my-10 p-4">
     <div class="flex justify-between mx-4">
