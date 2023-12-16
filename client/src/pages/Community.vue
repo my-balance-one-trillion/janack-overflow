@@ -1,13 +1,13 @@
 <template>
     <div class="w-full pt-20 mx-auto">
-        <div class="relative w-full p-7 sm:max-w-2xl sm:mx-auto">
+        <div class="relative w-3/4 mx-auto p-7 sm:max-w-xl sm:mx-auto">
             <div class="relative z-0 p-1 overflow-hidden rounded-full">
                 <div class="relative z-50 flex bg-white rounded-full">
-                    <input type="text" id="searchInput" placeholder="검색어를 입력해 주세요"
-                        class="flex-1 px-3 py-2 text-sm text-gray-500 border-0 rounded-full outline-none focus:border-0 focus:outline-none">
-                    <button
+                    <input type="text" v-model="searchInput" id="searchInput" placeholder="검색어를 입력해 주세요"
+                        class="flex-1 px-4 py-3 text-gray-500 border-0 rounded-full outline-none text-md focus:border-0 focus:outline-none">
+                    <!-- <button
                         class="px-6 py-2 font-semibold text-white rounded-full bg-main-grn hover:bg-hover-grn focus:bg-hover-grn focus:outline-none"
-                        @click="searchIssue">Search</button>
+                        @click="searchIssue">Search</button> -->
                 </div>
                 <div class="absolute z-10 bg-main-red glow glow-1"></div>
                 <div class="absolute z-20 bg-main-grn glow glow-2"></div>
@@ -15,7 +15,7 @@
                 <div class="absolute z-40 bg-sub-grn glow glow-4"></div>
             </div>
         </div>
-        <div class="flex justify-end mb-5">
+        <div class="flex justify-end pr-16 mb-5 lg:w-11/12 lg:pr-12 md:w-11/12 sm:w-auto md:pr-8 sm:pr-20">
             <button id="dropdownRadioButton" data-dropdown-toggle="dropdownDefaultRadio"
                 class="text-white bg-main-grn hover:bg-hover-grn focus:ring-4 focus:outline-none focus:ring-sub-grn font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center dark:bg-sub-grn dark:hover:bg-sub-grn dark:focus:ring-sub-grn"
                 type="button">FILTER <svg class="w-2.5 h-2.5 ms-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
@@ -31,7 +31,7 @@
                 <ul class="p-3 space-y-3 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="dropdownRadioButton">
                     <li>
                         <div class="flex items-center">
-                            <input checked id="default-radio-0" type="radio" value="default" name="default-radio"
+                            <input checked id="default-radio-0" type="radio" value="" name="default-radio"
                                 v-model="selectedFilter"
                                 class="w-4 h-4 bg-gray-100 border-gray-300 text-main-red focus:ring-main-red dark:focus:ring-sub-red dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500">
                             <label for="default-radio-0"
@@ -79,7 +79,7 @@
         </div>
         <div class="flex flex-wrap justify-center w-11/12 mx-auto space-y-10">
             <div v-for="(issue, index) in solvedIssue"
-                class="w-10/12 max-w-5xl px-10 py-6 my-4 bg-white border border-b-4 rounded-lg shadow-lg min-w-min border-main-grn">
+                class="w-10/12 max-w-5xl px-10 py-6 my-4 break-all bg-white border border-b-4 rounded-lg shadow-lg min-w-min border-main-grn">
                 <div class="flex items-center justify-between">
                     <span class="font-light text-gray-600">{{ issue.createdAt }}</span>
                     <div class="flex">
@@ -89,7 +89,7 @@
                 </div>
                 <div class="mt-2">
                     <div class="flex justify-between">
-                        <a class="text-2xl font-bold text-black hover:text-gray-800" href="#">{{ issue.title }}</a>
+                        <a class="text-2xl font-bold text-black hover:text-gray-800" :href='`/community/detail/${issue.id}`'>{{ issue.title }}</a>
                         <div class="my-auto mr-2">
                             <i class="fa-regular fa-thumbs-up fa-xl"></i>
                             <span class="ml-2">{{ issue.likes }}</span>
@@ -99,20 +99,18 @@
                 </div>
                 <div class="flex items-center justify-between mt-4">
                     <div>
-                        <a class="flex items-center" href="#">
-
-                            
+                        <div class="flex items-center">
                             <img class="hidden object-cover w-10 h-10 mr-3 rounded-full sm:block"
                                 src="https://cdn.pixabay.com/photo/2018/03/26/20/49/tiger-3264048_1280.jpg" alt="avatar">
                             <h1 class="font-bold text-gray-700">{{ issue.communityUsersDTO.nickname }}</h1>
-                        </a>
+                        </div>
                     </div>
                     <router-link class="mr-2 font-bold text-sub-grn hover:underline hover:text-main-grn"
                         :to='`/community/detail/${issue.id}`'>Read more</router-link>
                 </div>
             </div>
             <div class="flex justify-center w-full">
-                <fwb-pagination class="py-10" @click="move" v-model="currentPage" :total-items=totalItems></fwb-pagination>
+                <fwb-pagination class="py-10" v-model="currentPage" :total-items=totalItems></fwb-pagination>
             </div>
         </div>
     </div>
@@ -120,71 +118,44 @@
 <script setup>
 import { FwbBadge } from 'flowbite-vue';
 import { FwbPagination } from 'flowbite-vue';
-import { ref, onMounted, watchEffect } from 'vue';
+import { ref, onMounted, watch } from 'vue';
 import { initFlowbite } from 'flowbite'
 import axios from "axios";
 import { useRoute, useRouter } from 'vue-router';
-import { useAuthStore } from '@/stores/auth';
-import { storeToRefs } from 'pinia';
 
-const authStore = useAuthStore()
-const { userInfo } = storeToRefs(authStore);
-
+const searchInput = ref('');
 const currentPage = ref(1);
 const totalPages = ref(0);
 const totalItems = ref(0);
 const page = ref({});
 const solvedIssue = ref(null);
 const pageNo = ref(0);
-const selectedFilter = ref(null);
+const selectedFilter = ref('');
+const isPage = ref(null);
+console.log("currentPage.value ::" + currentPage.value);
 
-// console.log(userInfo);
-
-// filter
-
-watchEffect(async () => {
-    if(selectedFilter.value === 'default') {
-        getSolvedIssueList();
-    }
-    const url = '/community/solvedissue/filter?category=' + selectedFilter.value;
-    const resp = await axios.get(url);
-    // console.log(resp.data);
-    if (resp.status === 200) {
-        solvedIssue.value = resp.data.content;
-    } else {
-        alert("게시물을 불러오는데 실패하였습니다.");
-    }
+// filter 부분 함수로 빼야함
+watch(selectedFilter, async () => {
+    currentPage.value = 1;
+    await searchIssue();
 });
-const router = useRouter();
 
-// move 를 search 일때와 그냥 일때 따로 인자값을 줘야 하나??
-const move = async (pageNum) => {
-    console.log(router);
-    console.log(router.currentRoute.value);
-    pageNo.value = Number(pageNum.target.innerText);
-    getSolvedIssueList(pageNo);
-}
+watch(currentPage, async (newValue, oldValue) => {
+    console.log("newValue :" + newValue + "oldValue : "+ oldValue);
+    currentPage.value = newValue;
+    await searchIssue();
+});
 
+watch(searchInput, async () => {
+    currentPage.value = 1; 
+    await searchIssue();
+});
 
-const searchIssue = async () => {
-    let search = document.querySelector('#searchInput').value;
-    // category 에따른 검색도 구현해야 함
-    const url = '/community/solvedissue/search?title=' + search;
-    const resp = await axios.get(url);
-    console.log(resp);
-    if (resp.status === 200) {
-        solvedIssue.value = resp.data.content;
-    } else {
-        alert("게시물을 불러오는데 실패하였습니다.");
-    }
-}
-
-async function getSolvedIssueList(pageNo) {
-    if (pageNo != null) {
-        pageNo.value = pageNo.value - 1;
+async function searchIssue() {
+    if (currentPage.value != null && currentPage.value > 1) {
         await axios
             .get(
-                "/community/solvedissue?pageNo=" + (pageNo.value)
+                '/community/solvedissue/search?title=' + searchInput.value + '&category=' + selectedFilter.value + '&pageNo=' + (currentPage.value-1)
             )
             .then((response) => {
                 console.log(response);
@@ -196,7 +167,7 @@ async function getSolvedIssueList(pageNo) {
     } else {
         await axios
             .get(
-                "/community/solvedissue"
+                '/community/solvedissue/search?title=' + searchInput.value + '&category=' + selectedFilter.value
             )
             .then((response) => {
                 console.log(response);
@@ -211,7 +182,7 @@ async function getSolvedIssueList(pageNo) {
 onMounted(() => {
 
     initFlowbite();
-    getSolvedIssueList();
+    searchIssue();
 });
 
 </script>

@@ -19,15 +19,16 @@
                     <h1 class="py-4 text-3xl font-bold">{{ issue.title }}</h1>
                     <div class="flex justify-between mb-4">
                         <div class="flex">
-                            <fwb-badge v-for="keyword of keywords" class="px-2 mx-1 text-lg font-bold text-black rounded bg-badge-bg">{{ keyword
-                            }}</fwb-badge>
+                            <fwb-badge v-for="keyword of keywords"
+                                class="px-2 mx-1 text-lg font-bold text-black rounded bg-badge-bg">{{ keyword
+                                }}</fwb-badge>
                         </div>
                         <div class="w-fit">
                             <fwb-badge class="px-4 mx-1 text-lg font-bold text-white rounded-full bg-main-red">{{
                                 issue.category }}</fwb-badge>
                         </div>
                     </div>
-                    <p class="">
+                    <p class="w-full break-all">
                         {{ issue.content }}
                     </p>
                     <div>
@@ -43,7 +44,7 @@
                 </div>
 
                 <div v-show="activeTab === 1" class="w-full">
-                    <p>{{ solution.content }}</p>
+                    <p class="w-full break-all">{{ solution.content }}</p>
                     <div>
                         <div class="p-3 border-0 rounded-xl bg-bg-grey">
                             <div class="flex justify-end">
@@ -120,8 +121,12 @@
         <div class="my-4">
             <h1 class="text-2xl">댓글</h1>
         </div>
+        <div class="flex items-center justify-end text-center text-main-red">
+            <fwb-pagination v-model="currentPage" :layout="'table'" :per-page="5" :total-items="totalCommentElements"
+                class="mb-2" />
+        </div>
         <div class="flex justify-end">
-            <div class="w-11/12 space-y-4">
+            <div class="w-10/12 space-y-4">
                 <div class="flex" v-for="comment in commentList">
                     <div class="flex-shrink-0 mr-3">
                         <img class="w-8 h-8 mt-2 rounded-full sm:w-10 sm:h-10"
@@ -136,6 +141,7 @@
                     </div>
                 </div>
             </div>
+
         </div>
         <div class="flex justify-end mt-10">
             <form class="w-7/12">
@@ -154,11 +160,11 @@
 </template>
 
 <script setup>
-import { onMounted, ref, watchEffect } from 'vue';
+import { onMounted, ref, watch } from 'vue';
 import { createStore, useStore } from 'vuex';
 import { FwbBadge } from 'flowbite-vue';
 import { FwbCard } from 'flowbite-vue'
-import { FwbButton, FwbTextarea } from 'flowbite-vue'
+import { FwbButton, FwbTextarea, FwbPagination } from 'flowbite-vue'
 import ClipboardJS from 'clipboard';
 
 import java from 'highlight.js/lib/languages/java';
@@ -173,11 +179,7 @@ import { storeToRefs } from 'pinia';
 const authStore = useAuthStore()
 const { userInfo } = storeToRefs(authStore);
 
-// const authStore = ref();
-// const userInfo = ref({});
-
 const activeTab = ref(0);
-
 const tabs = ref([
     "에러",
     "해결",
@@ -189,7 +191,8 @@ const hovered = ref(false);
 const likeHovered = ref(false);
 // TODO keywords split 해서 저장
 const keywords = ref([]);
-
+const currentPage = ref(1);
+const totalCommentElements = ref(0);
 const route = useRoute();
 const issue = ref({});
 const solution = ref({});
@@ -197,6 +200,12 @@ const commentList = ref(null);
 const isLike = ref(false);
 const likeCnt = ref(0);
 const message = ref(null);
+
+watch(currentPage, async (newValue, oldValue) => {
+    console.log("newValue :" + newValue + "oldValue : " + oldValue);
+    currentPage.value = newValue;
+    await getCommentListAPI();
+});
 
 async function getIssueDetail() {
     await axios
@@ -230,14 +239,19 @@ async function getLikesCnt() {
 }
 
 const getCommentListAPI = async () => {
-    const url = "/community/comment/" + route.params.id;
+    let pageNo = currentPage.value - 1;
+    const url = `/community/comment/${route.params.id}?pageNo=` + pageNo;
     const resp = await axios.get(url);
     console.log(resp);
-    if (resp.status === 200) {
-        commentList.value = resp.data;
-    } else {
-        alert("댓글 불러오는데 실패하였습니다.");
-    }
+    // if (resp.status === 200) {
+    commentList.value = resp.data.content;
+    // currentPage.value = resp.data.totalPages;
+    totalCommentElements.value = resp.data.totalElements;
+    // } else {
+    //     alert("댓글 불러오는데 실패하였습니다.");
+    // }
+    console.log("currentPage : " + currentPage.value);
+    console.log("totalCommentElements : " + totalCommentElements.value);
 }
 
 const commentAPI = async () => {
@@ -247,7 +261,12 @@ const commentAPI = async () => {
     let data = {
         content: message.value,
     };
-    const resp = await axios.post(url, data);
+
+    const resp = await axios.post(url, data, {
+        headers: {
+            authorization: useAuthStore().token,
+        },
+    });
     console.log(resp);
     if (resp.status === 200) {
         getCommentListAPI();
@@ -280,21 +299,24 @@ function copyToClipboard(event) {
     });
 
     clipboardInstance.on('success', function (e) {
-        alert('텍스트가 클립보드에 복사되었습니다.');
+        alert('코드가 클립보드에 복사되었습니다.');
     });
 
     clipboardInstance.on('error', function (e) {
-        console.error('클립보드 복사 중 오류가 발생했습니다:', e);
+        console.error('코드복사 중 오류가 발생했습니다:', e);
     });
 
 }
 
 const getLikesAPI = async () => {
-    // console.log(userInfo.value);
     const url = `/community/likes/${route.params.id}/${userInfo.value.id}`; //usersId
 
     try {
-        const resp = await axios.get(url);
+        const resp = await axios.get(url, {
+            headers: {
+                authorization: useAuthStore().token,
+            },
+        });
         console.log(resp);
         if (resp.status === 200) {
             isLike.value = true;
@@ -311,9 +333,14 @@ const getLikesAPI = async () => {
 }
 
 const likeAPI = async () => {
-    console.log(isLike.value);
+    console.log(userInfo.value.id);
+    // console.log("123123" + useAuthStore().token);
     const url = `/community/likes/${route.params.id}/${userInfo.value.id}`;
-    const resp = await axios.post(url);
+    const resp = await axios.post(url, {}, {
+        headers: {
+            authorization: authStore.token,
+        },
+    });
 
     console.log(resp);
 
@@ -330,7 +357,11 @@ const likeAPI = async () => {
 const cancleLikeAPI = async () => {
     console.log(isLike.value);
     const url = `/community/likes/${route.params.id}/${userInfo.value.id}`;
-    const resp = await axios.delete(url);
+    const resp = await axios.delete(url, {
+        headers: {
+            authorization: useAuthStore().token,
+        },
+    });
     console.log(resp);
     if (resp.status === 200) {
         // 좋아요 취소
@@ -343,7 +374,9 @@ const cancleLikeAPI = async () => {
 };
 
 onMounted(() => {
+    getLikesCnt();
     getLikesAPI();
+    getCommentListAPI();
     getIssueDetail();
     hljs.highlightAll();
 });
