@@ -26,10 +26,10 @@ public class RuleRequestDTO {
         return Rule.builder()
                 .users(users)
                 .inputAccount(inputAccount)
-                .underThirty(this.underThirty)
-                .underHour(this.underHour)
-                .underThreeHour(this.underThreeHour)
-                .overThreeHour(this.overThreeHour)
+                .underThirty(underThirty)
+                .underHour(underHour)
+                .underThreeHour(underThreeHour)
+                .overThreeHour(overThreeHour)
                 .build();
     }
 }

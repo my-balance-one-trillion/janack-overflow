@@ -36,24 +36,21 @@ public class RuleService {
 
     // 규칙 수정
     @Transactional
-    public Rule updateRule(RuleRequestDTO ruleRequestDTO, Long userId, Long accountId){
-        Rule updateRule = ruleRepository.findByInputAccountIdAndUsersId(accountId, userId)
+    public Rule updateRule(RuleRequestDTO ruleRequestDTO, Users users, Long accountId){
+        Rule updateRule = ruleRepository.findByInputAccountIdAndUsersId(accountId, users.getId())
                 .orElseThrow(() -> new BusinessLogicException(ExceptionCode.RULE_NOT_FOUND));
         updateRule.updateRule(ruleRequestDTO.getUnderThirty(),
                 ruleRequestDTO.getUnderHour(),
                 ruleRequestDTO.getUnderThreeHour(),
-                ruleRequestDTO.getUnderThreeHour());
+                ruleRequestDTO.getOverThreeHour());
         return ruleRepository.save(updateRule);
     }
 
     // 규칙 조회
     @Transactional(readOnly = true)
     public Optional<RuleResponseDTO> getInProgressRuleByUser(Users users, Optional<InputAccountResponseDTO> inProgressAccount) {
-        if(inProgressAccount.isPresent()){
-            throw new BusinessLogicException(ExceptionCode.RULE_NOT_FOUND);
-        }
-        return Optional.ofNullable(ruleRepository.findByUsersIdAndInputAccountId(users.getId(), inProgressAccount.get().getId())
-                .map(RuleResponseDTO::toDto)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "규칙 없음")));
+        InputAccountResponseDTO account = inProgressAccount.orElseThrow(() -> new BusinessLogicException(ExceptionCode.RULE_NOT_FOUND));
+        return ruleRepository.findByUsersIdAndInputAccountId(users.getId(), account.getId())
+                .map(RuleResponseDTO::toDto);
     }
 }

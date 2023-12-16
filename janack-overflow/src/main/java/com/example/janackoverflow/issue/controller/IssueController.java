@@ -1,9 +1,13 @@
 package com.example.janackoverflow.issue.controller;
 
+import com.example.janackoverflow.global.exception.BusinessLogicException;
+import com.example.janackoverflow.global.exception.ExceptionCode;
 import com.example.janackoverflow.global.security.auth.NowUserDetails;
+import com.example.janackoverflow.issue.domain.SolutionDTO;
 import com.example.janackoverflow.issue.domain.request.CreateIssueRequestDTO;
 import com.example.janackoverflow.issue.domain.request.CreateSolutionRequestDTO;
 import com.example.janackoverflow.issue.domain.response.IssueResponseDTO;
+import com.example.janackoverflow.issue.domain.response.SolutionResponseDTO;
 import com.example.janackoverflow.issue.domain.response.StackOverflowResponse;
 import com.example.janackoverflow.issue.entity.Issue;
 import com.example.janackoverflow.issue.entity.Solution;
@@ -18,9 +22,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 
 @RestController
 @RequestMapping("/issues")
@@ -54,38 +56,61 @@ public class IssueController {
         return new ResponseEntity<>(createdAt, HttpStatus.OK);
     }*/
 
-    // 에러 조회 (에러 제목, 키워드, 카테고리, 코드, 생성 날짜)
-    @GetMapping("/{issueId}")
-    public ResponseEntity<?> getIssue(@PathVariable Long issueId){
-        Optional<IssueResponseDTO> issue = issueService.getIssueById(issueId);
-        return new ResponseEntity<>(issue, HttpStatus.OK);
-    }
+    // 에러 조회
+    @GetMapping
+    public ResponseEntity<?> getIssue(@AuthenticationPrincipal NowUserDetails userDetails) throws JsonProcessingException {
+        Users users = userDetails.getUser();
+        Optional<IssueResponseDTO> issue = issueService.getIssueByUserId(users);
+        IssueResponseDTO userIssue = issue.orElseThrow(() -> new BusinessLogicException(ExceptionCode.ERROR_NOT_FOUND));
 
-    // 에러 키워드로 stackoverflow 검색
-    @GetMapping("/{issueId}/keyword")
-    public ResponseEntity<List<StackOverflowResponse>> searchStackOverflow(@PathVariable Long issueId) throws JsonProcessingException {
-        List<StackOverflowResponse> searchResult = issueService.searchByKeyword(issueId);
-        if(searchResult.isEmpty()){
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        }
-        return new ResponseEntity<>(searchResult, HttpStatus.OK);
+        // 에러 키워드로 stackoverflow 검색
+        List<StackOverflowResponse> searchResult = issueService.searchByKeyword(userIssue.getId());
+
+        Map<String, Object> response = new HashMap<>();
+        response.put("issue", issue.get());
+        response.put("stackOverflowResults", searchResult);
+
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     // 해결 등록
-    @PostMapping("/{issueId}/solution")
-    public ResponseEntity<?> createSolution(@Validated @RequestBody CreateSolutionRequestDTO solutionRequestDTO, @PathVariable Long issueId, BindingResult bindingResult){
+    @PostMapping("/solution")
+    public ResponseEntity<?> createSolution(@Validated @RequestBody CreateSolutionRequestDTO solutionRequestDTO,
+                                            @AuthenticationPrincipal NowUserDetails userDetails, BindingResult bindingResult){
         if(bindingResult.hasErrors()){
             String message = Objects.requireNonNull(bindingResult.getFieldError()).getDefaultMessage();
             return new ResponseEntity<>(message, HttpStatus.BAD_REQUEST);
         }
-        Solution solution = solutionService.createSolution(solutionRequestDTO, issueId);
+        Users users = userDetails.getUser();
+        Optional<IssueResponseDTO> issue = issueService.getIssueByUserId(users);
+        IssueResponseDTO userIssue = issue.orElseThrow(() -> new BusinessLogicException(ExceptionCode.ERROR_NOT_FOUND));
+
+        Solution solution = solutionService.createSolution(solutionRequestDTO, userIssue.getId());
         return new ResponseEntity<>(solution, HttpStatus.CREATED);
     }
 
     // 에러 해결 포기
-    @PatchMapping("{issueId}/giveup")
-    public ResponseEntity<?> giveUpIssue(@PathVariable Long issueId){
-        Issue issue = issueService.updateIssueStatus(issueId);
-        return new ResponseEntity<>(issue, HttpStatus.OK);
+    @PutMapping("/giveup")
+    public ResponseEntity<?> giveUpIssue(@AuthenticationPrincipal NowUserDetails userDetails){
+        Users users = userDetails.getUser();
+        Optional<IssueResponseDTO> issue = issueService.getIssueByUserId(users);
+        IssueResponseDTO userIssue = issue.orElseThrow(() -> new BusinessLogicException(ExceptionCode.ERROR_NOT_FOUND));
+
+        Issue giveupIssue = issueService.updateIssueStatus(userIssue.getId());
+        return new ResponseEntity<>(giveupIssue, HttpStatus.OK);
+    }
+
+    // 에러 해결 결과 조회
+    @GetMapping("/solution")
+    public ResponseEntity<?> getSolution(@AuthenticationPrincipal NowUserDetails userDetails){
+        Users users = userDetails.getUser();
+        IssueResponseDTO issue = issueService.getSolvedIssueByUserId(users);
+        SolutionResponseDTO solution = solutionService.getRecentSolution(issue);
+
+        Map<String, Object> response = new HashMap<>();
+        response.put("issue", issue);
+        response.put("solution", solution);
+
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 }
