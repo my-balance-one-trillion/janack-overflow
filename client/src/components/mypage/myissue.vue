@@ -63,7 +63,12 @@
           </li>
           <li v-for="i in pageInt">
             <div
-              class="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">
+              class="flex items-center justify-center px-3 h-8 leading-tight text-main-red bg-white border border-gray-300 hover:bg-red-200 hover:text-hover-red dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
+              @click="getIssueList(i)" v-if="pageSet.page == i">
+              {{ i + 1 }}</div>
+            <div
+              class="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
+              @click="getIssueList(i)" v-else>
               {{ i + 1 }}</div>
           </li>
 
