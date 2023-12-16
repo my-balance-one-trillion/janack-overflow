@@ -72,10 +72,11 @@
                     </div>
 
                     <div class="relative">
-                      <DatePicker class="w-10/12"
+                      <DatePicker class="w-10/12 ml-6"
                         v-model="datePic"
-                        label="생년월일"
-                        :typeable="true"
+                        language="ko"
+                        append-icon="mdi-calendar"
+                        :is-inline="true"
                       />
                     </div>
 
@@ -173,7 +174,7 @@ export default {
     const year = datePic.value.getFullYear();
     const month = datePic.value.getMonth() + 1;
     const day = datePic.value.getDate();
-    
+
     const locale = reactive(ko); //한글 달력
 
     const router = useRouter();

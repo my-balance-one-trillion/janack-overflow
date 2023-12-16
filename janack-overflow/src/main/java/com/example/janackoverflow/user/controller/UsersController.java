@@ -50,24 +50,31 @@ public class UsersController {
 
     }
 
-    @GetMapping("/userLogout")
-    public ResponseEntity logout(){
+//    이메일 인증
+    @GetMapping("/mailPass")
+    public ResponseEntity mailPass(@RequestBody UsersRequestDTO usersRequestDTO){
 
-        System.out.println("로그아웃 수행");
+        //메일 주소 유효성 검사
+        if(usersService.findByEmail(usersRequestDTO.getEmail()) == null){
+            return new ResponseEntity<>("입력하신 메일과 일치하는 회원이 없습니다.", HttpStatus.FORBIDDEN);
+        }
 
-        SecurityContextHolder.clearContext();
+        //입력한 메일이 유효하면, 임시 번호를 생성하고
+        int randNum = (int) (Math.random() * 10000) + 9999;
+        String tempPass = "temp" + randNum;
 
-        return new ResponseEntity("로그아웃을 수행했습니다", HttpStatus.OK);
+        //DB에 업데이트 (서비스에서 암호화)
+        usersService.updateRandomPass(usersRequestDTO, tempPass);
+
+        //발급한 임시 번호를 입력받은 메일로 발송
+
+
+        return new ResponseEntity<>("회원님의 메일로 임시 비밀번호가 발송되었습니다.", HttpStatus.OK);
     }
 
-//    이메일 인증
+    @GetMapping("/admin")
+    public ResponseEntity admin(){
+        return new ResponseEntity("어드민", HttpStatus.OK);
+    }
 
-//    @GetMapping("/email")
-//    public
-
-//    아이디 찾기
-
-//    비밀번호 재설정
-
-//    비밀번호 찾기
 }

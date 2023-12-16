@@ -46,7 +46,7 @@
           <router-link to="/signup" class="pl-2 text-sm text-red-700">회원가입</router-link>
 
           <p class="pl-5 text-sm">비밀번호를 잊으셨나요?</p>
-          <router-link to="/" class="pl-2 text-sm text-red-700">비밀번호 찾기</router-link>
+          <router-link to="/passMail" class="pl-2 text-sm text-red-700">비밀번호 찾기</router-link>
         </div>
       </div>
     </div>

@@ -82,20 +82,24 @@ public class SecurityConfig {
                         authorizeRequests
                                 .dispatcherTypeMatchers(DispatcherType.FORWARD).permitAll()
 
-                                //USER만 접근 가능
-                                .requestMatchers("/mypage", "/mypage/**").hasRole("USER")
+                                //USER, ADMIN 만 공통으로 접근 가능
+                                .requestMatchers("/mypage", "/mypage/**").hasAnyRole("USER", "ADMIN")
 
+                                //USER만 접근 가능 <- 추가 하려면 주석 풀고 추가해주세요
+                                //.requestMatchers("").hasRole("USER")
+                                
                                 //ADMIN만 접근 가능
-                                .requestMatchers("/mypage", "/mypage/**", "/admin", "/admin/**").hasRole("ADMIN")
+                                .requestMatchers("/admin", "/admin/**").hasRole("ADMIN")
 
                                 //화이트 리스트
                                 .requestMatchers("/image/**", "/css/**", "/", "/login", "/signup", "/community/**", "/saving/**", "/main/**", "/issue/**", "/ws/**", "/chatrooms/**").permitAll()
                                 
                                 //위에 작성된 url을 제외한 나머지는 인증절차 필요 (403 발생)
-                                .requestMatchers("/image/**", "/css/**", "/", "/login", "/logout", "/signup", "/community/**", "/saving/**", "/main/**", "/issue/**", "/ws/**", "/chatrooms/**", "/message/**").permitAll()
+                                .requestMatchers("/image/**", "/css/**", "/", "/login", "/logout", "/signup", "/mailPass", "/community/**", "/saving/**", "/main/**", "/issue/**", "/ws/**", "/chatrooms/**", "/message/**").permitAll()
                                 .anyRequest().authenticated()
 
                 );
+
 //                .exceptionHandling((exceptionHandling) ->
 //                        exceptionHandling
 //                                .accessDeniedPage("/login"));
