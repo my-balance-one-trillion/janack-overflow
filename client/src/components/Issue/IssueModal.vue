@@ -64,9 +64,9 @@ onMounted(async () => {
             <router-link to="/" class="bg-gray-500 hover:bg-gray-400 px-6 py-3 rounded-xl shadow">
               <div class="text-white text-xl font-bold font-main">메인으로 이동</div>
             </router-link>
-            <button class="bg-main-grn hover:bg-hover-grn px-6 py-3 rounded-xl shadow">
+            <router-link :to='`/community/detail/${issue.id}`' class="bg-main-grn hover:bg-hover-grn px-6 py-3 rounded-xl shadow">
               <div class="text-white text-xl font-bold font-main">상세페이지로 이동</div>
-            </button>
+            </router-link>
           </div>
         </div>
       </div>
