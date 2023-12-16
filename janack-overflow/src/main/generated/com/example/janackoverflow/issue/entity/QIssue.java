@@ -37,6 +37,8 @@ public class QIssue extends EntityPathBase<Issue> {
 
     public final NumberPath<Long> id = createNumber("id", Long.class);
 
+    public final com.example.janackoverflow.saving.entity.QInputAccount inputAccount;
+
     public final StringPath keyword = createString("keyword");
 
     public final BooleanPath publicStatus = createBoolean("publicStatus");
@@ -67,6 +69,7 @@ public class QIssue extends EntityPathBase<Issue> {
 
     public QIssue(Class<? extends Issue> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
+        this.inputAccount = inits.isInitialized("inputAccount") ? new com.example.janackoverflow.saving.entity.QInputAccount(forProperty("inputAccount"), inits.get("inputAccount")) : null;
         this.users = inits.isInitialized("users") ? new com.example.janackoverflow.user.entity.QUsers(forProperty("users")) : null;
     }
 

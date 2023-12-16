@@ -2,19 +2,33 @@
 import {onMounted, ref} from 'vue';
 import axios from "axios";
 import dayjs from "dayjs";
+import {useAuthStore} from "../../../stores/auth";
 
 const issueList = ref([]);
 
 onMounted(async () => {
-  try {
-    const response = await axios.get('/issues');
-    issueList.value = response.data;
-    filterDataByMonth();
-  } catch (error) {
-    console.log(error);
-  }
+  getMonthlyIssues();
 });
 
+
+const getMonthlyIssues = async () => {
+  // 현재 날짜를 기준으로 년도와 월 추출
+  const now = new Date();
+  const year = now.getFullYear();
+  const month = now.getMonth() + 1;
+
+  try {
+    const response = await axios.get(`/monthly-issues?year=${year}&month=${month}`,{
+      headers: {
+        Authorization: useAuthStore().token,
+      }
+    });
+    console.log(response.data);
+    issueList.value = response.data;
+  } catch (error) {
+    console.error(error);
+  }
+};
 const now = dayjs().format("YYYY-MM");
 const current = ref(now);
 
@@ -23,7 +37,6 @@ const prevMonth = () => {
   const [year, month] = current.value.split('-');
   const prevDate = new Date(year, month - 2);
   current.value = `${prevDate.getFullYear()}-${prevDate.getMonth() + 1}`;
-  filterDataByMonth();
 };
 
 // 다음 월 조회
@@ -31,28 +44,6 @@ const nextMonth = () => {
   const [year, month] = current.value.split('-');
   const nextDate = new Date(year, month);
   current.value = `${nextDate.getFullYear()}-${nextDate.getMonth() + 1}`;
-  filterDataByMonth();
-};
-
-// 월별 데이터 필터링 함수
-const filterDataByMonth = () => {
-  const filteredList = [];
-
-  // 현재 월을 가져옴
-  const [year, month] = current.value.split('-');
-
-  // issueList를 순회하면서 현재 월과 일치하는 데이터를 filteredList에 추가
-  issueList.value.forEach((item) => {
-    const itemYear = dayjs(item.createdAt).format('YYYY');
-    const itemMonth = dayjs(item.createdAt).format('MM');
-
-    if (itemYear === year && itemMonth === month) {
-      filteredList.push(item);
-    }
-  });
-
-  // 필터링된 데이터를 issueList에 할당
-  issueList.value = filteredList;
 };
 
 

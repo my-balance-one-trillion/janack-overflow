@@ -1,5 +1,6 @@
 package com.example.janackoverflow.issue.repository;
 
+import com.example.janackoverflow.issue.domain.response.IssueResponseDTO;
 import com.example.janackoverflow.issue.entity.Issue;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -12,7 +13,7 @@ import java.util.Optional;
 
 @Repository
 public interface IssueRepository extends JpaRepository<Issue, Long> {
-    Optional<Object> findByUsersIdAndStatus(Long userId, String status);
+    Optional<Issue> findByUsersIdAndStatus(Long usersId, String status);
     public Page<Issue> findByUsers_id(Long id, Pageable pageble);
 
 
@@ -21,4 +22,7 @@ public interface IssueRepository extends JpaRepository<Issue, Long> {
 
     List<Issue> findTop10ByOrderByCreatedAtDesc();
     List<Issue> findByUsersId(Long userId);
+    List<Issue> findByUsersIdAndStatusOrderByCreatedAtDesc(Long userId, String status);
+
+    Optional<Issue> findFirstByUsersIdAndStatusOrderByCreatedAtDesc(Long usersId, String status);
 }

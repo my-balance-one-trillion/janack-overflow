@@ -4,6 +4,8 @@ import com.example.janackoverflow.global.exception.BusinessLogicException;
 import com.example.janackoverflow.global.exception.ExceptionCode;
 import com.example.janackoverflow.issue.domain.SolutionDTO;
 import com.example.janackoverflow.issue.domain.request.CreateSolutionRequestDTO;
+import com.example.janackoverflow.issue.domain.response.IssueResponseDTO;
+import com.example.janackoverflow.issue.domain.response.SolutionResponseDTO;
 import com.example.janackoverflow.issue.entity.Issue;
 import com.example.janackoverflow.issue.entity.Solution;
 import com.example.janackoverflow.issue.repository.IssueRepository;
@@ -12,12 +14,9 @@ import com.example.janackoverflow.saving.entity.InputAccount;
 import com.example.janackoverflow.saving.entity.Rule;
 import com.example.janackoverflow.saving.repository.InputAccountRepository;
 import com.example.janackoverflow.saving.repository.RuleRepository;
-import com.example.janackoverflow.user.entity.Users;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
@@ -48,7 +47,7 @@ public class SolutionService {
         Duration duration = getDuration(issue);  // 시간
         int amount = getAmount(duration, issue);  // 금액
         issue.updateAmount(amount);  // 금액 변경
-
+        log.info("publicStatus: "+solutionRequestDTO.getPublicStatus());
         issue.updatePublicStatus(solutionRequestDTO.getPublicStatus());  // 공개 여부
         issue.updateStatus("03");  // 상태 (해결: 03)
 
@@ -97,4 +96,11 @@ public class SolutionService {
         return solution.toDto();
     }
 
+    // 최근 해결 조회
+    @Transactional(readOnly = true)
+    public SolutionResponseDTO getRecentSolution(IssueResponseDTO issue) {
+        Solution solution = solutionRepository.findByIssueId(issue.getId())
+                .orElseThrow(() -> new BusinessLogicException(ExceptionCode.ERROR_NOT_FOUND));
+        return SolutionResponseDTO.toDto(solution);
+    }
 }

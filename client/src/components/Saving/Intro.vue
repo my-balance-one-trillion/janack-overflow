@@ -1,11 +1,5 @@
 <script setup>
-import router from "../../router";
 
-const goOpenAccount = () => {
-  router.push({
-    path: "/open",
-  })
-}
 </script>
 
 <template>
@@ -18,9 +12,9 @@ const goOpenAccount = () => {
     <div class="text-3xl my-2 text-red-700  font-medium">잔액이 overflow될 때까지 에러 기록을 남겨보세요!</div>
   </div>
   <div class="text-center my-20">
-    <button @click="goOpenAccount()" type="button" class="bg-main-red hover:bg-hover-red m-2 px-10 py-5 rounded-xl shadow">
+    <router-link to="/open" type="button" class="bg-main-red hover:bg-hover-red m-2 px-10 py-5 rounded-xl shadow">
       <div class="text-white text-4xl font-bold ">잔액오버플로우 시작하기</div>
-    </button>
+    </router-link>
   </div>
   </div>
 

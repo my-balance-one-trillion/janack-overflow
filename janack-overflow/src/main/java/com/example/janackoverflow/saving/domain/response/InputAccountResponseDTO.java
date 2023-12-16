@@ -20,6 +20,7 @@ public class InputAccountResponseDTO {
     private int goalAmount;
     private LocalDateTime createdAt;
     private LocalDateTime completedAt;
+    private String status;
 
     public static InputAccountResponseDTO toDto(InputAccount inputAccount){
         return InputAccountResponseDTO.builder()
@@ -31,6 +32,7 @@ public class InputAccountResponseDTO {
                 .goalAmount(inputAccount.getGoalAmount())
                 .createdAt(inputAccount.getCreatedAt())
                 .completedAt(inputAccount.getCompletedAt())
+                .status(inputAccount.getStatus())
                 .build();
     }
 }
