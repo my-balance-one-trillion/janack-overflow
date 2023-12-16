@@ -1,6 +1,5 @@
 package com.example.janackoverflow.global.security.config;
 
-import com.example.janackoverflow.global.security.config.CorsConfig;
 import com.example.janackoverflow.global.security.jwt.JwtAuthenticationFilter;
 import com.example.janackoverflow.global.security.jwt.JwtAuthorizationFilter;
 import jakarta.servlet.DispatcherType;
@@ -17,6 +16,9 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.authentication.logout.LogoutFilter;
+import org.springframework.security.web.authentication.logout.LogoutHandler;
+import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
 
 @Configuration
 @EnableWebSecurity
@@ -37,6 +39,24 @@ public class SecurityConfig {
     }
 
     @Bean
+    public LogoutFilter logoutFilter() throws Exception {
+        // LogoutSuccessHandler와 LogoutHandler 등을 생성하여 LogoutFilter를 생성
+        return new LogoutFilter(logoutSuccessHandler(), customLogoutHandler());
+    }
+
+    @Bean
+    public LogoutSuccessHandler logoutSuccessHandler() {
+        // 로그아웃 성공 이후의 동작을 정의한 구현체를 반환
+        return new CustomLogoutSuccessHandler();
+    }
+
+    @Bean
+    public LogoutHandler customLogoutHandler() {
+        // 실제 로그아웃 처리를 담당하는 구현체를 반환
+        return new CustomLogoutHandler();
+    }
+
+    @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
         http.httpBasic(AbstractHttpConfigurer::disable);
@@ -48,8 +68,11 @@ public class SecurityConfig {
 //        http.sessionManagement(httpSecuritySessionManagementConfigurer
 //                -> httpSecuritySessionManagementConfigurer.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
 
-        // jwt Filter 적용
+        // jwt 검증 Filter 적용
         http.addFilterBefore(jwtAuthorizationFilter, UsernamePasswordAuthenticationFilter.class);
+
+        //logout 담당 Filter
+        http.addFilterBefore(logoutFilter(), LogoutFilter.class);
 
         // jwt 토큰을 사용하므로 csrf 방식 적용 안함
         http.csrf(AbstractHttpConfigurer::disable);
@@ -59,25 +82,23 @@ public class SecurityConfig {
                         authorizeRequests
                                 .dispatcherTypeMatchers(DispatcherType.FORWARD).permitAll()
 
-                                //화이트 리스트
-                                .requestMatchers("/image/**", "/css/**", "/", "/login", "/logout", "/signup/**",
-                                        "/main/**", "/community/**", "/saving/**").permitAll()
-
                                 //USER만 접근 가능
                                 .requestMatchers("/mypage", "/mypage/**").hasRole("USER")
 
                                 //ADMIN만 접근 가능
                                 .requestMatchers("/mypage", "/mypage/**", "/admin", "/admin/**").hasRole("ADMIN")
 
+                                //화이트 리스트
+                                .requestMatchers("/image/**", "/css/**", "/", "/login", "/signup", "/community/**", "/saving/**", "/main/**", "/issue/**", "/ws/**", "/chatrooms/**").permitAll()
+                                
                                 //위에 작성된 url을 제외한 나머지는 인증절차 필요 (403 발생)
-                                .requestMatchers("/image/**", "/css/**", "/", "/login", "/logout", "/signup", "/community/**", "/saving/**", "/main/**", "/issue/**", "/ws/**", "/chatrooms/**").permitAll()
-
                                 .anyRequest().authenticated()
 
-                ).exceptionHandling((exceptionHandling) ->
-                        exceptionHandling
-                                .accessDeniedPage("/login"));
-                                //권한이 없는 사용자를 '/login' 으로 이동 (현재 작동 안함)
+                );
+//                .exceptionHandling((exceptionHandling) ->
+//                        exceptionHandling
+//                                .accessDeniedPage("/login"));
+//                                //권한이 없는 사용자를 '/login' 으로 이동 (현재 작동 안함)
 
         http.formLogin(AbstractHttpConfigurer::disable);
 

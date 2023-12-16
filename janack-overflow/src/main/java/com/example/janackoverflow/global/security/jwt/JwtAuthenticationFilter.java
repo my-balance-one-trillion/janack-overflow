@@ -102,7 +102,7 @@ public class JwtAuthenticationFilter extends AbstractAuthenticationProcessingFil
 				.withSubject(principalDetailis.getUsername()) //현재 주체가 되는 사용자 (Subject)
 				.withExpiresAt(new Date(System.currentTimeMillis() + jwtProperties.getTokenValidityInSeconds() * 1000)) //토큰 유효시간
 				.withClaim("email", principalDetailis.getUsername()) //email값
-				.sign(Algorithm.HMAC512(jwtProperties.getSecret())); //시크릿 키 이용하여 HMAC512 알고리즘 적용
+				.sign(Algorithm.HMAC512(jwtProperties.getSecret1())); //시크릿 키 이용하여 HMAC512 알고리즘 적용
 
 		//헤더에 접근 권한 정보를 추가해 브라우저에서 차단하지 못하게 방지
 		response.setHeader("Access-Control-Allow-Origin", "http://localhost:5173");
