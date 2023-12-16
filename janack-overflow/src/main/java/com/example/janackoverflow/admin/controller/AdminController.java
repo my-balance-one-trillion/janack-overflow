@@ -1,9 +1,10 @@
 package com.example.janackoverflow.admin.controller;
 
 import com.example.janackoverflow.admin.service.AdminService;
+import com.example.janackoverflow.global.pagination.PageResponseDTO;
 import com.example.janackoverflow.user.domain.request.UsersRequestDTO;
 import com.example.janackoverflow.user.domain.response.UsersResponseDTO;
-import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -17,8 +18,8 @@ public class AdminController {
 
     //전체 유저 보기
     @GetMapping("/admin/users")
-    public ResponseEntity readAllUsers(){
-        Page<UsersResponseDTO> allUsersPage = adminService.readAllUsers();
+    public ResponseEntity readAllUsers(Pageable pageable){
+        PageResponseDTO<UsersResponseDTO> allUsersPage = adminService.readAllUsers(pageable);
         return new ResponseEntity(allUsersPage, HttpStatus.OK);
     }
     //유저 상태 변경

@@ -58,18 +58,17 @@ public class MypageController {
     @GetMapping("mypage/myissue")
     public ResponseEntity readMyIssue( @AuthenticationPrincipal NowUserDetails nowUserDetails,
                                        Pageable pageable){
-        System.out.println(pageable);
         Long usersId = nowUserDetails.getId();
         PageResponseDTO<myIssueResponseDTO> myIssueList = mypageService.readMyIssue(usersId, pageable);
-        System.out.println(myIssueList);
         return new ResponseEntity(myIssueList, HttpStatus.OK);
     }
 
 //    내가쓴 댓글 보기
     @GetMapping("/mypage/mycomment")
-    public ResponseEntity readMyComment( @AuthenticationPrincipal NowUserDetails nowUserDetails){
+    public ResponseEntity readMyComment( @AuthenticationPrincipal NowUserDetails nowUserDetails,
+                                         Pageable pageable){
         Long usersId = nowUserDetails.getId();
-        Page<myCommentResponseDTO> myCommentList = mypageService.readMyComment(usersId);
+        PageResponseDTO<myCommentResponseDTO> myCommentList = mypageService.readMyComment(usersId, pageable);
         return new ResponseEntity(myCommentList ,HttpStatus.OK);
     }
 

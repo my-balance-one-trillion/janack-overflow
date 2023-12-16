@@ -83,8 +83,9 @@ public class SecurityConfig {
                                 .dispatcherTypeMatchers(DispatcherType.FORWARD).permitAll()
 
                                 //USER만 접근 가능
-                                .requestMatchers("/mypage", "/mypage/**").hasRole("USER")
-
+//                                .requestMatchers("/mypage", "/mypage/**").hasRole("USER")
+                                //USER, ADMIN 만 공통으로 접근 가능
+                                .requestMatchers("/mypage", "/mypage/**").hasAnyRole("USER", "ADMIN")
                                 //ADMIN만 접근 가능
                                 .requestMatchers("/mypage", "/mypage/**", "/admin", "/admin/**").hasRole("ADMIN")
 

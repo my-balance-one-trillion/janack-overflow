@@ -99,8 +99,7 @@ public class MypageService {
     }
 
 //    내가 쓴 댓글 보기
-    public Page<myCommentResponseDTO> readMyComment(Long usersId){
-        Pageable pageable = PageRequest.of(0, 10, Sort.by(Sort.Direction.DESC, "id"));
+    public PageResponseDTO<myCommentResponseDTO> readMyComment(Long usersId, Pageable pageable){
         Page<Comment> myCommentList = commentRepository.findAllByUsers_IdOrderByCreatedAtDesc(usersId,pageable);
         // 댓글DtoList
         List<myCommentResponseDTO> commentResponseDtolist = myCommentList.stream().map(comment -> myCommentResponseDTO.builder()
@@ -109,8 +108,8 @@ public class MypageService {
                 .issue_title(comment.getIssue().getTitle())
                 .createdAt(comment.getCreatedAt())
                 .build()).toList();
-        Page<myCommentResponseDTO> MyCommentPage = new PageImpl<>(commentResponseDtolist, pageable, myCommentList.getTotalElements());
-        return MyCommentPage;
+        List<Integer> pageNumber = paginationService.getPaginationPageNumber(myCommentList.getNumber(), myCommentList.getTotalPages());
+        return new PageResponseDTO<>(commentResponseDtolist, myCommentList, pageNumber);
     }
 //    댓글 삭제
     @Transactional

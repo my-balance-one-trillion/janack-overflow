@@ -4,7 +4,7 @@
   <p class="text-xl my-4">에러 목록</p>
   <p class="text-[#919090]">작성한 에러를 확인할 수 있습니다.</p>
   <article class="">
-    <div class="w-full xl:w-8/12 m-12 xl:mb-0 px-4 mx-auto mt-2 flex flex-col items-center">
+    <div class="w-full xl:w-10/12 m-12 xl:mb-0 px-4 mx-auto mt-2 flex flex-col items-center">
       <div class="relative flex flex-col min-w break-words bg-white w-full my-12 shadow-lg">
         <div class="block overflow-x-auto">
           <table class="min-w-full">
