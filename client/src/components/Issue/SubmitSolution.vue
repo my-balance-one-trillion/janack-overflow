@@ -21,11 +21,10 @@ async function submitSolution() {
             }
           }
       )
-      .then(() => {
-        emit('show-modal', true);
+      .then((response) => {
+        emit('show-modal', true, response.data.id);
       })
       .catch((error) => {
-        console.log(error);
       })
 }
 </script>

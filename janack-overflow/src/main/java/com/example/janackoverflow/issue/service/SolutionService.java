@@ -98,8 +98,8 @@ public class SolutionService {
 
     // 최근 해결 조회
     @Transactional(readOnly = true)
-    public SolutionResponseDTO getRecentSolution(IssueResponseDTO issue) {
-        Solution solution = solutionRepository.findByIssueId(issue.getId())
+    public SolutionResponseDTO getRecentSolution(Long solutionId) {
+        Solution solution = solutionRepository.findById(solutionId)
                 .orElseThrow(() -> new BusinessLogicException(ExceptionCode.ERROR_NOT_FOUND));
         return SolutionResponseDTO.toDto(solution);
     }

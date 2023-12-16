@@ -101,11 +101,10 @@ public class IssueController {
     }
 
     // 에러 해결 결과 조회
-    @GetMapping("/solution")
-    public ResponseEntity<?> getSolution(@AuthenticationPrincipal NowUserDetails userDetails){
-        Users users = userDetails.getUser();
-        IssueResponseDTO issue = issueService.getSolvedIssueByUserId(users);
-        SolutionResponseDTO solution = solutionService.getRecentSolution(issue);
+    @GetMapping("/solution/{solutionId}")
+    public ResponseEntity<?> getSolution(@PathVariable(name = "solutionId") Long solutionId){
+        SolutionResponseDTO solution = solutionService.getRecentSolution(solutionId);
+        IssueResponseDTO issue = issueService.getIssue(solution.getIssueId());
 
         Map<String, Object> response = new HashMap<>();
         response.put("issue", issue);

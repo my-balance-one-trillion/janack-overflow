@@ -9,8 +9,9 @@ import SubmitSolution from "../components/Issue/SubmitSolution.vue";
 import IssueModal from "../components/Issue/IssueModal.vue";
 
 const activeTab = ref(0);
-const step = ref(4);
+const step = ref(1);
 const modal = ref(false);
+const solutionId = ref(0);
 const tabs = ref([
   "에러",
   "해결",
@@ -35,24 +36,18 @@ async function getIssue() {
           step.value=1;
         }
       })
-  console.log('modal: '+modal.value);
-
 }
 
 const stepChanged = (newStep) => {
   step.value = newStep;
-  console.log('modal: '+modal.value);
-
 };
 const stepAndTabChanged = (newStep, newTab) => {
   step.value = newStep;
   activeTab.value = newTab;
-  console.log('modal: '+modal.value);
-
 }
-const showModal = (modalState) => {
+const showModal = (modalState, id) => {
   modal.value = modalState;
-  console.log('modal: '+modal.value);
+  solutionId.value = id;
 }
 </script>
 <template>
@@ -85,7 +80,7 @@ const showModal = (modalState) => {
       <submit-solution v-if="step === 3" @show-modal="showModal"></submit-solution>
     </div>
 
-    <issue-modal v-if="modal"></issue-modal>
+    <issue-modal v-if="modal" :solution-id="solutionId"></issue-modal>
   </div>
 
 </template>

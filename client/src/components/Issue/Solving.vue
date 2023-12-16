@@ -63,14 +63,12 @@ async function getIssue() {
         }
       })
       .then((response) => {
-        console.log(response.data)
         issue.value = response.data.issue;
         keywords.value = response.data.issue.keyword.split(",");
         createdAt.value = response.data.issue.createdAt;
         stackoverflow.value = response.data.stackOverflowResults;
       })
       .catch((error) => {
-        console.log(error);
       })
 }
 

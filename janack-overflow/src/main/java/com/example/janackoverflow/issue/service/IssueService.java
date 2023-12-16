@@ -153,11 +153,11 @@ public class IssueService {
     }
 
 
-    // 가장 최근 해결한 에러 조회
+    // 에러 조회
     @Transactional(readOnly = true)
-    public IssueResponseDTO getSolvedIssueByUserId(Users users) {
-        Issue issue = issueRepository.findFirstByUsersIdAndStatusOrderByCreatedAtDesc(users.getId(), "03")
-                .orElseThrow(() -> new BusinessLogicException(ExceptionCode.ERROR_NOT_FOUND));
+    public IssueResponseDTO getIssue(Long issueId) {
+        Issue issue = issueRepository.findById(issueId)
+                .orElseThrow(() -> new BusinessLogicException(ExceptionCode.ERROR_NOT_FOUND));;
         return IssueResponseDTO.toDto(issue);
     }
 }
