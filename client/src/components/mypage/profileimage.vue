@@ -8,105 +8,110 @@
       <div>
         <img
           class="h-auto max-w-full rounded-lg border-yellow-400 cursor-pointer"
-          
           src="/images/default.png"
-          alt="" @click="setImgName"
+          alt=""
+          @click="setImgName"
         />
       </div>
       <div>
         <img
           class="h-auto max-w-full rounded-lg border-yellow-400 cursor-pointer"
           src="/images/money.png"
-          alt="" @click="setImgName"
+          alt=""
+          @click="setImgName"
         />
       </div>
       <div>
         <img
           class="h-auto max-w-full rounded-lg border-yellow-400 cursor-pointer"
           src="/images/saving.png"
-          alt="" @click="setImgName"
+          alt=""
+          @click="setImgName"
         />
       </div>
       <div>
         <img
           class="h-auto max-w-full rounded-lg border-yellow-400 cursor-pointer"
           src="/images/coding.png"
-          alt="" @click="setImgName"
+          alt=""
+          @click="setImgName"
         />
       </div>
       <div>
         <img
           class="h-auto max-w-full rounded-lg border-yellow-400 cursor-pointer"
           src="/images/dev.png"
-          alt="" @click="setImgName"
+          alt=""
+          @click="setImgName"
         />
       </div>
       <div>
         <img
           class="h-auto max-w-full rounded-lg border-yellow-400 cursor-pointer"
           src="/images/codebug.png"
-          alt="" @click="setImgName"
+          alt=""
+          @click="setImgName"
         />
       </div>
       <div>
         <img
           class="h-auto max-w-full rounded-lg border-yellow-400 cursor-pointer"
           src="/images/bankbook.png"
-          alt="" @click="setImgName"
+          alt=""
+          @click="setImgName"
         />
       </div>
       <div>
         <img
           class="h-auto max-w-full rounded-lg border-yellow-400 cursor-pointer"
           src="/images/error.png"
-          alt="" @click="setImgName"
+          alt=""
+          @click="setImgName"
         />
       </div>
     </div>
   </article>
 </template>
 <script setup>
-import axios from 'axios';
-import { defineProps, defineEmits, onMounted } from 'vue';
+import axios from "axios";
+import { onMounted } from "vue";
+import { useAuthStore } from "@/stores/auth";
 
-const props = defineProps(["token", "info"]);
-const emit = defineEmits(['update']);
+const authStore = useAuthStore();
 
 // ---------------------------
 // 프로필 이미지 확인
 // ---------------------------
 
-onMounted(()=>{
+onMounted(() => {
   const imgArr = document.querySelectorAll(".grid img");
-  for(let img of imgArr){
-    img.classList.remove('border-4')
-    if(props.info.profileImage == img.src.split("/").pop()){
-      img.classList.add('border-4');
+  for (let img of imgArr) {
+    img.classList.remove("border-4");
+    if (authStore.userInfo.profileImage == img.src.split("/").pop()) {
+      img.classList.add("border-4");
     }
   }
-})
+});
 
 // ---------------------------
 // 프로필 이미지 변경
 // ---------------------------
 
-async function setImgName(e){
-  let imgName = e.target.src.split('/').pop();
-  let updateimage = {"profileImage": imgName };
-  await axios.put('/mypage/profileimage',updateimage,{
-    headers:{
-      'content-type':'application/json',
-      'authorization': props.token
-    }
+async function setImgName(e) {
+  let imgName = e.target.src.split("/").pop();
+  let updateimage = { profileImage: imgName };
+  await axios.put("/mypage/profileimage", updateimage, {
+    headers: {
+      "content-type": "application/json",
+      authorization: authStore.token,
+    },
   });
+  authStore.getUserInfo();
   const imgArr = document.querySelectorAll(".grid img");
-  for(let img of imgArr){
-    img.classList.remove('border-4')
-  }  
-  e.target.classList.add('border-4');
-  emit('update','updated');
+  for (let img of imgArr) {
+    img.classList.remove("border-4");
+  }
+  e.target.classList.add("border-4");
 }
-
-
 </script>
 <style scoped></style>

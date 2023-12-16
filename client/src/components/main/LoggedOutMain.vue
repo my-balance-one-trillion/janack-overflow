@@ -33,11 +33,11 @@
       최근 올라온<span class="text-main-red"> 에러</span>
     </div>
     <div class="flex flex-wrap justify-center my-5">
-      <MainPageCard
+      <!-- <MainPageCard
         v-for="(issue, index) in issueList"
         :issue="issue"
         :key="index"
-      />
+      /> -->
     </div>
   </div>
 
@@ -124,7 +124,7 @@ onMounted(() => {
   axios.get("http://localhost:8081/main/unlogin")
   .then((response) => {
     issueList.value = response.data;
-    console.log("response", issueList.value);
+    // console.log("response", issueList.value);
   });
 });
 </script>

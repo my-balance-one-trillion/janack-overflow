@@ -2,6 +2,7 @@ package com.example.janackoverflow.saving.controller;
 
 import com.example.janackoverflow.global.security.auth.NowUserDetails;
 import com.example.janackoverflow.issue.domain.response.IssueResponseDTO;
+import com.example.janackoverflow.issue.entity.Issue;
 import com.example.janackoverflow.issue.service.IssueService;
 import com.example.janackoverflow.saving.domain.request.SavingRequestDTO;
 import com.example.janackoverflow.saving.domain.response.InputAccountResponseDTO;
@@ -38,12 +39,8 @@ public class SavingController {
 
     // 적금 개설
     @PostMapping
-    public ResponseEntity<?> createAccount(@Validated @RequestBody SavingRequestDTO savingRequestDTO){
-//                                           @AuthenticationPrincipal NowUserDetails userDetails){
-//        Users users = userDetails.getUser();
-        Users users = new Users();
-        users.setId(1L);
-
+    public ResponseEntity<?> createAccount(@Validated @RequestBody SavingRequestDTO savingRequestDTO, @AuthenticationPrincipal NowUserDetails userDetails){
+        Users users = userDetails.getUser();
         try {
             InputAccount inputAccount = inputAccountService.createInputAccount(savingRequestDTO.getInputAccountRequestDTO(), users);
             if (inputAccount != null) {
@@ -64,11 +61,8 @@ public class SavingController {
 
     // 적금 내역 (진행 중인 적금 정보)
     @GetMapping("/progress")
-    public ResponseEntity<?> getUserAccountInProgress(){
-//            @AuthenticationPrincipal NowUserDetails userDetails){
-//        Long userId = userDetails.getUser().getId();
-        Users users = new Users();
-        users.setId(1L);
+    public ResponseEntity<?> getUserAccountInProgress(@AuthenticationPrincipal NowUserDetails userDetails){
+        Users users = userDetails.getUser();
         Optional<InputAccountResponseDTO> inProgressAccount = inputAccountService.getInProgressAccountByUser(users);
         Optional<RuleResponseDTO> inProgressRule = ruleService.getInProgressRuleByUser(users, inProgressAccount);
 
@@ -79,29 +73,31 @@ public class SavingController {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
-    // 월별 내역 조회 (사용자 에러 내역 월별 조회)
-    @GetMapping("/monthly")
-    public ResponseEntity<?> getAllIssues(){
-        Users users = new Users();
-        users.setId(1L);
-        List<IssueResponseDTO> issue = issueService.getAllIssuesByUserId(users);
-        return new ResponseEntity<>(issue, HttpStatus.OK);
+    // 월별 내역 조회 (해결된 에러 내역 월별 조회)
+    @GetMapping("/monthly-issues")
+    public ResponseEntity<?> getMonthlyIssuesByUserAndDate(@AuthenticationPrincipal NowUserDetails userDetails,
+                                                           @RequestParam int year, @RequestParam int month) {
+        Users users = userDetails.getUser();
+
+        List<Issue> monthlyIssues = issueService.getMonthlyIssuesByUserId(users, year, month);
+        return new ResponseEntity<>(monthlyIssues, HttpStatus.OK);
     }
+
 
     // 적금 기록 (사용자 적금 전부 조회)
     @GetMapping
     public ResponseEntity<?> getUserAccounts(@AuthenticationPrincipal NowUserDetails userDetails){
-        Long userId = userDetails.getUser().getId();
-        List<InputAccountResponseDTO> userAccounts = inputAccountService.getAccountsByUser(userId);
+        Users users = userDetails.getUser();
+        List<InputAccountResponseDTO> userAccounts = inputAccountService.getAccountsByUser(users);
         return new ResponseEntity<>(userAccounts, HttpStatus.OK);
     }
 
     // 진행 중인 적금 정보 수정
-    @PatchMapping
+    @PutMapping
     public ResponseEntity<?> updateAccountInfo(@RequestBody SavingRequestDTO savingRequestDTO, @AuthenticationPrincipal NowUserDetails userDetails){
-        Long userId = userDetails.getUser().getId();
-        InputAccount updateAccount = inputAccountService.updateInputAccount(savingRequestDTO.getInputAccountRequestDTO(), userId);
-        Rule updateRule = ruleService.updateRule(savingRequestDTO.getRuleRequestDTO(),userId, updateAccount.getId());
+        Users users = userDetails.getUser();
+        InputAccount updateAccount = inputAccountService.updateInputAccount(savingRequestDTO.getInputAccountRequestDTO(), users);
+        Rule updateRule = ruleService.updateRule(savingRequestDTO.getRuleRequestDTO(),users, updateAccount.getId());
 
         Map<String, Object> response = new HashMap<>();
         response.put("updateAccount", updateAccount);
@@ -111,7 +107,7 @@ public class SavingController {
     }
 
     // 적금 삭제 (적금 포기 상태로 변경 status=02)
-    @PatchMapping("/giveup")
+    @PutMapping("/giveup")
     public ResponseEntity<?> updateAccountStatusGiveup(@AuthenticationPrincipal NowUserDetails userDetails){
         Long userId = userDetails.getUser().getId();
         InputAccount deleteAccount = inputAccountService.deleteInputAccount(userId);

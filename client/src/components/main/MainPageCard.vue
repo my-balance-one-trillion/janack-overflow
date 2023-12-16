@@ -32,6 +32,34 @@
                 </div>
             </div>
         </div>
+        <p
+          class="mt-2 text-gray-600 overflow-hidden"
+          style="height: 80px; overflow: hidden"
+        >
+          {{ props.issue.content }}
+        </p>
+      </div>
+      <div class="flex items-center justify-between mt-4">
+        <a
+          class="font-bold text-sub-grn hover:underline hover:text-main-grn"
+          href="#"
+          >Read more</a
+        >
+        <div class="flex">
+          <a class="flex items-center" href="#">
+            <img
+              class="hidden object-cover w-10 h-10 mx-4 rounded-full sm:block"
+              src="https://cdn.pixabay.com/photo/2018/03/26/20/49/tiger-3264048_1280.jpg"
+              alt="avatar"
+            />
+            <h1 class="font-bold text-gray-700">
+              {{ props.issue.communityUsersDTO.nickname }}
+            </h1>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
 </template>
 
 <script setup>
@@ -42,8 +70,7 @@
         }
     })
     console.log("issue:", props.issue);
+
 </script>
 
-<style scoped>
-
-</style>
+<style scoped></style>
