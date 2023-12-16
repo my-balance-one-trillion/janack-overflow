@@ -64,8 +64,8 @@ public class CommunityService {
         this.communityRepositoryImpl = communityRepositoryImpl;
     }
 
-    public Page<IssueDTO.ResponseDTO> getSolvedIssueList(String order, String category, int pageNo) {
-        log.info("pageNo : " + pageNo);
+    public Page<IssueDTO.ResponseDTO> getSolvedIssueList(String order, int pageNo) {
+        log.info("!!!!!!!title : " + " pageNo : " + pageNo);
         Pageable pageable = null;
 
         pageable = PageRequest.of(pageNo, 10, Sort.by(Sort.Direction.DESC, Objects.requireNonNullElse(order, "id")));
@@ -86,37 +86,46 @@ public class CommunityService {
     public Page<IssueDTO.ResponseDTO> getIssueBySelectedCategory(String category, int pageNo) {
 
         Pageable pageable = PageRequest.of(pageNo, 10, Sort.by(Sort.Direction.DESC, "id"));
-        List<IssueDTO.ResponseDTO> issuePageList = communityRepositoryImpl.findAllByCategoryName(category, pageable).map(issue ->
+        Page<Issue> issueList =communityRepositoryImpl.findAllByCategoryName(category, pageable);
+        List<IssueDTO.ResponseDTO> issuePageList = issueList.map(issue ->
                 issue.toDto(likesService.getIssueLikes(issue.getId()),
                         usersRepository.findById(issue.getUsers().getId()).orElseThrow(() ->
                                 new IllegalArgumentException("해당 유저를 찾을 수 없습니다.")).toIssueDto())).toList();
 
         // TODO pageImpl 하나만 사용해서 구현하기 현재 repo안에서도 사용중
-        return new PageImpl<>(issuePageList, pageable, issuePageList.size());
+        return new PageImpl<>(issuePageList, pageable, issueList.getTotalElements());
     }
 
-    public Page<IssueDTO.ResponseDTO> searchKeyword(String keyword, String title) {
+    public Page<IssueDTO.ResponseDTO> searchKeyword(String title) {
         Pageable pageable = PageRequest.of(0, 10, Sort.by(Sort.Direction.DESC, "id"));
-        return communityRepositoryImpl.findAllByKeyword(keyword, title, pageable).map(issue ->
+        return communityRepositoryImpl.findAllByTitle(title, pageable).map(issue ->
                 issue.toDto(likesService.getIssueLikes(issue.getId()),
                     usersRepository.findById(issue.getUsers().getId()).orElseThrow(() ->
                             new IllegalArgumentException("해당 유저를 찾을 수 없습니다.")).toIssueDto()));
     }
 
-    public Page<IssueDTO.ResponseDTO> search(String title, String category) {
-        log.info("!!!!!!!title : " + title);
+    public Page<IssueDTO.ResponseDTO> search(String title, String category, int pageNo) {
+        log.info("!!!!!!!title : " + title + "category : " + category + " pageNo : " + pageNo);
+        log.info("title isEmpty : "+ title.isEmpty());
+        log.info("category : " + category + (category == null));
+        if(title.isEmpty() && category.isEmpty()) {
+            log.info("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
+            return getSolvedIssueList(null, pageNo);
+        }
         List<String> categories = new ArrayList<>();
         if(category != null){
             categories = Arrays.asList(category.split(","));
         }
-
-        Pageable pageable = PageRequest.of(0, 10, Sort.by(Sort.Direction.DESC, "id"));
-        List<IssueDTO.ResponseDTO> issuePageList = communityRepositoryImpl.findAllByCategory(title, categories, pageable).map(issue ->
+        Pageable pageable = PageRequest.of(pageNo, 10, Sort.by(Sort.Direction.DESC, "id"));
+        Page<Issue> issueList =communityRepositoryImpl.findAllByCategory(title, categories, pageable);
+        List<IssueDTO.ResponseDTO> issuePageList = issueList.map(issue ->
                 issue.toDto(likesService.getIssueLikes(issue.getId()),
                         usersRepository.findById(issue.getUsers().getId()).orElseThrow(() ->
                                 new IllegalArgumentException("해당 유저를 찾을 수 없습니다.")).toIssueDto())).toList();
+
+        log.info("issuePageList.size() :" + issuePageList.size());
         // TODO pageImpl 하나만 사용해서 구현하기 현재 repo안에서도 사용중
-        return new PageImpl<>(issuePageList, pageable, issuePageList.size());
+        return new PageImpl<>(issuePageList, pageable, issueList.getTotalElements());
     }
 
     @Transactional
