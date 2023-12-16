@@ -13,6 +13,11 @@ public class CustomLogoutSuccessHandler implements LogoutSuccessHandler {
 
     @Override
     public void onLogoutSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
-        //마지막 url로 리다이렉트 구현 예정
+        // "/" 로 리다이렉트
+        String scheme = request.getScheme(); //http 또는 https
+        String serverName = request.getServerName();
+        int serverPort = request.getServerPort();
+
+        response.sendRedirect(scheme + "://" + serverName + ":" + serverPort + "/");
     }
 }

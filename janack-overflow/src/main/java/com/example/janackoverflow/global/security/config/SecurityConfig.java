@@ -51,9 +51,9 @@ public class SecurityConfig {
     }
 
     @Bean
-    public LogoutHandler customLogoutHandler() throws Exception {
+    public LogoutHandler customLogoutHandler() {
         // 실제 로그아웃 처리를 담당하는 구현체를 반환
-        return new CustomLogoutHandler(authenticationManagerBean());
+        return new CustomLogoutHandler();
     }
 
     @Bean

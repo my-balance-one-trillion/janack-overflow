@@ -1,9 +1,11 @@
 package com.example.janackoverflow.global.pagination;
 
+import lombok.Getter;
 import org.springframework.data.domain.Page;
 
 import java.util.List;
 
+@Getter
 public class PageResponseDTO<T> {
     private List<T> data;
     private PageDTO pageDTO;

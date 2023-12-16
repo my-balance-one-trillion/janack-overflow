@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.text.SimpleDateFormat;
+
 @RestController
 public class UsersController {
     private final UsersService usersService;
@@ -59,6 +61,9 @@ public class UsersController {
     }
 
 //    이메일 인증
+
+//    @GetMapping("/email")
+//    public
 
 //    아이디 찾기
 

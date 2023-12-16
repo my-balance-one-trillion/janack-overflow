@@ -61,6 +61,7 @@ public class MypageController {
         System.out.println(pageable);
         Long usersId = nowUserDetails.getId();
         PageResponseDTO<myIssueResponseDTO> myIssueList = mypageService.readMyIssue(usersId, pageable);
+        System.out.println(myIssueList);
         return new ResponseEntity(myIssueList, HttpStatus.OK);
     }
 
