@@ -62,7 +62,7 @@ public class MainService {
 //        return issueRepository.findTop10ByOrderByCreatedAtDesc()
 //                .stream().map(IssueResponseDTO::toDto)
 //                .toList();
-        return issueRepository.findTop10ByOrderByCreatedAtDesc()
+        return issueRepository.findTop10ByPublicStatusOrderByCreatedAtDesc(true)
                 .stream().map(issue -> issue.toDto(likesService.getIssueLikes(issue.getId()), usersRepository.findById(issue.getUsers().getId()).get().toIssueDto()))
                 .toList();
     }

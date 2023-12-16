@@ -17,7 +17,6 @@ public class IssueResponseDTO {
     private String keyword;
     private String category;
     private String code;
-    @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDateTime createdAt;
     private String status;
     private int amount;

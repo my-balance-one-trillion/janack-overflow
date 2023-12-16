@@ -38,17 +38,21 @@
 <script setup>
 import { onMounted, ref } from 'vue';
 import axios from 'axios';
-import IssueTable from "./IssueTable.vue";
+import IssueTable from "@/components/main/IssueTable.vue";
 import "vue3-circle-progress/dist/circle-progress.css";
 import CircleProgress from "vue3-circle-progress";
-import Chart from '../Chart.vue';
-
+import Chart from '@/components/Chart.vue';
+import { useAuthStore } from '../../stores/auth';
 const nowAccount = ref({});
 const weeklyIssues = ref([]);
 var goalAmount;
 var acntAmount;
-onMounted(()=>{
-  axios.get("http://localhost:8081/main/1")
+onMounted(async()=>{
+  await axios.get("http://localhost:8081/main/login", {
+      headers: {
+        authorization: useAuthStore().token,
+      },
+    })
   .then((response) => {
     nowAccount.value = response.data.nowAccount;
     weeklyIssues.value = response.data.weeklyIssues;

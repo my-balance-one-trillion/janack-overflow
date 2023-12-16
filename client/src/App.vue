@@ -7,27 +7,42 @@
 
 <script setup>
 import axios from "axios";
-import { onMounted } from "vue";
+import { onBeforeMount } from "vue";
 import Header from "@/components/Header.vue";
-import { useAuthStore } from "./stores/auth";
+import { useAuthStore } from "@/stores/auth";
+import { useRouter } from "vue-router";
 
+const authStore = useAuthStore();
+const router = useRouter();
 
-onMounted(async () => {
-  if (useAuthStore().token) {
-    await getUserInfo();
-  }
+onBeforeMount(async () => {
+  await handleRouteLogic();
 });
+
+router.beforeEach(async (to, from, next) => {
+  await handleRouteLogic();
+  next();
+});
+
+async function handleRouteLogic() {
+  try {
+    if (authStore.token) {
+      await getUserInfo();
+      console.log("사용자 정보가 스토어에 등록되었습니다.");
+    }
+  } catch (error) {
+    console.error("getUserInfo 오류:", error);
+  }
+}
 
 async function getUserInfo() {
   const response = await axios.get("/mypage/myinfo", {
     headers: {
-      authorization: useAuthStore().token,
+      authorization: authStore.token,
     },
   });
-  useAuthStore().setUserInfo(response.data);
-  console.log(useAuthStore().userInfo)
+  authStore.setUserInfo(response.data);  
 }
-console.log(useAuthStore().userInfo)
 </script>
 
 <style scoped>
