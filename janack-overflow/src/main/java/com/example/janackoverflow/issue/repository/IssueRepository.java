@@ -1,5 +1,6 @@
 package com.example.janackoverflow.issue.repository;
 
+import com.example.janackoverflow.issue.domain.response.IssueResponseDTO;
 import com.example.janackoverflow.issue.entity.Issue;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -21,4 +22,7 @@ public interface IssueRepository extends JpaRepository<Issue, Long> {
 
     List<Issue> findTop10ByOrderByCreatedAtDesc();
     List<Issue> findByUsersId(Long userId);
+    List<Issue> findByUsersIdAndStatusOrderByCreatedAtDesc(Long userId, String status);
+
+    Optional<Issue> findFirstByUsersIdAndStatusOrderByCreatedAtDesc(Long usersId, String status);
 }

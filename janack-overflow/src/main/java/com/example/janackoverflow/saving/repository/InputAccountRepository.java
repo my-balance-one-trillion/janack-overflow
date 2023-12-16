@@ -12,4 +12,6 @@ public interface InputAccountRepository extends JpaRepository<InputAccount, Long
     List<InputAccount> findByUsersId(Long userId);
 
     Optional<InputAccount> findByUsersIdAndStatus(Long userId, String status);
+
+    List<InputAccount> findByUsersIdOrderByCreatedAtDesc(Long id);
 }

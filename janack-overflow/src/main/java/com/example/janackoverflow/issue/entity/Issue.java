@@ -71,6 +71,7 @@ public class Issue extends AuditingFields {
                 .category(category)
                 .code(code)
                 .keyword(keyword)
+                .createdAt(getCreatedAt())
                 .status(status)
                 .publicStatus(publicStatus)
                 .amount(amount)

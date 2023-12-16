@@ -1,8 +1,6 @@
 <script setup>
-import {onMounted, ref} from 'vue';
 import HorizontalBarChart from "./component/HorizontalBarChart.vue";
 import LineChart from "./component/LineChart.vue";
-import axios from "axios";
 import MyAccount from "./Details/MyAccount.vue";
 import MonthlyDetails from "./Details/MonthlyDetails.vue";
 

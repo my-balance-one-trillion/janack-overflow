@@ -2,6 +2,7 @@ package com.example.janackoverflow.community.service;
 
 import com.example.janackoverflow.community.domain.CommentDTO;
 import com.example.janackoverflow.community.entity.Comment;
+import com.example.janackoverflow.community.repository.CommentListRepositoruImpl;
 import com.example.janackoverflow.community.repository.CommentRepository;
 import com.example.janackoverflow.issue.entity.Issue;
 import com.example.janackoverflow.issue.repository.IssueRepository;
@@ -9,9 +10,7 @@ import com.example.janackoverflow.user.entity.Users;
 import com.example.janackoverflow.user.repository.UsersRepository;
 import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -22,14 +21,15 @@ public class CommentService {
     private final CommentRepository commentRepository;
     private final UsersRepository usersRepository;
     private final IssueRepository issueRepository;
-
+    private final CommentListRepositoruImpl commentListRepositoryImpl;
 
     public CommentService (CommentRepository commentRepository,
                            UsersRepository usersRepository,
-                           IssueRepository issueRepository) {
+                           IssueRepository issueRepository, CommentListRepositoruImpl commentListRepositoryImpl) {
         this.commentRepository = commentRepository;
         this.usersRepository= usersRepository;
         this.issueRepository = issueRepository;
+        this.commentListRepositoryImpl = commentListRepositoryImpl;
     }
 
     @Transactional
@@ -48,8 +48,11 @@ public class CommentService {
         commentRepository.save(commentRequestDto.toEntity(issue, users));
     }
 
-    public List<CommentDTO.ResponseDto> getCommentList(long issueId) {
-        Pageable pageable = PageRequest.of(0, 5, Sort.by(Sort.Direction.DESC, "id"));
-        return commentRepository.findAllByIssue_IdOrderByCreatedAtDesc(issueId, pageable).stream().map(Comment::toDto).toList();
+    public Page<CommentDTO.ResponseDto> getCommentList(long issueId, int pageNo) {
+        Pageable pageable = PageRequest.of(pageNo, 5, Sort.by(Sort.Direction.DESC, "id"));
+        Page<Comment> commentList =commentListRepositoryImpl.selectCommentList(issueId, pageable);
+        List<CommentDTO.ResponseDto> commentPageList = commentListRepositoryImpl.selectCommentList(issueId, pageable).map(Comment :: toDto).toList();
+
+        return new PageImpl<>(commentPageList, pageable, commentList.getTotalElements());
     }
 }

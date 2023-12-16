@@ -7,6 +7,7 @@ import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -18,23 +19,27 @@ import static com.example.janackoverflow.issue.entity.QIssue.issue;
 
 @Repository
 @RequiredArgsConstructor
+@Slf4j
 public class CommunityRepositoryImpl implements CommunityRepository {
     private final JPAQueryFactory jpaQueryFactory;
 
     @Override
-    public Page<Issue> findAllByKeyword(String keyword, String title, Pageable pageable) {
+    public Page<Issue> findAllByTitle(String title, Pageable pageable) {
         List<Issue> Issues = jpaQueryFactory.selectFrom(issue)
-                .where(issue.keyword.contains(keyword), issue.title.contains(title))
+                .where(issue.title.contains(title))
                 .orderBy(new OrderSpecifier<>(Order.DESC, issue.createdAt))
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
                 .fetch();
 
-        return new PageImpl<>(Issues, pageable, getCount(keyword));
+        return new PageImpl<>(Issues, pageable, getCount(title));
     }
 
     @Override
     public Page<Issue> findAllByCategory(String title, List<String> category, Pageable pageable) {
+        if(!title.isEmpty() && !category.isEmpty()) {
+            return findAllByCategoryAndTitle(title, category, pageable);
+        }
         List<Issue> Issues = jpaQueryFactory.selectFrom(issue)
                 .where(eqCategories(category).or(eqTitle(title)))
                 .orderBy(new OrderSpecifier<>(Order.DESC, issue.createdAt))
@@ -45,10 +50,34 @@ public class CommunityRepositoryImpl implements CommunityRepository {
         return new PageImpl<>(Issues, pageable, getCategoryCount(title, category));
     }
 
-    private Long getCount(String keyword) {
+    @Override
+    public Page<Issue> findAllByCategoryName(String category, Pageable pageable) {
+        List<Issue> Issues = jpaQueryFactory.selectFrom(issue)
+                .where(eqCategory(category))
+                .orderBy(new OrderSpecifier<>(Order.DESC, issue.createdAt))
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize())
+                .fetch();
+
+        return new PageImpl<>(Issues, pageable, getCategoryCount(category));
+    }
+
+    @Override
+    public Page<Issue> findAllByCategoryAndTitle(String title, List<String> category, Pageable pageable) {
+        List<Issue> Issues = jpaQueryFactory.selectFrom(issue)
+                .where(eqCategories(category).and(eqTitle(title)))
+                .orderBy(new OrderSpecifier<>(Order.DESC, issue.createdAt))
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize())
+                .fetch();
+
+        return new PageImpl<>(Issues, pageable, getTitleAndCategoryCount(title, category));
+    }
+
+    private Long getCount(String title) {
         return jpaQueryFactory.select(issue.count())
                 .from(issue)
-                .where(issue.keyword.contains(keyword))
+                .where(issue.title.contains(title))
                 .fetchOne();
     }
 
@@ -59,8 +88,23 @@ public class CommunityRepositoryImpl implements CommunityRepository {
                 .fetchOne();
     }
 
+    private Long getCategoryCount(String category) {
+        return jpaQueryFactory.select(issue.count())
+                .from(issue)
+                .where(eqCategory(category))
+                .fetchOne();
+    }
+
+    private Long getTitleAndCategoryCount(String title, List<String> category) {
+        return jpaQueryFactory.select(issue.count())
+                .from(issue)
+                .where(eqCategories(category).and(eqTitle(title)))
+                .fetchOne();
+    }
+
     private BooleanExpression eqTitle(String searchTitle){
-        return searchTitle == null ? null : issue.title.contains(searchTitle);
+        log.info("eqTitle : " + (searchTitle == null));
+        return searchTitle == null || searchTitle.isEmpty() ? null : issue.title.contains(searchTitle);
     }
 
     /**
@@ -78,6 +122,17 @@ public class CommunityRepositoryImpl implements CommunityRepository {
         for (String category : categories){
             booleanBuilder.or(issue.category.contains(category));
         }
+
+        return booleanBuilder;
+    }
+
+    private BooleanBuilder eqCategory(String category){
+        if(category == null){
+            return null;
+        }
+
+        BooleanBuilder booleanBuilder = new BooleanBuilder();
+        booleanBuilder.or(issue.category.eq(category));
 
         return booleanBuilder;
     }
