@@ -166,9 +166,7 @@
 
 <script setup>
 import { onMounted, ref, watch } from 'vue';
-import { createStore, useStore } from 'vuex';
 import { FwbBadge } from 'flowbite-vue';
-import { FwbCard } from 'flowbite-vue'
 import { FwbButton, FwbTextarea, FwbPagination } from 'flowbite-vue'
 import ClipboardJS from 'clipboard';
 import Spinner from "@/components/Spinner.vue";
