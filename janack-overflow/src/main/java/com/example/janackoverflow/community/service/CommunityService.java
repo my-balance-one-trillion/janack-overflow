@@ -15,6 +15,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
+import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
@@ -140,7 +141,7 @@ public class CommunityService {
         // TODO map 에 있는지 없는지 확인
         if( articleMap.get(issueId) == null ) {
             try {
-                mediumArticleList = getMediumApi(optIssue.orElseThrow(() -> new IllegalArgumentException("해당 이슈를 찾을 수 없습니다.")).getCategory());
+                mediumArticleList = getMediumApi(optIssue.orElseThrow(() -> new IllegalArgumentException("해당 이슈를 찾을 수 없습니다.")).getKeyword());
                 articleMap.put(issueId, mediumArticleList);
             } catch (IOException | InterruptedException e) {
                 throw new RuntimeException(e);
@@ -173,14 +174,14 @@ public class CommunityService {
     public List<MediumArticle> getMediumApi(String query) throws IOException, InterruptedException {
         log.info("@@@@@@@@@@ + " + apikey);
         HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create("https://medium2.p.rapidapi.com/topfeeds/" + query.toLowerCase() + "/top_month?count=3&after=0"))
+                .uri(URI.create("https://medium2.p.rapidapi.com/search/articles?query=" + query.replaceAll(",", "")))
                 .header("X-RapidAPI-Key", apikey)
                 .header("X-RapidAPI-Host", "medium2.p.rapidapi.com")
                 .method("GET", HttpRequest.BodyPublishers.noBody())
                 .build();
         HttpResponse<String> response = HttpClient.newHttpClient().send(request, HttpResponse.BodyHandlers.ofString());
-        log.info("@@@@@@@@@@@ body : " + response.body());
-        log.info("@@@@@@@@@@@ query : " + query);
+//        log.info("@@@@@@@@@@@ body : " + response.body());
+        log.info("@@@@@@@@@@@ query : " +  query.replaceAll(",", ""));
         JSONParser parser = new JSONParser();
         JSONObject obj;
         List<String> relatedArticlesId = null;
@@ -188,10 +189,22 @@ public class CommunityService {
 
         try {
             obj = (JSONObject) parser.parse(response.body());
-            relatedArticlesId = Arrays.stream(obj.get("topfeeds").toString().split("\"")).toList();
-            for (String id : relatedArticlesId) {
-                if (id.length() > 3) {
-                    articleList.add(getArticlesInfo(id));
+            int articleSize = 0;
+
+            JSONArray articlesObj = (JSONArray) obj.get("articles");
+            log.info("articlesObj : "+ articlesObj.size());
+            articleSize = articlesObj.size();
+            if(articleSize > 3) {
+                articleSize = 3;
+
+            } else if(articlesObj.isEmpty()) {
+                log.info("비어있음");
+            }
+
+            for (int i = 0 ; i < articleSize ; i ++ ) {
+                if (articlesObj.get(i) != null) {
+                    System.out.println(articlesObj.get(i).toString());
+                    articleList.add(getArticlesInfo(articlesObj.get(i).toString()));
                 }
             }
         } catch (ParseException e) {
