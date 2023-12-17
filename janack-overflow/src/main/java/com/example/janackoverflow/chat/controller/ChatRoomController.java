@@ -39,13 +39,11 @@ public class ChatRoomController {
 
         return ResponseEntity.ok(chatRoomDTOList);
     }
-    //채팅 내역 불러오기
+    //채팅 내역 불러오기+입장
     @GetMapping("/{roomId}")
     public ResponseEntity<?> chatList(@AuthenticationPrincipal NowUserDetails nowUserDetails,
                                       @PathVariable(value = "roomId") Long roomId){
         Long userId = nowUserDetails.getUser().getId();
-        //입장
-        chatRoomService.enterChatRoom(roomId, userId);
 
         ChatRoomDTO.ResponseDTO chatRoomDTO = chatRoomService.read(roomId);
         List<ChatMessageDTO.ResponseDTO> chatMessageList = chatMessageService.readAll(roomId);
@@ -53,6 +51,25 @@ public class ChatRoomController {
         responseMap.put("roomInfo", chatRoomDTO);
         responseMap.put("messageList", chatMessageList);
         return ResponseEntity.ok(responseMap);
+    }
+    //유저 입장
+    @GetMapping("/enter/{roomId}")
+    public ResponseEntity<?> enterChatRoom(@AuthenticationPrincipal NowUserDetails nowUserDetails,
+                                           @PathVariable(value = "roomId") Long roomId){
+
+
+        Long userId = nowUserDetails.getUser().getId();
+
+        //유저 수 다 찼을때 못들어오게 하기
+        if(!chatRoomService.isMax(roomId)) {
+            chatRoomService.enterChatRoom(roomId, userId);
+            return ResponseEntity.ok("입장");
+        } else {
+            return ResponseEntity.badRequest().body("인원수 다 참");
+        }
+
+
+
     }
     //유저 퇴장
     @DeleteMapping("/quit/{roomId}")

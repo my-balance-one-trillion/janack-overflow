@@ -1,5 +1,6 @@
 <template>
-   <Doughnut :data="data" :options="options" />
+    <Doughnut :data="data" :options="options" />
+   
 </template>
 
 
@@ -49,7 +50,7 @@ ChartJS.register({
 const data = {
   datasets: [
     {
-      label: '목표명',
+      label: ['달성률'],
       backgroundColor: ['#025939', '#F0F2F2'],
       data: [percent, 100-percent]
     }
