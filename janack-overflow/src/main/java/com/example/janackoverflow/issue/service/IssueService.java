@@ -4,11 +4,10 @@ import com.example.janackoverflow.global.exception.BusinessLogicException;
 import com.example.janackoverflow.global.exception.ExceptionCode;
 import com.example.janackoverflow.issue.domain.request.CreateIssueRequestDTO;
 import com.example.janackoverflow.issue.domain.response.IssueResponseDTO;
+import com.example.janackoverflow.issue.domain.response.SolutionResponseDTO;
 import com.example.janackoverflow.issue.domain.response.StackOverflowResponse;
 import com.example.janackoverflow.issue.entity.Issue;
-import com.example.janackoverflow.issue.entity.Solution;
 import com.example.janackoverflow.issue.repository.IssueRepository;
-import com.example.janackoverflow.issue.repository.SolutionRepository;
 import com.example.janackoverflow.saving.entity.InputAccount;
 import com.example.janackoverflow.saving.repository.InputAccountRepository;
 import com.example.janackoverflow.user.entity.Users;
@@ -21,19 +20,16 @@ import org.springframework.web.reactive.function.client.WebClient;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
 public class IssueService {
     private final IssueRepository issueRepository;
     private final InputAccountRepository inputAccountRepository;
-    private final SolutionRepository solutionRepository;
 
-    public IssueService(IssueRepository issueRepository, InputAccountRepository inputAccountRepository, SolutionRepository solutionRepository) {
+    public IssueService(IssueRepository issueRepository, InputAccountRepository inputAccountRepository) {
         this.issueRepository = issueRepository;
         this.inputAccountRepository = inputAccountRepository;
-        this.solutionRepository = solutionRepository;
     }
 
     // 에러 등록
@@ -56,12 +52,16 @@ public class IssueService {
     }
     // 현재 진행 중인 에러 조회
     @Transactional(readOnly = true)
-    public Optional<IssueResponseDTO> getIssueByUserId(Users users){
+    public IssueResponseDTO getIssueByUserId(Users users){
         Issue inprogressIssue = issueRepository.findByUsersIdAndStatus(users.getId(),"01")
-                .orElseThrow(()-> new BusinessLogicException(ExceptionCode.ERROR_NOT_FOUND));
-        return Optional.ofNullable(issueRepository.findById(inprogressIssue.getId()).map(IssueResponseDTO::toDto)
-                .orElseThrow(() -> new BusinessLogicException(ExceptionCode.ERROR_NOT_FOUND)));
+                .orElse(null);
+
+        if (inprogressIssue == null) {
+            return null;
+        }
+       return IssueResponseDTO.toDto(inprogressIssue);
     }
+
 
     /*// 에러 등록 시간 조회
     @Transactional(readOnly = true)
@@ -135,23 +135,13 @@ public class IssueService {
         return issueRepository.save(issue);
     }
 
-    // 년도월 별로 에러 조회
+    // 해결한 에러 조회
     @Transactional(readOnly = true)
-    public List<Issue> getMonthlyIssuesByUserId(Users users, int year, int month) {
-        List<Issue> resolvedIssues = issueRepository.findByUsersIdAndStatusOrderByCreatedAtDesc(users.getId(), "03");
-
-        return resolvedIssues.stream()
-                .filter(issue -> {
-                    // 해당 에러에 대한 해결책 조회
-                    Optional<Solution> solutions = solutionRepository.findByIssueId(users.getId());
-
-                    // 각 해결에 대해 년도와 월을 비교
-                    return solutions.stream().anyMatch(solution ->
-                            solution.getCreatedAt().getYear() == year && solution.getCreatedAt().getMonthValue() == month);
-                })
-                .collect(Collectors.toList());
+    public List<IssueResponseDTO> getSolvedIssuesByUserId(Users users) {
+        return issueRepository.findByUsers_IdAndStatus(users.getId(),"03")
+                .stream().map(IssueResponseDTO::toDto)
+                .toList();
     }
-
 
     // 에러 조회
     @Transactional(readOnly = true)
@@ -159,5 +149,17 @@ public class IssueService {
         Issue issue = issueRepository.findById(issueId)
                 .orElseThrow(() -> new BusinessLogicException(ExceptionCode.ERROR_NOT_FOUND));;
         return IssueResponseDTO.toDto(issue);
+    }
+
+    // 년도월에 해당하는 해결한 에러 조회
+    @Transactional(readOnly = true)
+    public List<IssueResponseDTO> getMonthlyIssues(List<SolutionResponseDTO> monthlySolutions) {
+        List<Long> issueIds = new ArrayList<>();
+        for (SolutionResponseDTO solution : monthlySolutions) {
+            issueIds.add(solution.getIssueId());
+        }
+        return issueRepository.findAllById(issueIds)
+                .stream().map(IssueResponseDTO::toDto)
+                .toList();
     }
 }

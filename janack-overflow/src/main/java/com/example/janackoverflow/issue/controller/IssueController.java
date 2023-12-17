@@ -60,14 +60,15 @@ public class IssueController {
     @GetMapping
     public ResponseEntity<?> getIssue(@AuthenticationPrincipal NowUserDetails userDetails) throws JsonProcessingException {
         Users users = userDetails.getUser();
-        Optional<IssueResponseDTO> issue = issueService.getIssueByUserId(users);
-        IssueResponseDTO userIssue = issue.orElseThrow(() -> new BusinessLogicException(ExceptionCode.ERROR_NOT_FOUND));
-
+        IssueResponseDTO issue = issueService.getIssueByUserId(users);
+        if(issue == null){
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
         // 에러 키워드로 stackoverflow 검색
-        List<StackOverflowResponse> searchResult = issueService.searchByKeyword(userIssue.getId());
+        List<StackOverflowResponse> searchResult = issueService.searchByKeyword(issue.getId());
 
         Map<String, Object> response = new HashMap<>();
-        response.put("issue", issue.get());
+        response.put("issue", issue);
         response.put("stackOverflowResults", searchResult);
 
         return new ResponseEntity<>(response, HttpStatus.OK);
@@ -82,10 +83,12 @@ public class IssueController {
             return new ResponseEntity<>(message, HttpStatus.BAD_REQUEST);
         }
         Users users = userDetails.getUser();
-        Optional<IssueResponseDTO> issue = issueService.getIssueByUserId(users);
-        IssueResponseDTO userIssue = issue.orElseThrow(() -> new BusinessLogicException(ExceptionCode.ERROR_NOT_FOUND));
+        IssueResponseDTO issue = issueService.getIssueByUserId(users);
+        if(issue == null){
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
 
-        Solution solution = solutionService.createSolution(solutionRequestDTO, userIssue.getId());
+        Solution solution = solutionService.createSolution(solutionRequestDTO, issue.getId());
         return new ResponseEntity<>(solution, HttpStatus.CREATED);
     }
 
@@ -93,10 +96,12 @@ public class IssueController {
     @PutMapping("/giveup")
     public ResponseEntity<?> giveUpIssue(@AuthenticationPrincipal NowUserDetails userDetails){
         Users users = userDetails.getUser();
-        Optional<IssueResponseDTO> issue = issueService.getIssueByUserId(users);
-        IssueResponseDTO userIssue = issue.orElseThrow(() -> new BusinessLogicException(ExceptionCode.ERROR_NOT_FOUND));
+        IssueResponseDTO issue = issueService.getIssueByUserId(users);
+        if(issue == null){
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
 
-        Issue giveupIssue = issueService.updateIssueStatus(userIssue.getId());
+        Issue giveupIssue = issueService.updateIssueStatus(issue.getId());
         return new ResponseEntity<>(giveupIssue, HttpStatus.OK);
     }
 
