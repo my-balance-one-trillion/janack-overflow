@@ -32,13 +32,12 @@
   </div>
 </template>
 <script setup>
-import {defineProps} from 'vue';
-const props = defineProps({
-  issue:{
-    type: Object
-  }
-})
-console.log("issue:", props.issue);
+    const props = defineProps({
+        issue:{
+            type: Object
+        }
+    })
+    console.log("issue:", props.issue.amount);
 </script>
 <style scoped>
 </style>
