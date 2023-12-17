@@ -6,6 +6,8 @@ import com.example.janackoverflow.user.entity.Users;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import lombok.*;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import java.time.LocalDateTime;
 
@@ -32,6 +34,7 @@ public class ChatMessage extends AuditingFields {
     private Users users;
 
     @ManyToOne
+    @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name = "room_id")
     private ChatRoom chatRoom;
 

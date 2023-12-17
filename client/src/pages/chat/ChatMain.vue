@@ -1,59 +1,96 @@
 <template>
-<div class="mb-4 border-b border-gray-200 dark:border-gray-700">
-    <ul class="flex flex-wrap -mb-px text-sm font-medium text-center" id="default-tab" data-tabs-toggle="#default-tab-content" role="tablist">
-        <li class="me-2" role="presentation">
-            <button class="inline-block p-4 border-b-2 rounded-t-lg" id="profile-tab" data-tabs-target="#profile" type="button" role="tab" aria-controls="profile" aria-selected="false">Profile</button>
-        </li>
-        <li class="me-2" role="presentation">
-            <button class="inline-block p-4 border-b-2 rounded-t-lg hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300" id="dashboard-tab" data-tabs-target="#dashboard" type="button" role="tab" aria-controls="dashboard" aria-selected="false">Dashboard</button>
-        </li>
-        <li class="me-2" role="presentation">
-            <button class="inline-block p-4 border-b-2 rounded-t-lg hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300" id="settings-tab" data-tabs-target="#settings" type="button" role="tab" aria-controls="settings" aria-selected="false">Settings</button>
-        </li>
-        <li role="presentation">
-            <button class="inline-block p-4 border-b-2 rounded-t-lg hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300" id="contacts-tab" data-tabs-target="#contacts" type="button" role="tab" aria-controls="contacts" aria-selected="false">Contacts</button>
-        </li>
-    </ul>
-</div>
-<div id="default-tab-content">
-    <div class="hidden p-4 rounded-lg bg-gray-50 dark:bg-gray-800" id="profile" role="tabpanel" aria-labelledby="profile-tab">
-        <p class="text-sm text-gray-500 dark:text-gray-400">This is some placeholder content the <strong class="font-medium text-gray-800 dark:text-white">Profile tab's associated content</strong>. Clicking another tab will toggle the visibility of this one for the next. The tab JavaScript swaps classes to control the content visibility and styling.</p>
+  <div>
+    <div class="flex justify-center">
+      <button 
+      :class="isSelected[0]? classList[0] : classList[1]"
+      @click="[getAllList(), toggle(0)]">
+        오픈 채팅
+      </button>
+      <button 
+      :class="isSelected[1]? classList[0] : classList[1]"
+      @click="[getMyList(), toggle(1)]">
+        내 채팅
+      </button>
     </div>
-    <div class="hidden p-4 rounded-lg bg-gray-50 dark:bg-gray-800" id="dashboard" role="tabpanel" aria-labelledby="dashboard-tab">
-        <p class="text-sm text-gray-500 dark:text-gray-400">This is some placeholder content the <strong class="font-medium text-gray-800 dark:text-white">Dashboard tab's associated content</strong>. Clicking another tab will toggle the visibility of this one for the next. The tab JavaScript swaps classes to control the content visibility and styling.</p>
-    </div>
-    <div class="hidden p-4 rounded-lg bg-gray-50 dark:bg-gray-800" id="settings" role="tabpanel" aria-labelledby="settings-tab">
-        <p class="text-sm text-gray-500 dark:text-gray-400">This is some placeholder content the <strong class="font-medium text-gray-800 dark:text-white">Settings tab's associated content</strong>. Clicking another tab will toggle the visibility of this one for the next. The tab JavaScript swaps classes to control the content visibility and styling.</p>
-    </div>
-    <div class="hidden p-4 rounded-lg bg-gray-50 dark:bg-gray-800" id="contacts" role="tabpanel" aria-labelledby="contacts-tab">
-        <p class="text-sm text-gray-500 dark:text-gray-400">This is some placeholder content the <strong class="font-medium text-gray-800 dark:text-white">Contacts tab's associated content</strong>. Clicking another tab will toggle the visibility of this one for the next. The tab JavaScript swaps classes to control the content visibility and styling.</p>
-    </div>
-</div>
+  </div>
+  
   <div>
     <ChatList 
-    :chatRoomList="chatRoomList"/>
+    :chatRoomList="chatRoomList"
+    :toggle="isSelected[0]"
+    @open-modal="openModal"
+     />
+     <ChatCreateModal 
+     v-show="modalCheck"
+     @toggle-modalCheck="closeModal"
+     @send-roomInfo="createChatRoom"/>
   </div>
+  
 </template>
 
 <script setup>
-import { onMounted, ref } from 'vue'
-import axios from 'axios'
-import ChatList from '../../components/chat/ChatList.vue'
+import { useRoute, useRouter } from "vue-router";
+import { onMounted, ref } from "vue";
+import axios from "axios";
+import ChatList from "@/components/chat/ChatList.vue";
+import ChatCreateModal from '../../components/chat/ChatCreateModal.vue';
+import { useAuthStore } from '../../stores/auth';
 
+
+const classList = ["text-white p-4 rounded bg-main-red shadow-md", "p-4 rounded bg-white text-main-red shadow-md"];
+
+const isSelected = ref([true, false]);
+const modalCheck = ref(false);
 const chatRoomList = ref([]);
+const router = useRouter();
 
-function getAllList(){
-  axios.get("http://localhost:8081/chatrooms")
-  .then((response) => {
+function toggle(index){
+    isSelected.value = [false, false];
+    isSelected.value[index] = !isSelected.value[index];
+}
+function getMyList(){
+    axios.get("http://localhost:8081/chatrooms/my", {
+    headers: {
+      'authorization': useAuthStore().token,
+    }
+}
+    ).then((response) => {
     chatRoomList.value = response.data;
     console.log("chatRoomList", chatRoomList.value);
-  })
+  });
+}
+function getAllList() {
+  axios.get("http://localhost:8081/chatrooms").then((response) => {
+    chatRoomList.value = response.data;
+    console.log("chatRoomList", chatRoomList.value);
+  });
 }
 
+function openModal(data){
+  console.log("openModal", data);
+  modalCheck.value = data;
+}
+
+function closeModal(data){
+  console.log("emit", data);
+  modalCheck.value = data;
+}
+
+function createChatRoom(data){
+  console.log("createChatRoom", data);
+  axios.post("http://localhost:8081/chatrooms", data, {
+      headers: {
+        authorization: useAuthStore().token,
+      },
+    })
+    .then((response) => {
+      console.log("post 성공", response.data);
+      router.go(0)
+    })
+}
 onMounted(() => {
   getAllList();
-})
-
+});
 </script>
 <style>
 </style>

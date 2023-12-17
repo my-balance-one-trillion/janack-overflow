@@ -37,19 +37,19 @@ public class NowUserDetails implements UserDetails{
         return user.getEmail();
     }
     @Override
-    public boolean isAccountNonExpired() {
+    public boolean isAccountNonExpired() { //계정 만료 여부
         return true;
     }
     @Override
-    public boolean isAccountNonLocked() {
+    public boolean isAccountNonLocked() { //계정이 잠겨있는지 여부
         return true;
     }
     @Override
-    public boolean isCredentialsNonExpired() {
+    public boolean isCredentialsNonExpired() { //자격 증명 만료 여부
         return true;
     }
     @Override
-    public boolean isEnabled() {
+    public boolean isEnabled() { //계정 활성화 여부
         return true;
     }
     @Override

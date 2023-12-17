@@ -15,9 +15,10 @@ import Intro from "@/components/Saving/Intro.vue";
 import OpenAccountFinish from "@/components/Saving/OpenAccountFinish.vue";
 import SavingDelete from "@/components/Saving/SavingDelete.vue";
 import SavingRecord from "../components/Saving/SavingRecord.vue";
-import Chat from "@/pages/chat/Chat.vue";
+import ChatRoom from "@/pages/chat/ChatRoom.vue";
 import ChatMain from "@/pages/chat/ChatMain.vue"
 import MyChat from "@/pages/chat/MyChat.vue"
+import Issue from "@/pages/Issue.vue";
 
 const routes = [
     {path: "/", component: Main},
@@ -32,6 +33,7 @@ const routes = [
             {path:'delete', component: SavingDelete},
         ]
     },
+    {path:"/issue", component: Issue},
     {path:"/intro", component: Intro},
     {path: "/open", component: OpenAccount},
     {path: "/open/finish", component: OpenAccountFinish},
@@ -39,7 +41,7 @@ const routes = [
     {path: "/community", component: Community},
     {path: '/community/detail/:id', component: Detail },
     {path: "/mypage", component: Mypage},
-    {path: "/chat/:chatId", component: Chat},
+    {path: "/chat/:chatId", component: ChatRoom},
     {path: "/chat", component: ChatMain},
     {path: "/chat/my/:userId", component: MyChat}
 

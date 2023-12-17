@@ -19,7 +19,7 @@
       <div class="absolute top-0 right-0">
         <img
           class="z-1 float-right"
-          src="/images/main-coin.gif"
+          :src="isGifPlaying ? '/images/main-coin.gif' : ''"
           alt="gif"
           width="286px"
           height="216px"
@@ -33,11 +33,11 @@
       최근 올라온<span class="text-main-red"> 에러</span>
     </div>
     <div class="flex flex-wrap justify-center my-5">
-      <MainPageCard
+      <!-- <MainPageCard
         v-for="(issue, index) in issueList"
         :issue="issue"
         :key="index"
-      />
+      /> -->
     </div>
   </div>
 
@@ -118,10 +118,13 @@ import axios from "axios";
 import MainPageCard from "./MainPageCard.vue";
 
 const issueList = ref([]);
+const isGifPlaying = ref(true);
+
 onMounted(() => {
-  axios.get("http://localhost:8081/main").then((response) => {
+  axios.get("http://localhost:8081/main/unlogin")
+  .then((response) => {
     issueList.value = response.data;
-    console.log("response", issueList.value);
+    // console.log("response", issueList.value);
   });
 });
 </script>

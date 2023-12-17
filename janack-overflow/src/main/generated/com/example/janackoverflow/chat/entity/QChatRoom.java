@@ -22,6 +22,8 @@ public class QChatRoom extends EntityPathBase<ChatRoom> {
 
     public static final QChatRoom chatRoom = new QChatRoom("chatRoom");
 
+    public final StringPath category = createString("category");
+
     public final NumberPath<Long> id = createNumber("id", Long.class);
 
     public final NumberPath<Integer> max = createNumber("max", Integer.class);
@@ -31,6 +33,8 @@ public class QChatRoom extends EntityPathBase<ChatRoom> {
     public final StringPath roomName = createString("roomName");
 
     public final com.example.janackoverflow.user.entity.QUsers users;
+
+    public final ListPath<ChatRoomUsers, QChatRoomUsers> usersList = this.<ChatRoomUsers, QChatRoomUsers>createList("usersList", ChatRoomUsers.class, QChatRoomUsers.class, PathInits.DIRECT2);
 
     public QChatRoom(String variable) {
         this(ChatRoom.class, forVariable(variable), INITS);

@@ -3,7 +3,7 @@ import ProgressBar from "@/components/Saving/component/ProgressBar.vue";
 import {ref} from "vue";
 import router from "../../router";
 import axios from "axios";
-
+import {useAuthStore} from "../../stores/auth";
 
 let currentStep = ref(1); // 현재 단계
 const nextStep = () => { // 다음 단계 이동
@@ -39,18 +39,23 @@ const accountInfo = ref({
   },
 });
 const goOpenAccountFinish = async () => {
-  try {
-    const response = await axios.post('/savings', {
-      inputAccountRequestDTO: accountInfo.value.inputAccountRequestDTO,
-      ruleRequestDTO: accountInfo.value.ruleRequestDTO,
-    });
-    console.log(response.data);
-    await router.push({
-      path: "/open/finish",
-    });
-  } catch (error) {
-    console.log(error);
-  }
+  await axios
+      .post('/savings',
+          {
+            inputAccountRequestDTO: accountInfo.value.inputAccountRequestDTO,
+            ruleRequestDTO: accountInfo.value.ruleRequestDTO,
+          }, {
+            headers: {
+              Authorization: useAuthStore().token,
+            }
+          })
+      .then(() => {
+        router.push({
+          path: "/open/finish",
+        })
+      })
+      .catch(() => {
+      })
 }
 </script>
 
@@ -73,11 +78,11 @@ const goOpenAccountFinish = async () => {
         <div class="my-9">
           <div class="text-red-500 text-3xl font-medium">적금명</div>
           <input
-              class="my-5 w-1/2 text-gray-700 text-3xl font-light  bg-transparent border-0 border-b-4 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-red-400"
-              placeholder="적금명을 입력해주세요."
-              required type="text"
-              name="acntName"
               v-model="accountInfo.inputAccountRequestDTO.acntName"
+              class="my-5 w-1/2 text-gray-700 text-3xl font-light  bg-transparent border-0 border-b-4 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-red-400"
+              name="acntName" placeholder="적금명을 입력해주세요."
+              required
+              type="text"
           />
           <div>
           </div>
@@ -101,22 +106,22 @@ const goOpenAccountFinish = async () => {
         <div class="my-9">
           <div class="text-red-500 text-3xl font-medium ">목표명</div>
           <input
-              class="my-5 w-full text-gray-700 text-3xl font-light bg-transparent border-0 border-b-4 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-red-400"
-              placeholder="목표명을 입력해주세요."
-              required type="text"
-              name="goalName"
               v-model="accountInfo.inputAccountRequestDTO.goalName"
+              class="my-5 w-full text-gray-700 text-3xl font-light bg-transparent border-0 border-b-4 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-red-400"
+              name="goalName" placeholder="목표명을 입력해주세요."
+              required
+              type="text"
           />
           <div>
           </div>
           <div class="my-9">
             <div class="text-red-500 text-3xl font-medium ">목표 금액</div>
             <input
-                class="my-5 w-1/2 text-gray-700 text-3xl font-light bg-transparent border-0 border-b-4 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-red-400"
-                placeholder="목표 금액을 입력해주세요."
-                required type="number"
-                name="goalAmount"
                 v-model="accountInfo.inputAccountRequestDTO.goalAmount"
+                class="my-5 w-1/2 text-gray-700 text-3xl font-light bg-transparent border-0 border-b-4 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-red-400"
+                name="goalAmount" placeholder="목표 금액을 입력해주세요."
+                required
+                type="number"
             />
             <span class="text-gray-800 text-3xl font-light">원</span>
             <div>
@@ -142,10 +147,10 @@ const goOpenAccountFinish = async () => {
           <div class="w-1/4 text-gray-800 text-3xl font-medium">30분 미만</div>
           <div>
             <input
-                class="mr-3 px-6 py-3 w-1/2 text-gray-700 text-2xl font-light bg-gray-200 border-0 focus:outline-none focus:ring-0 focus:border-red-400"
-                type="text"
-                name="underThirty"
                 v-model="accountInfo.ruleRequestDTO.underThirty"
+                class="mr-3 px-6 py-3 w-1/2 text-gray-700 text-2xl font-light bg-gray-200 border-0 focus:outline-none focus:ring-0 focus:border-red-400"
+                name="underThirty"
+                type="text"
             />
             <span class="px-6 py-3 text-gray-800 text-3xl font-light">원</span>
           </div>
@@ -154,10 +159,10 @@ const goOpenAccountFinish = async () => {
           <div class="w-1/4 text-gray-800 text-3xl font-medium">1시간 미만</div>
           <div>
             <input
-                class="mr-3 px-6 py-3 w-1/2 text-gray-700 text-2xl font-light bg-gray-200 border-0 focus:outline-none focus:ring-0 focus:border-red-400"
-                type="text"
-                name="underHour"
                 v-model="accountInfo.ruleRequestDTO.underHour"
+                class="mr-3 px-6 py-3 w-1/2 text-gray-700 text-2xl font-light bg-gray-200 border-0 focus:outline-none focus:ring-0 focus:border-red-400"
+                name="underHour"
+                type="text"
             />
             <span class="px-6 py-3 text-gray-800 text-3xl font-light">원</span>
           </div>
@@ -166,10 +171,10 @@ const goOpenAccountFinish = async () => {
           <div class="w-1/4 text-gray-800 text-3xl font-medium">3시간 미만</div>
           <div>
             <input
-                class="mr-3 px-6 py-3 w-1/2 text-gray-700 text-2xl font-light bg-gray-200 border-0 focus:outline-none focus:ring-0 focus:border-red-400"
-                type="text"
-                name="underThreeHour"
                 v-model="accountInfo.ruleRequestDTO.underThreeHour"
+                class="mr-3 px-6 py-3 w-1/2 text-gray-700 text-2xl font-light bg-gray-200 border-0 focus:outline-none focus:ring-0 focus:border-red-400"
+                name="underThreeHour"
+                type="text"
             />
             <span class="px-6 py-3 text-gray-800 text-3xl font-light">원</span>
           </div>
@@ -178,10 +183,10 @@ const goOpenAccountFinish = async () => {
           <div class="w-1/4 text-gray-800 text-3xl font-medium">3시간 이상</div>
           <div>
             <input
-                class="mr-3 px-6 py-3 w-1/2 text-gray-700 text-2xl font-light bg-gray-200 border-0 focus:outline-none focus:ring-0 focus:border-red-400"
-                type="text"
-                name="overThreeHour"
                 v-model="accountInfo.ruleRequestDTO.overThreeHour"
+                class="mr-3 px-6 py-3 w-1/2 text-gray-700 text-2xl font-light bg-gray-200 border-0 focus:outline-none focus:ring-0 focus:border-red-400"
+                name="overThreeHour"
+                type="text"
             />
             <span class="px-6 py-3 text-gray-800 text-3xl font-light">원</span>
           </div>

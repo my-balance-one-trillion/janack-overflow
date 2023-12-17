@@ -8,17 +8,13 @@ import org.hibernate.annotations.ColumnDefault;
 import org.springframework.web.socket.WebSocketSession;
 
 import java.time.LocalDateTime;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 
 @Entity
 @Builder
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-@ToString
 public class ChatRoom{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -33,6 +29,13 @@ public class ChatRoom{
     @ColumnDefault(value = "4")
     private int max;//최대 유저수
 
+    private String category;
+
+    //유저 리스트
+    //id/채팅방id/유저id
+
+    @OneToMany(mappedBy = "chatRoom", cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
+    private List<ChatRoomUsers> usersList;
 
     //방주인
     @ManyToOne
