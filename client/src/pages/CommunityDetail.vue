@@ -71,12 +71,16 @@
 
         <!-- 미디엄 추천 컨테이너 -->
         <h1 class="my-2 text-2xl">연관 미디엄 게시물</h1>
+        <div class="flex justify-center" v-if="!issue.articleList"><Spinner></Spinner></div>
+        <div v-else-if="articleLength === 0" class="text-center">연관 게시물이 없습니다.</div>
         <div class="grid w-full h-full grid-cols-1 gap-4 px-2 py-4 md:h-auto md:grid-cols-3">
             <!--item 1-->
             <div v-for="article in issue.articleList" class="w-full mb-6 select-none">
                 <div class="relative pb-64">
                     <a :href="article.url" class="cursor-pointer">
-                        <img class="absolute object-cover w-full h-full border-b-4 rounded-lg shadow-md cursor-pointer border-main-grn"
+                        <img v-if="!article.imgUrl" class="absolute object-cover w-full h-full border-b-4 rounded-lg shadow-md cursor-pointer border-main-grn"
+                            src="../../public/images/errorImg.jpeg" alt="medium thumnail" />
+                        <img v-if="article.imgUrl" class="absolute object-cover w-full h-full border-b-4 rounded-lg shadow-md cursor-pointer border-main-grn"
                             :src="article.imgUrl" alt="medium thumnail" />
                     </a>
                 </div>
@@ -121,7 +125,8 @@
         <div class="my-4">
             <h1 class="text-2xl">댓글</h1>
         </div>
-        <div class="flex items-center justify-end text-center text-main-red">
+        <div v-if="!commentList === false" class="py-2 text-center text-main-red">아직 댓글이 없습니다. 댓글을 작성해주세요!</div>
+        <div v-if="!commentList" class="flex items-center justify-end text-center text-main-red">
             <fwb-pagination v-model="currentPage" :layout="'table'" :per-page="5" :total-items="totalCommentElements"
                 class="mb-2" />
         </div>
@@ -166,6 +171,7 @@ import { FwbBadge } from 'flowbite-vue';
 import { FwbCard } from 'flowbite-vue'
 import { FwbButton, FwbTextarea, FwbPagination } from 'flowbite-vue'
 import ClipboardJS from 'clipboard';
+import Spinner from "@/components/Spinner.vue";
 
 import java from 'highlight.js/lib/languages/java';
 import 'highlight.js/styles/default.css';
@@ -195,6 +201,7 @@ const currentPage = ref(1);
 const totalCommentElements = ref(0);
 const route = useRoute();
 const issue = ref({});
+const articleLength = ref(0);
 const solution = ref({});
 const commentList = ref(null);
 const isLike = ref(false);
@@ -215,6 +222,7 @@ async function getIssueDetail() {
         .then((response) => {
             console.log(response.data);
             issue.value = response.data;
+            articleLength.value = response.data.articleList.length;
             solution.value = response.data.solutionDTO;
             issueCodeBlock.value = response.data.code;
             solutionCodeBlock.value = response.data.solutionDTO.code;
@@ -379,6 +387,7 @@ onMounted(() => {
     getCommentListAPI();
     getIssueDetail();
     hljs.highlightAll();
+
 });
 
 </script>

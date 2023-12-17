@@ -1,6 +1,6 @@
 <template>
     <div class="w-full pt-20 mx-auto">
-        <div class="relative w-3/4 mx-auto p-7 sm:max-w-xl sm:mx-auto">
+        <div class="relative w-3/4 mx-auto p-7 sm:max-w-xl sm:mx-auto" ref="targetRef">
             <div class="relative z-0 p-1 overflow-hidden rounded-full">
                 <div class="relative z-50 flex bg-white rounded-full">
                     <input type="text" v-model="searchInput" id="searchInput" placeholder="검색어를 입력해 주세요"
@@ -78,6 +78,9 @@
             </div>
         </div>
         <div class="flex flex-wrap justify-center w-11/12 mx-auto space-y-10">
+            <div v-if="!solvedIssue">
+                <Spinner></Spinner>
+            </div>
             <div v-for="(issue, index) in solvedIssue"
                 class="w-10/12 max-w-5xl px-10 py-6 my-4 break-all bg-white border border-b-4 rounded-lg shadow-lg min-w-min border-main-grn">
                 <div class="flex items-center justify-between">
@@ -89,7 +92,8 @@
                 </div>
                 <div class="mt-2">
                     <div class="flex justify-between">
-                        <a class="text-2xl font-bold text-black hover:text-gray-800" :href='`/community/detail/${issue.id}`'>{{ issue.title }}</a>
+                        <a class="text-2xl font-bold text-black hover:text-gray-800"
+                            :href='`/community/detail/${issue.id}`'>{{ issue.title }}</a>
                         <div class="my-auto mr-2">
                             <i class="fa-regular fa-thumbs-up fa-xl"></i>
                             <span class="ml-2">{{ issue.likes }}</span>
@@ -110,7 +114,7 @@
                 </div>
             </div>
             <div class="flex justify-center w-full">
-                <fwb-pagination class="py-10" v-model="currentPage" :total-items=totalItems></fwb-pagination>
+                <fwb-pagination @click="handleClick" class="py-10" v-model="currentPage" :total-items=totalItems></fwb-pagination>
             </div>
         </div>
     </div>
@@ -121,6 +125,7 @@ import { FwbPagination } from 'flowbite-vue';
 import { ref, onMounted, watch } from 'vue';
 import { initFlowbite } from 'flowbite'
 import axios from "axios";
+import Spinner from "@/components/Spinner.vue";
 import { useRoute, useRouter } from 'vue-router';
 
 const searchInput = ref('');
@@ -133,7 +138,7 @@ const pageNo = ref(0);
 const selectedFilter = ref('');
 const isPage = ref(null);
 console.log("currentPage.value ::" + currentPage.value);
-
+const targetRef = ref(null);
 // filter 부분 함수로 빼야함
 watch(selectedFilter, async () => {
     currentPage.value = 1;
@@ -141,13 +146,13 @@ watch(selectedFilter, async () => {
 });
 
 watch(currentPage, async (newValue, oldValue) => {
-    console.log("newValue :" + newValue + "oldValue : "+ oldValue);
+    console.log("newValue :" + newValue + "oldValue : " + oldValue);
     currentPage.value = newValue;
     await searchIssue();
 });
 
 watch(searchInput, async () => {
-    currentPage.value = 1; 
+    currentPage.value = 1;
     await searchIssue();
 });
 
@@ -155,7 +160,7 @@ async function searchIssue() {
     if (currentPage.value != null && currentPage.value > 1) {
         await axios
             .get(
-                '/community/solvedissue/search?title=' + searchInput.value + '&category=' + selectedFilter.value + '&pageNo=' + (currentPage.value-1)
+                '/community/solvedissue/search?title=' + searchInput.value + '&category=' + selectedFilter.value + '&pageNo=' + (currentPage.value - 1)
             )
             .then((response) => {
                 console.log(response);
@@ -163,6 +168,7 @@ async function searchIssue() {
                 totalPages.value = response.data.totalPages;
                 totalItems.value = response.data.totalElements;
                 page.value = response.data.pageable;
+
             });
     } else {
         await axios
@@ -178,7 +184,9 @@ async function searchIssue() {
             });
     }
 }
-
+const handleClick = () => {
+    targetRef.value.scrollIntoView({ behavior: 'smooth' });
+};
 onMounted(() => {
 
     initFlowbite();
