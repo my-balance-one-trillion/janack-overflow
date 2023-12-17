@@ -17,6 +17,7 @@ import java.util.Optional;
 public interface IssueRepository extends JpaRepository<Issue, Long> {
     Optional<Issue> findByUsersIdAndStatus(Long userId, String status);
     Page<Issue> findAllByUsers_idOrderByCreatedAtDesc(Long id, Pageable pageble);
+    Page<Issue> findByPublicStatusAndStatusOrderByCreatedAtDesc(Boolean publicStatus, String status, Pageable pageable);
     List<Issue> findByUsersIdAndCreatedAtAfterOrderByCreatedAtDesc(Long userId, LocalDateTime aWeekAgo);
     Long countByUsersIdAndCreatedAtAfter(Long userId, LocalDateTime createAt);
     List<Issue> findTop10ByPublicStatusOrderByCreatedAtDesc(boolean publicStatus);

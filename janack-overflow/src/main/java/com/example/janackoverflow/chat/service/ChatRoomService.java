@@ -94,19 +94,23 @@ public class ChatRoomService {
     //사람 입장
     @Transactional
     public void enterChatRoom(Long chatRoomId, Long userId){
+
         ChatRoom chatRoom = chatRoomRepository.findById(chatRoomId)
                 .orElseThrow(()-> new IllegalArgumentException("없음"));
         Users users = usersRepository.findById(userId)
                 .orElseThrow(() -> new IllegalArgumentException("not found:"+userId));
 
 
-        if(chatRoomUsersRepository.findByChatRoomAndUsers(chatRoom, users).isPresent()){
-            System.out.println("이미 있는 유저임");
+
+        if( chatRoomUsersRepository.findByChatRoomAndUsers(chatRoom, users).isPresent()){
+            System.out.println("이미 있는 유저거나 다참");
+
         } else {
             chatRoomUsersRepository.save(ChatRoomUsers.builder()
                     .chatRoom(chatRoom)
                     .users(users)
                     .build());
+
         }
     }
 
@@ -120,6 +124,12 @@ public class ChatRoomService {
                 .orElseThrow(() -> new IllegalArgumentException("x"));
         System.out.println("퇴장:"+chatRoomUsers.getId());
         chatRoomUsersRepository.delete(chatRoomUsers);
+    }
+    //최대 인원수 체크
+    public boolean isMax(Long chatRoomId){
+        ChatRoom chatRoom = chatRoomRepository.findById(chatRoomId)
+                .orElseThrow(()-> new IllegalArgumentException("없음"));
+        return chatRoom.getUsersList().size()>=chatRoom.getMax();
     }
 
 }

@@ -19,6 +19,7 @@ public class NowAccountResponseDTO {
     private int acntAmount;
     private long savingCnt;
     private int dayCnt;
+    private String status;
     public static NowAccountResponseDTO toDto(InputAccount inputAccount, long savingCnt, int dayCnt){
         return NowAccountResponseDTO.builder()
                 .acntNum(inputAccount.getAcntNum())
@@ -28,6 +29,7 @@ public class NowAccountResponseDTO {
                 .savingCnt(savingCnt)
                 .dayCnt(dayCnt)
                 .acntAmount(inputAccount.getAcntAmount())
+                .status(inputAccount.getStatus())
                 .build();
 
 

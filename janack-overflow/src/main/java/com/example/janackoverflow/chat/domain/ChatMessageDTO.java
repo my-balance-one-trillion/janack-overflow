@@ -51,7 +51,7 @@ public class ChatMessageDTO {
         private String roomId;
         private String content;
         private CommunityUsersDTO usersDTO;
-        @JsonFormat(pattern = "hh:mm")
+        @JsonFormat(pattern = "HH:mm")
         private LocalDateTime createdAt;
 
         public static ChatMessageDTO.ResponseDTO fromEntity(ChatMessage chatMessage){

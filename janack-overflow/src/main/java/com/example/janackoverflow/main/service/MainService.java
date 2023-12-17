@@ -48,6 +48,18 @@ public class MainService {
 
 
     }
+    public NowAccountResponseDTO readRecentAccount(Long userId){
+        Users users = usersRepository.findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("not found :"+userId));
+
+
+        InputAccount inputAccount = inputAccountRepository.findTop1ByUsersIdAndStatusOrderByCreatedAtDesc(userId, "03")
+                .orElseThrow(() -> new IllegalArgumentException("not found"));
+        Long savingCnt = issueRepository.countByUsersIdAndCreatedAtAfter(1L, inputAccount.getCreatedAt());
+        int dayCnt = LocalDateTime.now().getDayOfYear()-inputAccount.getCreatedAt().getDayOfYear()+1;
+        return NowAccountResponseDTO.toDto(inputAccount, savingCnt, dayCnt);
+
+    }
 //    최근 일주일 이슈
     public List<IssueResponseDTO> readWeeklyIssues(Long userId){
         Users users = usersRepository.findById(userId)
