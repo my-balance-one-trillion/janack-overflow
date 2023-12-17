@@ -70,7 +70,7 @@ public class CommunityService {
 
         pageable = PageRequest.of(pageNo, 10, Sort.by(Sort.Direction.DESC, Objects.requireNonNullElse(order, "id")));
         // 페이져블 객체와 errorId로 모든 comment를 들고온다.
-        Page<Issue> issueList = issueRepository.findAll(pageable);
+        Page<Issue> issueList = issueRepository.findByPublicStatusAndStatusOrderByCreatedAtDesc(true, "03", pageable);
         // 댓글DtoList
         List<IssueDTO.ResponseDTO> issueResponseDtoList = issueList.stream().map(issue -> issue.toDto(likesService.getIssueLikes(issue.getId()), usersRepository.findById(issue.getUsers().getId()).get().toIssueDto())).toList();
 
