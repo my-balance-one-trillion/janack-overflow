@@ -29,9 +29,13 @@ module.exports = {
             }
         },
     },
-      plugins: [
-    require("flowbite/plugin")({
-      charts: true,
-    })
-  ],
+    plugins: [
+        require("flowbite/plugin")({
+            charts: true,
+        })
+    ],
+    env: {
+        node: true,
+        'vue/setup-compiler-macros': true,
+    },
 };

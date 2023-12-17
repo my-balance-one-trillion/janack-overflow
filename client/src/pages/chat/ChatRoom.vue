@@ -18,7 +18,7 @@
     <div
       class="flex flex-col flex-auto flex-shrink-0 rounded-2xl justify-end max-h-[800px] min-h-[600px] bg-gray-100 p-4"
     >
-      <div class="flex flex-col h-full overflow-x-auto mb-4">
+      <div class="flex flex-col h-full mb-4 overflow-x-auto">
         <div class="flex flex-col h-full overflow-y-scroll" ref="chatDiv">
           <div class="grid grid-cols-12 gap-y-2">
             <template
@@ -31,9 +31,9 @@
                 v-if="item.type == 'ENTER' || item.type == 'QUIT'"
                 class="col-start-1 col-end-13 p-3 rounded-lg flex justify-center items-center"
               >
-                <div class="flex items-center justify-start flex-row-reverse">
+                <div class="flex flex-row-reverse items-center justify-start">
                   <div
-                    class="relative mr-3 text-sm bg-indigo-100 py-2 px-4 shadow rounded-xl"
+                    class="relative px-4 py-2 mr-3 text-sm bg-indigo-100 shadow rounded-xl"
                   >
                     <div>
                       {{ item.usersDTO.nickname + "님이 " + item.content }}
@@ -46,9 +46,9 @@
                 v-else-if="item.usersDTO.id == userInfo.id"
                 class="col-start-6 col-end-13 p-3 rounded-lg"
               >
-                <div class="flex items-center justify-start flex-row-reverse">
+                <div class="flex flex-row-reverse items-center justify-start">
                   <div
-                    class="relative mr-3 text-sm bg-indigo-100 py-2 px-4 shadow rounded-xl"
+                    class="relative px-4 py-2 mr-3 text-sm bg-indigo-100 shadow rounded-xl"
                   >
                     <div>
                       {{ item.content }}
@@ -66,12 +66,12 @@
                 </div>
                 <div class="flex flex-row items-center">
                   <img
-                    class="h-10 w-10 rounded-full"
+                    class="w-10 h-10 rounded-full"
                     :src="'/images/' + item.usersDTO.profileImage"
                   />
 
                   <div
-                    class="relative ml-3 text-sm bg-white py-2 px-4 shadow rounded-xl"
+                    class="relative px-4 py-2 ml-3 text-sm bg-white shadow rounded-xl"
                   >
                     {{ item.content }}
                   </div>
@@ -85,18 +85,18 @@
         </div>
       </div>
       <div
-        class="flex flex-row items-center h-16 rounded-xl bg-white w-full px-4"
+        class="flex flex-row items-center w-full h-16 px-4 bg-white rounded-xl"
       >
         <div class="flex-grow">
           <div class="relative w-full">
             <input
-              class="flex w-full border rounded-xl focus:outline-none focus:border-indigo-300 pl-4 h-10"
+              class="flex w-full h-10 pl-4 border rounded-xl focus:outline-none focus:border-indigo-300"
               type="text"
               v-model="messageReq.content"
               @keyup.enter="sendMessage"
             />
             <button
-              class="absolute flex items-center justify-center h-full w-12 right-0 top-0 text-gray-400 hover:text-gray-600"
+              class="absolute top-0 right-0 flex items-center justify-center w-12 h-full text-gray-400 hover:text-gray-600"
             >
               <!-- <svg
                 class="w-6 h-6"
@@ -117,13 +117,13 @@
         </div>
         <div class="ml-2">
           <button
-            class="flex items-center justify-center bg-indigo-500 hover:bg-indigo-600 rounded-xl text-white px-4 py-1 flex-shrink-0"
+            class="flex items-center justify-center flex-shrink-0 px-4 py-1 text-white bg-indigo-500 hover:bg-indigo-600 rounded-xl"
             @click="sendMessage"
           >
             <span>Send</span>
             <span class="ml-2">
               <svg
-                class="w-4 h-4 transform rotate-45 -mt-px"
+                class="w-4 h-4 -mt-px transform rotate-45"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
