@@ -6,7 +6,7 @@
       -skew-y-6 sm:skew-y-0 sm:-rotate-6 sm:rounded-3xl">
       </div>
       
-      <div class="relative px-4 py-10 bg-gray-100 shadow-lg sm:rounded-3xl sm:p-20">
+      <div class="relative px-4 py-10 bg-gray-50 shadow-lg sm:rounded-3xl sm:p-20">
         <div class="max-w-md mx-auto">
           <div>
             <h1 class="text-2xl text-center font-semibold">Sign Up</h1>
@@ -18,7 +18,7 @@
                 <form>
                 <div class="relative">
                   <input autocomplete="off" id="email" name="email" type="text" v-model="state.input.email"
-                  class="focus:ouline-none focus:ring-0 peer placeholder-transparent h-10 w-full border-t-0 border-l-0 border-r-0 border-b-2
+                  class="focus:ouline-none focus:ring-0 peer placeholder-transparent bg-gray-50 h-10 w-full border-t-0 border-l-0 border-r-0 border-b-2
                   border-red-700 text-gray-900 
                   focus:outline-none focus:borer-rose-600" placeholder="Email" required/>
                   <label for="email" 
@@ -31,7 +31,7 @@
                 
                 <div class="relative">
                   <input autocomplete="off" id="password" name="password" type="password" v-model="state.input.password"
-                  class="focus:ouline-none focus:ring-0 peer placeholder-transparent h-10 w-full border-t-0 border-l-0 border-r-0 border-b-2 
+                  class="focus:ouline-none focus:ring-0 peer placeholder-transparent bg-gray-50 h-10 w-full border-t-0 border-l-0 border-r-0 border-b-2 
                   border-red-700 text-gray-900 focus:outline-none focus:borer-rose-600" placeholder="Password" required/>
                   <label for="password" 
                   class="absolute left-0 -top-3.5 text-gray-600 text-sm peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-440 peer-placeholder-shown:top-2 transition-all peer-focus:-top-3.5 peer-focus:text-gray-600 peer-focus:text-sm">패스워드</label>
@@ -45,7 +45,7 @@
                   <div class="flex justify-between gap-3">
                     <div class="relative">
                       <input autocomplete="off" id="name" name="name" type="text" v-model="state.input.name"
-                      class="focus:ouline-none focus:ring-0 peer placeholder-transparent h-10 w-full border-t-0 border-l-0 border-r-0 border-b-2 
+                      class="focus:ouline-none focus:ring-0 peer placeholder-transparent bg-gray-50 h-10 w-full border-t-0 border-l-0 border-r-0 border-b-2 
                       border-red-700 text-gray-900 focus:outline-none focus:borer-rose-600" placeholder="Name" required/>
                       <label for="name" 
                       class="absolute left-0 -top-3.5 text-gray-600 text-sm peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-440 peer-placeholder-shown:top-2 transition-all peer-focus:-top-3.5 peer-focus:text-gray-600 peer-focus:text-sm">이름</label>
@@ -53,7 +53,7 @@
 
                     <div class="relative">
                       <input autocomplete="off" id="nickName" name="nickName" type="text" v-model="state.input.nickname"
-                      class="focus:ouline-none focus:ring-0 peer placeholder-transparent h-10 w-full border-t-0 border-l-0 border-r-0 border-b-2 
+                      class="focus:ouline-none focus:ring-0 peer placeholder-transparent bg-gray-50 h-10 w-full border-t-0 border-l-0 border-r-0 border-b-2 
                       border-red-700 text-gray-900 focus:outline-none focus:borer-rose-600" placeholder="Nick Name" required/>
                       <label for="nickName" 
                       class="absolute left-0 -top-3.5 text-gray-600 text-sm peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-440 peer-placeholder-shown:top-2 transition-all peer-focus:-top-3.5 peer-focus:text-gray-600 peer-focus:text-sm">닉네임</label>
@@ -62,32 +62,30 @@
 
                   <br>
 
+                  
                   <div class="flex justify-between gap-3">
                     <div class="relative">
                       <input autocomplete="off" id="digit" name="digit" type="text" v-model="state.input.digit"
-                      class="focus:ouline-none focus:ring-0 peer placeholder-transparent h-10 w-full border-t-0 border-l-0 border-r-0 border-b-2 
+                      class="focus:ouline-none focus:ring-0 peer placeholder-transparent bg-gray-50 h-10 w-full border-t-0 border-l-0 border-r-0 border-b-2 
                       border-red-700 text-gray-900 focus:outline-none focus:borer-rose-600" placeholder="Digit" required/>
                       <label for="digit" 
                       class="absolute left-0 -top-3.5 text-gray-600 text-sm peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-440 peer-placeholder-shown:top-2 transition-all peer-focus:-top-3.5 peer-focus:text-gray-600 peer-focus:text-sm">전화번호</label>
                     </div>
 
+
                     <div class="relative">
-                      <DatePicker class="w-10/12 ml-6"
+                      <DatePicker
+                      class="w-full focus:ouline-none focus:borer-rose-600 focus:ring-0 placeholder-transparent h-10 bg-gray-50 border-t-0 border-l-0 border-r-0 border-b-2 border-red-700"
                         v-model="datePic"
-                        language="ko"
-                        append-icon="mdi-calendar"
+                        :locale="locale"
                         :is-inline="true"
                       />
-                    </div>
 
-                    <!-- <div class="relative">
-                      <input autocomplete="off" id="birth" name="birth" type="text" v-model="state.input.birth"
-                      class="focus:ouline-none focus:ring-0 peer placeholder-transparent h-10 w-full border-t-0 border-l-0 border-r-0 border-b-2 
-                      border-red-700 text-gray-900 focus:outline-none focus:borer-rose-600" placeholder="Birth" required/>
                       <label for="birth" 
                       class="absolute left-0 -top-3.5 text-gray-600 text-sm peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-440 peer-placeholder-shown:top-2 transition-all peer-focus:-top-3.5 peer-focus:text-gray-600 peer-focus:text-sm">생년월일</label>
-                    </div> -->
+                    </div>
                   </div>
+                  
                 </div>
 
                 <br>
@@ -98,7 +96,7 @@
                   <div class="flex justify-between gap-3">
                     <div class="relative">
                       <input autocomplete="off" id="bankName" name="bankName" type="text" v-model="state.input.bankName"
-                      class="focus:ouline-none focus:ring-0 peer placeholder-transparent h-10 w-full border-t-0 border-l-0 border-r-0 border-b-2 
+                      class="focus:ouline-none focus:ring-0 peer placeholder-transparent bg-gray-50 h-10 w-full border-t-0 border-l-0 border-r-0 border-b-2 
                       border-red-700 text-gray-900 focus:outline-none focus:borer-rose-600" placeholder="bankName" required/>
                       <label for="bankName" 
                       class="absolute left-0 -top-3.5 text-gray-600 text-sm peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-440 peer-placeholder-shown:top-2 transition-all peer-focus:-top-3.5 peer-focus:text-gray-600 peer-focus:text-sm">은행명</label>
@@ -106,7 +104,7 @@
 
                     <div class="relative">
                       <input autocomplete="off" id="holder" name="holder" type="text" v-model="state.input.holder"
-                      class="focus:ouline-none focus:ring-0 peer placeholder-transparent h-10 w-full border-t-0 border-l-0 border-r-0 border-b-2 
+                      class="focus:ouline-none focus:ring-0 peer placeholder-transparent bg-gray-50 h-10 w-full border-t-0 border-l-0 border-r-0 border-b-2 
                       border-red-700 text-gray-900 focus:outline-none focus:borer-rose-600" placeholder="holder" required/>
                       <label for="holder" 
                       class="absolute left-0 -top-3.5 text-gray-600 text-sm peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-440 peer-placeholder-shown:top-2 transition-all peer-focus:-top-3.5 peer-focus:text-gray-600 peer-focus:text-sm">예금주</label>
@@ -117,7 +115,7 @@
 
                   <div class="relative">
                     <input autocomplete="off" id="outputAcntNum" name="outputAcntNum" type="text" v-model="state.input.outputAcntNum"
-                    class="focus:ouline-none focus:ring-0 peer placeholder-transparent h-10 w-full border-t-0 border-l-0 border-r-0 border-b-2 
+                    class="focus:ouline-none focus:ring-0 peer placeholder-transparent bg-gray-50 h-10 w-full border-t-0 border-l-0 border-r-0 border-b-2 
                     border-red-700 text-gray-900 focus:outline-none focus:borer-rose-600" placeholder="outputAcntNum" required/>
                     <label for="outputAcntNum" 
                     class="absolute left-0 -top-3.5 text-gray-600 text-sm peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-440 peer-placeholder-shown:top-2 transition-all peer-focus:-top-3.5 peer-focus:text-gray-600 peer-focus:text-sm">계좌번호</label>
@@ -156,9 +154,8 @@
 
 <script>
 import { ref, reactive } from "vue";
-import DatePicker from 'vue3-datepicker';
 import {ko} from 'date-fns/locale';
-import dayjs from 'dayjs';
+import DatePicker from 'vue3-datepicker';
 import axios from "axios";
 import { useRouter } from "vue-router";
 

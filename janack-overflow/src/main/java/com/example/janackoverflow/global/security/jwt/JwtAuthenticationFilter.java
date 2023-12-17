@@ -116,6 +116,18 @@ public class JwtAuthenticationFilter extends AbstractAuthenticationProcessingFil
 		System.out.println("jwtToken : " + jwtToken);
 
 		System.out.println("login complete");
+
+		System.out.println(request.getRequestURL());
+		System.out.println(request.getRequestURI());
+
+		// "/" 로 리다이렉트
+		String scheme = request.getScheme(); //http 또는 https
+		String serverName = request.getServerName();
+		int serverPort = request.getServerPort();
+
+		response.sendRedirect(scheme + "://" + serverName + ":" + serverPort + "/");
+
+
 	}
 	
 }
