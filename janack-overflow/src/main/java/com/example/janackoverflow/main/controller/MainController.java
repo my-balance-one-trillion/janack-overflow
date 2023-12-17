@@ -38,17 +38,28 @@ public class MainController {
     //로그인 시 메인페이지
     @GetMapping("/login")
     private ResponseEntity<?> getLoggedInMainPage(@AuthenticationPrincipal NowUserDetails nowUserDetails){
-        log.info("로그인 시 메인페이지");
         Long userId = nowUserDetails.getUser().getId();
-        NowAccountResponseDTO nowAccountResponseDTO = mainService.readNowAccount(userId);
-        System.out.println("now:"+nowAccountResponseDTO);
-        List<IssueResponseDTO> issueResponseDTOList = mainService.readWeeklyIssues(userId);
+        try{
+            NowAccountResponseDTO nowAccountResponseDTO = mainService.readNowAccount(userId);
+            System.out.println("now:"+nowAccountResponseDTO);
+            List<IssueResponseDTO> issueResponseDTOList = mainService.readWeeklyIssues(userId);
+            Map<String, Object> responseMap = new HashMap<>();
+            responseMap.put("nowAccount", nowAccountResponseDTO);
+            responseMap.put("weeklyIssues", issueResponseDTOList);
+            return ResponseEntity.ok(responseMap);
+        } catch (IllegalArgumentException e1){
+            try{
+                NowAccountResponseDTO recentAccountDTO = mainService.readRecentAccount(userId);
+                List<IssueResponseDTO> issueResponseDTOList = mainService.readWeeklyIssues(userId);
+                Map<String, Object> responseMap = new HashMap<>();
+                responseMap.put("nowAccount", recentAccountDTO);
+                responseMap.put("weeklyIssues", issueResponseDTOList);
+                return ResponseEntity.ok(responseMap);
+            } catch (IllegalArgumentException e2){
+                return ResponseEntity.noContent().build();
+            }
 
-        Map<String, Object> responseMap = new HashMap<>();
-        responseMap.put("nowAccount", nowAccountResponseDTO);
-        responseMap.put("weeklyIssues", issueResponseDTOList);
-
-        return ResponseEntity.ok(responseMap);
+        }
     }
 
 }
