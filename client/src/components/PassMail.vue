@@ -17,8 +17,7 @@
                 <div class="relative">
                   <input autocomplete="off" id="email" name="email" type="text"
                     class="peer placeholder-transparent bg-gray-50 h-10 w-full border-t-0 border-l-0 border-r-0 border-b-2 border-red-700 text-gray-900 focus:outline-none focus:borer-rose-600"
-                    
-                    placeholder="Email" />
+                    v-model="state.input.email" placeholder="Email" />
                   <label for="email"
                     class="absolute left-0 -top-3.5 text-gray-600 text-sm peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-440 peer-placeholder-shown:top-2 transition-all peer-focus:-top-3.5 peer-focus:text-gray-600 peer-focus:text-sm">Email</label>
                 </div>
@@ -43,6 +42,38 @@
   </div>
 </template>
 
-<script>
+<script setup>
+import { reactive } from "vue";
+import axios from "axios";
+import { useRouter } from "vue-router";
 
+axios.defaults.withCredentials = true;
+
+const router = useRouter();
+const state = reactive({
+  input: {
+    email: ""
+  },
+});
+
+const login = async () => {
+  try {
+    const response = await axios.post(
+      "http://localhost:8081/mailPass",
+      state.input,
+      {
+        headers: {
+          "Content-Type": "application/json",
+          "X-Requested-With": "XMLHttpRequest",
+        },
+      }
+    );
+
+    window.alert("메일을 발송했습니다");
+    router.push("/login");
+  } catch (error) {
+    console.log("발송 실패", error);
+    window.alert("메일 발송을 실패하였습니다");
+  }
+};
 </script>
