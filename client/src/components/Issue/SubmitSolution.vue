@@ -10,7 +10,7 @@ const solution = ref({
   content: '',
   publicStatus: true
 });
-const emit = defineEmits(['step-changed']);
+const emit = defineEmits(['show-modal']);
 
 async function submitSolution() {
   await axios
@@ -21,11 +21,10 @@ async function submitSolution() {
             }
           }
       )
-      .then(() => {
-        emit('show-modal', true);
+      .then((response) => {
+        emit('show-modal', true, response.data.id);
       })
       .catch((error) => {
-        console.log(error);
       })
 }
 </script>

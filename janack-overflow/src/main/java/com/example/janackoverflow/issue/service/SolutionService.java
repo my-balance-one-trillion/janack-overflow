@@ -14,15 +14,15 @@ import com.example.janackoverflow.saving.entity.InputAccount;
 import com.example.janackoverflow.saving.entity.Rule;
 import com.example.janackoverflow.saving.repository.InputAccountRepository;
 import com.example.janackoverflow.saving.repository.RuleRepository;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
-@Slf4j
 @Service
 public class SolutionService {
 
@@ -47,7 +47,6 @@ public class SolutionService {
         Duration duration = getDuration(issue);  // 시간
         int amount = getAmount(duration, issue);  // 금액
         issue.updateAmount(amount);  // 금액 변경
-        log.info("publicStatus: "+solutionRequestDTO.getPublicStatus());
         issue.updatePublicStatus(solutionRequestDTO.getPublicStatus());  // 공개 여부
         issue.updateStatus("03");  // 상태 (해결: 03)
 
@@ -98,9 +97,28 @@ public class SolutionService {
 
     // 최근 해결 조회
     @Transactional(readOnly = true)
-    public SolutionResponseDTO getRecentSolution(IssueResponseDTO issue) {
-        Solution solution = solutionRepository.findByIssueId(issue.getId())
+    public SolutionResponseDTO getRecentSolution(Long solutionId) {
+        Solution solution = solutionRepository.findById(solutionId)
                 .orElseThrow(() -> new BusinessLogicException(ExceptionCode.ERROR_NOT_FOUND));
         return SolutionResponseDTO.toDto(solution);
+    }
+
+    // 년도 월에 해당하는 해결 조회
+    @Transactional(readOnly = true)
+    public List<SolutionResponseDTO> getMonthlySolutions(List<IssueResponseDTO> monthlyIssues, int year, int month) {
+        List<SolutionResponseDTO> monthlySolutions = new ArrayList<>();
+
+        for (IssueResponseDTO issue : monthlyIssues) {
+            List<Solution> solutions = solutionRepository.findAllByIssueIdOrderByCreatedAtDesc(issue.getId());
+
+            for (Solution solution : solutions) {
+                LocalDateTime createdAt = solution.getCreatedAt();
+                if (createdAt.getYear() == year && createdAt.getMonthValue() == month) {
+                    monthlySolutions.add(SolutionResponseDTO.toDto(solution));
+                }
+            }
+        }
+
+        return monthlySolutions;
     }
 }
