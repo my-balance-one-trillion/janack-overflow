@@ -1,9 +1,9 @@
 <template>
 	<footer class="flex items-center justify-between bg-gray-100 p-9">
 		<div class="font-light text-gray-700">
-			<p>개인정보처리방침 | 이용약관</p>
-			<p>(주) 내잔액1조 | 대표자: 전승현 | 사업자번호: 123-45-678910</p>
-			<p>주소 : 서울시 송파구 중대로 135, IT벤처타워 서관 12층</p>
+			<p class="text-main-red"><a href="">프로젝트 영상</a></p>
+			<p class="text-lg">팀명 : "내잔액1조" | 팀장: <span><a href="">전승현</a></span> | 팀원: <span><a href="https://github.com/sonsbe">손승범, </a></span><span><a href="https://github.com/gossong">송지오, </a></span><span><a href="https://github.com/vaem6877">윤상혁, </a></span><span><a href="https://github.com/undercover0072">이해성 </a></span></p>
+			<p class="text-main-grn"><a href="https://github.com/my-balance-one-trillion/janack-overflow">팀 깃헙주소 click!</a></p>
 			<p>janack overflow Co., Ltd. ALL RIGHTS RESERVED</p>
 		</div>
 		<img src="/images/logo.svg" class="w-40" alt="">
@@ -11,4 +11,5 @@
 </template>
 <script setup>
 </script>
-<style></style>
+<style>
+</style>
