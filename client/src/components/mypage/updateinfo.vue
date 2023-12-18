@@ -242,8 +242,8 @@ async function updateInfo() {
       confirmOk.value = false;
     }
   } catch (error) {
-    alert(response.status, "에러");
-    console.error("에러:", error.message);
+    console.error("에러:", error);
+    alert(error.response.data, "에러");
   }
 }
 </script>

@@ -36,10 +36,16 @@ public class MypageController {
     @PutMapping("/mypage/myinfo")
     public ResponseEntity<String> updateUser(@RequestBody UsersRequestDTO usersRequestDTO,
                                      @AuthenticationPrincipal NowUserDetails nowUserDetails){
-        Long usersId = nowUserDetails.getId();
-        String updateStatus = mypageService.updateUser(usersRequestDTO, usersId);
-        System.out.println(updateStatus);
-        return ResponseEntity.accepted().body(updateStatus);
+
+        if (usersService.isDuplicatedNick(usersRequestDTO)) { //닉네임 중복확인
+            return new ResponseEntity<>("중복되는 닉네임입니다", HttpStatus.FORBIDDEN);
+        } else {
+            Long usersId = nowUserDetails.getId();
+            String updateStatus = mypageService.updateUser(usersRequestDTO, usersId);
+            System.out.println(updateStatus);
+            return ResponseEntity.accepted().body(updateStatus);
+        }
+
     }
 
     //    마이페이지에서 프로필 이미지 변경

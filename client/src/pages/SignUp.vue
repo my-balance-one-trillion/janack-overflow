@@ -190,23 +190,23 @@ export default {
     })
 
     const signup = async () => {      
-      const response = await axios.post('http://localhost:8081/signup', state.input, 
+      const res = await axios.post('http://localhost:8081/signup', state.input, 
         {
           headers : {
           "Content-Type": "application/json",
           }
         }
-        ).then((response)=>{
-          console.log(response);
-          console.log(response.headers);
+        ).then((res)=>{
+          console.log(res);
+          console.log(res.headers);
           
-          window.alert(response.data);
+          window.alert(res.data);
           window.alert(`회원가입이 수행되었습니다`);
           router.push('/login')
 
-        }).catch( (response) => {
-          console.log("put error", response.response.data);
-            window.alert(response.response.data);
+        }).catch( (error) => {
+          console.log("put error", error.response.data);
+            window.alert(error.response.data);
         });
     }
 

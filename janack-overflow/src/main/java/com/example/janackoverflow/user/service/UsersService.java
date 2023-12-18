@@ -21,16 +21,36 @@ public class UsersService {
         this.usersRepository = usersRepository;
     }
 
-    public boolean isDuplicatedNick(UsersRequestDTO usersRequestDTO){ //닉네임 중복 확인
+    public boolean isDuplicatedNick(UsersRequestDTO usersRequestDTO) { //닉네임 중복 확인
         Users users = usersRequestDTO.toEntity();
-        Optional<Users> optionalUsers = usersRepository.findByNickname(users.getNickname());
-        return optionalUsers.isPresent() && !(optionalUsers.get().getId() == users.getId());
+
+        Optional<Users> optionalUsers = null;
+
+        try {
+            optionalUsers = usersRepository.findByNickname(users.getNickname()); //조회했는데, 있으면
+
+            return !optionalUsers.get().getId().equals(users.getId()) && true; //현재 사용자가 입력한 것과 일치해도 검사 스킵
+        } catch (Exception e) {
+            //입력한 걸 조회했는데, 결과가 없으면
+            return false; //현재 사용자가 입력한 것과 일치해도 검사 스킵
+        }
+
     }
 
     public boolean isDuplicatedEmail(UsersRequestDTO usersRequestDTO){ //이메일 중복 확인
         Users users = usersRequestDTO.toEntity();
-        Optional<Users> optionalUsers = usersRepository.findByEmail(users.getEmail());
-        return optionalUsers.isPresent() && !(optionalUsers.get().getId() == users.getId());
+
+        Optional<Users> optionalUsers = null;
+
+        try {
+            optionalUsers = usersRepository.findByEmail(users.getEmail()); //조회했는데, 있으면
+
+            return !optionalUsers.get().getId().equals(users.getId()) && true; //현재 사용자가 입력한 것과 일치해도 검사 스킵
+        } catch (Exception e) {
+            //입력한 걸 조회했는데, 결과가 없으면
+            return false; //현재 사용자가 입력한 것과 일치해도 검사 스킵
+        }
+
     }
 
     public Users createUser(UsersRequestDTO usersRequestDTO){ //회원 생성
