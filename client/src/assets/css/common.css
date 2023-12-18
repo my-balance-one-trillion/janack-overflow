@@ -70,7 +70,7 @@ body {
 }
 
 .nav ul {
-    padding: 0 0 0 22px;
+    padding: 0 10px 0 22px;
 }
 
 .nav li {
@@ -99,7 +99,7 @@ body {
     z-index: 1;
     width: 0;
     height: 0;
-    margin: 30px 0px 20px 20px;
+    margin: 30px 30px 20px 20px;
     background: radial-gradient(circle, #BF1131, #BF1131);
     border-radius: 50%;
     transition: 0.3s ease;

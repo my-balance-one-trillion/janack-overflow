@@ -63,14 +63,13 @@ async function getIssue() {
         }
       })
       .then((response) => {
-        console.log(response.data)
         issue.value = response.data.issue;
         keywords.value = response.data.issue.keyword.split(",");
         createdAt.value = response.data.issue.createdAt;
         stackoverflow.value = response.data.stackOverflowResults;
+        console.log(stackoverflow.value);
       })
       .catch((error) => {
-        console.log(error);
       })
 }
 
@@ -108,7 +107,7 @@ onMounted(async () => {
 <template>
   <div class="space-y-14">
     <!--  stackoverflow  -->
-    <div class="mt-14" v-if="stackoverflow">
+    <div class="mt-14" v-if="stackoverflow > 0">
       <div class="">
         <div class="text-2xl font-bold">이런 방법은 어떠세요?</div>
         <div class="text-gray-500">키워드와 관련된 <span class="text-orange-500">StackOverflow</span> 질문과 답변이 여기에 표시됩니다.</div>

@@ -1,15 +1,16 @@
 <script setup>
 import axios from "axios";
 import {useAuthStore} from "../../stores/auth";
-import {onMounted, ref} from "vue";
+import {defineProps, onMounted, ref} from "vue";
 import dayjs from "dayjs";
 const issue = ref({})
 const solution = ref({})
 const diffFormatted = ref();
+const props = defineProps(['solutionId']);
 
 async function getSolution() {
   await axios
-      .get('/issues/solution', {
+      .get(`/issues/solution/${props.solutionId}`, {
         headers: {
           Authorization: useAuthStore().token,
         }
@@ -18,14 +19,10 @@ async function getSolution() {
         const data = response.data;
         issue.value = data.issue;
         solution.value = data.solution;
-        console.log(data.issue.createdAt);
-        console.log(data.solution.createdAt);
         const diffMinutes = dayjs(data.solution.createdAt).diff(data.issue.createdAt, 'minute', true);
         diffFormatted.value = dayjs().startOf('day').add(diffMinutes, 'minute').format('HH:mm');
-        console.log(diffFormatted);
       })
       .catch((error) => {
-        console.log(error);
       })
 }
 

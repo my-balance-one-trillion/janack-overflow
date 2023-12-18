@@ -43,6 +43,7 @@ public class ChatRoomDTO {
         private String roomName;
         private String category;
         private int max;
+        private Long usersId;
         private List<CommunityUsersDTO> usersList;
 
         public static ChatRoomDTO.ResponseDTO fromEntity(ChatRoom chatRoom) {
@@ -52,6 +53,7 @@ public class ChatRoomDTO {
                     .roomName(chatRoom.getRoomName())
                     .category(chatRoom.getCategory())
                     .max(chatRoom.getMax())
+                    .usersId(chatRoom.getUsers().getId())
                     .usersList(chatRoom.getUsersList().
                             stream().map(ChatRoomUsers::toCommunityUsersDTO)
                             .toList())
