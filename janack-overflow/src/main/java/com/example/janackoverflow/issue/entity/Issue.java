@@ -92,7 +92,7 @@ public class Issue extends AuditingFields {
         this.publicStatus = newPublicStatus;
     }
 
-    public IssueDTO.ResponseDTO toDetailDto(long likes, CommunityUsersDTO communityUsersDTO, List<CommentDTO.ResponseDto> commentResponseDtoList, List<MediumArticle> articleList, SolutionDTO solutionDTO) {
+    public IssueDTO.ResponseDTO toDetailDto(long likes, CommunityUsersDTO communityUsersDTO, List<CommentDTO.ResponseDto> commentResponseDtoList, SolutionDTO solutionDTO) {
         return IssueDTO.ResponseDTO.builder()
                 .id(id)
                 .communityUsersDTO(communityUsersDTO)
@@ -108,7 +108,7 @@ public class Issue extends AuditingFields {
                 .views(views)
                 .createdAt(getCreatedAt())
                 .solutionDTO(solutionDTO)
-                .articleList(articleList)
+//                .articleList(articleList)
                 .build();
     }
 

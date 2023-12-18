@@ -39,8 +39,8 @@
                                     @click="copyToClipboard" @mouseover="hovered = true" @mouseout="hovered = false"></i>
                             </div>
                             <pre class="w-auto" v-if="lang === 'plain'" ref="issueCodeBlock">
-                                                    <code class="flex justify-start">{{ issue.code }}</code>
-                                                </pre>
+                                                                <code class="flex justify-start">{{ issue.code }}</code>
+                                                            </pre>
                             <pre v-if="lang === 'java'"
                                 v-highlightjs><code :class="lang" ref="issueCodeBlock" :style="codeStyle">{{ code }}</code></pre>
                             <pre v-if="lang === 'javascript'"
@@ -62,11 +62,26 @@
                     <div>
                         <div class="p-3 border-0 rounded-xl bg-bg-grey">
                             <div class="flex justify-end">
+                                <Dropdown @selectLang="solutionCodehandle"></Dropdown>
                                 <i :class="['p-2', 'fa-lg', 'fa-clipboard', 'solutionCodeBlock', 'hover:cursor-pointer', hovered ? 'fa-solid' : 'fa-regular']"
                                     @click="copyToClipboard" @mouseover="hovered = true" @mouseout="hovered = false"></i>
                                 <!-- <i class=" fa-solid fa-copy"></i> -->
                             </div>
-                            <pre v-highlightjs><code :class="lang" ref="issueCodeBlock">{{ solution.code }}</code></pre>
+                            <pre class="w-auto" v-if="lang === 'plain'" ref="solutionCodeBlock">
+                                                                <code class="flex justify-start">{{ solutionCode }}</code>
+                                                            </pre>
+                            <pre v-if="lang === 'java'"
+                                v-highlightjs><code :class="lang" ref="solutionCodeBlock" :style="codeStyle">{{ solutionCode }}</code></pre>
+                            <pre v-if="lang === 'javascript'"
+                                v-highlightjs><code :class="lang" ref="solutionCodeBlock" :style="codeStyle">{{ solutionCode }}</code></pre>
+                            <pre v-if="lang === 'kotlin'"
+                                v-highlightjs><code :class="lang" ref="solutionCodeBlock" :style="codeStyle">{{ solutionCode }}</code></pre>
+                            <pre v-if="lang === 'python'"
+                                v-highlightjs><code :class="lang" ref="solutionCodeBlock" :style="codeStyle">{{ solutionCode }}</code></pre>
+                            <pre v-if="lang === 'sql'"
+                                v-highlightjs><code :class="lang" ref="solutionCodeBlock" :style="codeStyle">{{ solutionCode }}</code></pre>
+                            <pre v-if="lang === 'html'"
+                                v-highlightjs><code :class="lang" ref="solutionCodeBlock" :style="codeStyle">{{ solutionCode }}</code></pre>
                         </div>
                     </div>
                 </div>
@@ -85,13 +100,14 @@
 
         <!-- 미디엄 추천 컨테이너 -->
         <h1 class="my-2 text-2xl">연관 미디엄 게시물</h1>
-        <div class="flex justify-center" v-if="!issue.articleList">
+        <div class="flex flex-col items-center justify-center p-3" v-if="!articleList">
+            <p class="font-bold text-md">게시물을 불러오는 중입니다...</p>
             <Spinner></Spinner>
         </div>
         <div v-else-if="articleLength === 0" class="text-center">연관 게시물이 없습니다.</div>
         <div class="grid w-full h-full grid-cols-1 gap-4 px-2 py-4 md:h-auto md:grid-cols-3">
             <!--item 1-->
-            <div v-for="article in issue.articleList" class="w-full mb-6 select-none">
+            <div v-for="article in articleList" class="w-full mb-6 select-none">
                 <div class="relative pb-64">
                     <a :href="article.url" class="cursor-pointer">
                         <img v-if="!article.imgUrl"
@@ -143,7 +159,7 @@
         <div class="my-4">
             <h1 class="text-2xl">댓글</h1>
         </div>
-        <div v-if="!commentList === false" class="py-2 text-center text-main-red">아직 댓글이 없습니다. 댓글을 작성해주세요!</div>
+        <div v-if="commentListLength === 0" class="py-2 text-center text-main-red">아직 댓글이 없습니다. 댓글을 작성해주세요!</div>
         <div v-if="!commentList" class="flex items-center justify-end text-center text-main-red">
             <fwb-pagination v-model="currentPage" :layout="'table'" :per-page="5" :total-items="totalCommentElements"
                 class="mb-2" />
@@ -162,6 +178,18 @@
                             {{ comment.comment }}
                         </p>
                     </div>
+                    <template v-if="comment.nickname === userInfo.nickname">
+                        <div class="flex items-center">
+                            <button @click="deleteMyComment(comment.id)"
+                                class="inline-flex items-center px-2 py-1 ml-2 font-bold text-gray-800 bg-white border-b-2 rounded shadow-md border-x-sub-red hover:border-sub-red hover:bg-hover-red hover:text-white">
+                                <!-- <span class="mr-2">Delete</span> -->
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+                                    <path fill="currentcolor"
+                                        d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41z" />
+                                </svg>
+                            </button>
+                        </div>
+                    </template>
                 </div>
             </div>
 
@@ -180,6 +208,9 @@
             </form>
         </div>
     </div>
+    <div>
+        <Monaco></Monaco>
+    </div>
 </template>
 
 <script setup>
@@ -189,6 +220,7 @@ import { FwbButton, FwbTextarea, FwbPagination } from 'flowbite-vue'
 import ClipboardJS from 'clipboard';
 import Spinner from "@/components/Spinner.vue";
 import Dropdown from "@/components/Dropdown.vue";
+import Monaco from "@/components/Monaco.vue";
 
 import 'highlight.js/styles/default.css';
 import hljs from 'highlight.js/lib/core';
@@ -202,7 +234,6 @@ import { func } from 'prop-types';
 
 const authStore = useAuthStore()
 const { userInfo } = storeToRefs(authStore);
-const code = ref(null);
 
 const activeTab = ref(0);
 const tabs = ref([
@@ -210,11 +241,12 @@ const tabs = ref([
     "해결",
 ]);
 
+const code = ref(null);
+const solutionCode = ref(null);
 const issueCodeBlock = ref(null);
 const solutionCodeBlock = ref(null);
 const hovered = ref(false);
 const likeHovered = ref(false);
-// TODO keywords split 해서 저장
 const keywords = ref([]);
 const currentPage = ref(1);
 const totalCommentElements = ref(0);
@@ -223,12 +255,21 @@ const issue = ref({});
 const articleLength = ref(0);
 const solution = ref({});
 const commentList = ref(null);
+const commentListLength = ref(0);
 const isLike = ref(false);
 const likeCnt = ref(0);
 const message = ref(null);
 const lang = ref(null);
 const codeStyle = ref(null);
-console.log(lang);
+const articleList = ref(null);
+
+console.log(userInfo.value.id);
+
+watch(commentListLength, async (newValue, oldValue) => {
+    console.log("newValue :" + newValue + "oldValue : " + oldValue);
+    commentListLength.value = newValue;
+    await getCommentListAPI();
+});
 
 watch(currentPage, async (newValue, oldValue) => {
     console.log("newValue :" + newValue + "oldValue : " + oldValue);
@@ -241,6 +282,11 @@ async function handle(e) {
     lang.value = e;
 }
 
+async function solutionCodehandle(e) {
+    solutionCode.value = solution.value.code;
+    lang.value = e;
+}
+
 async function getIssueDetail() {
     await axios
         .get(
@@ -249,12 +295,26 @@ async function getIssueDetail() {
         .then((response) => {
             console.log(response.data);
             issue.value = response.data;
-            articleLength.value = response.data.articleList.length;
+            // articleLength.value = response.data.articleList.length;
             solution.value = response.data.solutionDTO;
             issueCodeBlock.value = response.data.code;
+            code.value = response.data.code;
             solutionCodeBlock.value = response.data.solutionDTO.code;
-            commentList.value = response.data.commentResponseDtoList;
             keywords.value = response.data.keyword.split(',').map(keyword => keyword.trim());
+            solutionCode.value = response.data.solutionDTO.code;
+        });
+}
+
+async function getArticelList() {
+    await axios
+        .get(
+            `/community/solvedissue/${route.params.id}/articles`
+        )
+        .then((response) => {
+            console.log(response.data);
+            articleList.value = response.data;
+            console.log(response.data.length);
+            articleLength.value = response.data.length;
         });
 }
 
@@ -277,16 +337,9 @@ const getCommentListAPI = async () => {
     let pageNo = currentPage.value - 1;
     const url = `/community/comment/${route.params.id}?pageNo=` + pageNo;
     const resp = await axios.get(url);
-    console.log(resp);
-    // if (resp.status === 200) {
     commentList.value = resp.data.content;
-    // currentPage.value = resp.data.totalPages;
     totalCommentElements.value = resp.data.totalElements;
-    // } else {
-    //     alert("댓글 불러오는데 실패하였습니다.");
-    // }
-    console.log("currentPage : " + currentPage.value);
-    console.log("totalCommentElements : " + totalCommentElements.value);
+    commentListLength.value = commentList.value.length;
 }
 
 const commentAPI = async () => {
@@ -307,6 +360,20 @@ const commentAPI = async () => {
         getCommentListAPI();
     } else {
         alert("댓글 작성에 실패하였습니다.");
+    }
+}
+
+async function deleteMyComment(commentid) {
+    let deleteConfirm = window.confirm("댓글을 삭제하시겠습니까?");
+    if (deleteConfirm) {
+        await axios.delete(`/community/comment/${commentid}`, {
+            headers: {
+                "Authorization": useAuthStore().token
+            }
+        });
+        getCommentListAPI();
+    } else {
+        return;
     }
 }
 
@@ -413,6 +480,7 @@ onMounted(() => {
     getLikesAPI();
     getCommentListAPI();
     getIssueDetail();
+    getArticelList();
     initFlowbite();
 });
 
