@@ -36,26 +36,27 @@ import java.util.*;
 @Service
 @Slf4j
 public class CommunityService {
+    private static final HttpClient httpClient = HttpClient.newBuilder()
+            .version(HttpClient.Version.HTTP_2)
+            .build();
     private final CommentRepository commentRepository;
     private final IssueRepository issueRepository;
     private final UsersRepository usersRepository;
     private final LikesService likesService;
 
     private final SolutionService solutionService;
-
+    private final CommunityRepositoryImpl communityRepositoryImpl;
     Map<Long, List<MediumArticle>> articleMap = new HashMap<>();
     List<MediumArticle> mediumArticleList = new ArrayList<>();
-
     @Value("${external.medium.medium-key}")
     private String apikey;
-    private final CommunityRepositoryImpl communityRepositoryImpl;
 
-    public CommunityService (CommentRepository commentRepository,
-                             IssueRepository issueRepository,
-                             LikesService likesService,
-                             UsersRepository usersRepository,
-                             SolutionService solutionService,
-                             CommunityRepositoryImpl communityRepositoryImpl) {
+    public CommunityService(CommentRepository commentRepository,
+                            IssueRepository issueRepository,
+                            LikesService likesService,
+                            UsersRepository usersRepository,
+                            SolutionService solutionService,
+                            CommunityRepositoryImpl communityRepositoryImpl) {
 
         this.commentRepository = commentRepository;
         this.issueRepository = issueRepository;
@@ -87,7 +88,7 @@ public class CommunityService {
     public Page<IssueDTO.ResponseDTO> getIssueBySelectedCategory(String category, int pageNo) {
 
         Pageable pageable = PageRequest.of(pageNo, 10, Sort.by(Sort.Direction.DESC, "id"));
-        Page<Issue> issueList =communityRepositoryImpl.findAllByCategoryName(category, pageable);
+        Page<Issue> issueList = communityRepositoryImpl.findAllByCategoryName(category, pageable);
         List<IssueDTO.ResponseDTO> issuePageList = issueList.map(issue ->
                 issue.toDto(likesService.getIssueLikes(issue.getId()),
                         usersRepository.findById(issue.getUsers().getId()).orElseThrow(() ->
@@ -101,24 +102,24 @@ public class CommunityService {
         Pageable pageable = PageRequest.of(0, 10, Sort.by(Sort.Direction.DESC, "id"));
         return communityRepositoryImpl.findAllByTitle(title, pageable).map(issue ->
                 issue.toDto(likesService.getIssueLikes(issue.getId()),
-                    usersRepository.findById(issue.getUsers().getId()).orElseThrow(() ->
-                            new IllegalArgumentException("해당 유저를 찾을 수 없습니다.")).toIssueDto()));
+                        usersRepository.findById(issue.getUsers().getId()).orElseThrow(() ->
+                                new IllegalArgumentException("해당 유저를 찾을 수 없습니다.")).toIssueDto()));
     }
 
     public Page<IssueDTO.ResponseDTO> search(String title, String category, int pageNo) {
         log.info("!!!!!!!title : " + title + "category : " + category + " pageNo : " + pageNo);
-        log.info("title isEmpty : "+ title.isEmpty());
+        log.info("title isEmpty : " + title.isEmpty());
         log.info("category : " + category + (category == null));
-        if(title.isEmpty() && category.isEmpty()) {
+        if (title.isEmpty() && category.isEmpty()) {
             log.info("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
             return getSolvedIssueList(null, pageNo);
         }
         List<String> categories = new ArrayList<>();
-        if(category != null){
+        if (category != null) {
             categories = Arrays.asList(category.split(","));
         }
         Pageable pageable = PageRequest.of(pageNo, 10, Sort.by(Sort.Direction.DESC, "id"));
-        Page<Issue> issueList =communityRepositoryImpl.findAllByCategory(title, categories, pageable);
+        Page<Issue> issueList = communityRepositoryImpl.findAllByCategory(title, categories, pageable);
         List<IssueDTO.ResponseDTO> issuePageList = issueList.map(issue ->
                 issue.toDto(likesService.getIssueLikes(issue.getId()),
                         usersRepository.findById(issue.getUsers().getId()).orElseThrow(() ->
@@ -139,14 +140,14 @@ public class CommunityService {
         Optional<Issue> optIssue = issueRepository.findById(issueId);
 
         // TODO map 에 있는지 없는지 확인
-        if( articleMap.get(issueId) == null ) {
-            try {
-                mediumArticleList = getMediumApi(optIssue.orElseThrow(() -> new IllegalArgumentException("해당 이슈를 찾을 수 없습니다.")).getKeyword());
-                articleMap.put(issueId, mediumArticleList);
-            } catch (IOException | InterruptedException e) {
-                throw new RuntimeException(e);
-            }
-        }
+//        if (articleMap.get(issueId) == null) {
+//            try {
+//                mediumArticleList = getMediumApi(optIssue.orElseThrow(() -> new IllegalArgumentException("해당 이슈를 찾을 수 없습니다.")).getKeyword());
+//                articleMap.put(issueId, mediumArticleList);
+//            } catch (IOException | InterruptedException e) {
+//                throw new RuntimeException(e);
+//            }
+//        }
 
         // TODO solutionDTO 추가
         IssueDTO.ResponseDTO responseDTO = optIssue.
@@ -156,7 +157,7 @@ public class CommunityService {
                                 usersRepository.findById(issue.getUsers().getId()).orElseThrow(() ->
                                         new IllegalArgumentException("해당 유저를 찾을 수 없습니다.")).toIssueDto(),
                                 commentRepository.findAllByIssue_IdOrderByCreatedAtDesc(issueId, pageable).stream().map(Comment::toDto).toList(),
-                                articleMap.get(issueId), solutionService.getSolution(issueId)
+                                solutionService.getSolution(issueId)
                         )
                 ).orElseThrow(() -> new IllegalArgumentException("없는 이슈번호입니다."));
 
@@ -166,44 +167,42 @@ public class CommunityService {
     /**
      * medium api 연결 및 연관 게시물 3개
      *
-     * @param query
+     * @param
      * @return
      * @throws IOException
      * @throws InterruptedException
      */
-    public List<MediumArticle> getMediumApi(String query) throws IOException, InterruptedException {
-        log.info("@@@@@@@@@@ + " + apikey);
+    public List<MediumArticle> getMediumApi(long issueId) throws IOException, InterruptedException {
+
+        Optional<Issue> optIssue = issueRepository.findById(issueId);
+        Issue issue = optIssue.orElseThrow(() -> new IllegalArgumentException("해당 이슈를 찾을 수 없습니다."));
+        String keywords = issue.getKeyword();
+
+        if (articleMap.containsKey(issueId)) {
+            return articleMap.get(issueId);
+        }
+
+        String query = keywords.replaceAll(",", "");
+        String url = "https://medium2.p.rapidapi.com/search/articles?query=" + query;
         HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create("https://medium2.p.rapidapi.com/search/articles?query=" + query.replaceAll(",", "")))
+                .uri(URI.create(url))
                 .header("X-RapidAPI-Key", apikey)
                 .header("X-RapidAPI-Host", "medium2.p.rapidapi.com")
-                .method("GET", HttpRequest.BodyPublishers.noBody())
+                .GET()
                 .build();
-        HttpResponse<String> response = HttpClient.newHttpClient().send(request, HttpResponse.BodyHandlers.ofString());
-//        log.info("@@@@@@@@@@@ body : " + response.body());
-        log.info("@@@@@@@@@@@ query : " +  query.replaceAll(",", ""));
+        HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
+
         JSONParser parser = new JSONParser();
         JSONObject obj;
-        List<String> relatedArticlesId = null;
         List<MediumArticle> articleList = new ArrayList<>();
 
         try {
             obj = (JSONObject) parser.parse(response.body());
-            int articleSize = 0;
-
             JSONArray articlesObj = (JSONArray) obj.get("articles");
-            log.info("articlesObj : "+ articlesObj.size());
-            articleSize = articlesObj.size();
-            if(articleSize > 3) {
-                articleSize = 3;
 
-            } else if(articlesObj.isEmpty()) {
-                log.info("비어있음");
-            }
-
-            for (int i = 0 ; i < articleSize ; i ++ ) {
+            int articleSize = Math.min(articlesObj.size(), 3);
+            for (int i = 0; i < articleSize; i++) {
                 if (articlesObj.get(i) != null) {
-                    System.out.println(articlesObj.get(i).toString());
                     articleList.add(getArticlesInfo(articlesObj.get(i).toString()));
                 }
             }
@@ -211,29 +210,36 @@ public class CommunityService {
             throw new RuntimeException(e);
         }
 
-        log.info("####### : " + articleList);
+        articleMap.put(issueId, articleList);
 
         return articleList;
     }
 
     public MediumArticle getArticlesInfo(String articleId) throws IOException, InterruptedException {
+        String url = "https://medium2.p.rapidapi.com/article/" + articleId;
         HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create("https://medium2.p.rapidapi.com/article/" + articleId))
+                .uri(URI.create(url))
                 .header("X-RapidAPI-Key", apikey)
                 .header("X-RapidAPI-Host", "medium2.p.rapidapi.com")
-                .method("GET", HttpRequest.BodyPublishers.noBody())
+                .GET()
                 .build();
-        HttpResponse<String> response = HttpClient.newHttpClient().send(request, HttpResponse.BodyHandlers.ofString());
+        HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
 
         ObjectMapper objectMapper = new ObjectMapper();
-        MediumArticle article = null;
+        MediumArticle article;
 
         try {
             JsonNode jsonNode = objectMapper.readTree(response.body());
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
-            article = new MediumArticle(jsonNode.get("title").asText(), jsonNode.get("subtitle").asText(), jsonNode.get("image_url").asText(), jsonNode.get("url").asText(), jsonNode.get("claps").asInt(), LocalDateTime.from(formatter.parse(jsonNode.get("published_at").asText())));
+            String title = jsonNode.get("title").asText();
+            String subtitle = jsonNode.get("subtitle").asText();
+            String imageUrl = jsonNode.get("image_url").asText();
+            String articleUrl = jsonNode.get("url").asText();
+            int claps = jsonNode.get("claps").asInt();
+            LocalDateTime publishedAt = LocalDateTime.parse(jsonNode.get("published_at").asText(), formatter);
 
+            article = new MediumArticle(title, subtitle, imageUrl, articleUrl, claps, publishedAt);
         } catch (JsonMappingException e) {
             throw new RuntimeException(e);
         }
