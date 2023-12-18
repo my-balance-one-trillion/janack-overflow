@@ -12,9 +12,11 @@ import com.example.janackoverflow.chat.service.ChatMessageService;
 import com.example.janackoverflow.chat.service.ChatRoomService;
 import com.example.janackoverflow.issue.entity.Issue;
 import com.example.janackoverflow.issue.repository.IssueRepository;
+import com.example.janackoverflow.main.service.BankingService;
 import com.example.janackoverflow.main.service.MainService;
 import com.example.janackoverflow.user.entity.Users;
 import com.example.janackoverflow.user.repository.UsersRepository;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -40,18 +42,12 @@ class JanackOverflowApplicationTests {
 	UsersRepository usersRepository;
 	@Autowired
 	ChatRoomUsersRepository chatRoomUsersRepository;
+	@Autowired
+	BankingService bankingService;
 	@Test
-	void contextLoads() {
-		Users users = usersRepository.findById(7L)
-				.orElseThrow(() -> new IllegalArgumentException("zz"));
-//		ChatRoom chatRoom =chatRoomRepository.findById()
-//		ChatRoomUsers chatRoomUsers = ChatRoomUsers.builder()
-//						.U
-//		chatRoomRepository.findByUsersListContaining()
-//				.forEach(System.out::println);
-		chatRoomUsersRepository.findChatRoomByUsers(users)
-				.forEach(System.out::println);
+	void contextLoads() throws JsonProcessingException {
 
+		bankingService.transfer(3000, "3020000009671");
 	}
 
 
