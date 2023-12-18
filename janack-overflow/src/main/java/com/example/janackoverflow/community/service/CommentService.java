@@ -55,4 +55,7 @@ public class CommentService {
 
         return new PageImpl<>(commentPageList, pageable, commentList.getTotalElements());
     }
+
+    public void deleteMyComment(Long commentId, Long usersId) {
+    }
 }
