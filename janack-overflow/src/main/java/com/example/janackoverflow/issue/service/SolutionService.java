@@ -10,10 +10,13 @@ import com.example.janackoverflow.issue.entity.Issue;
 import com.example.janackoverflow.issue.entity.Solution;
 import com.example.janackoverflow.issue.repository.IssueRepository;
 import com.example.janackoverflow.issue.repository.SolutionRepository;
+import com.example.janackoverflow.main.service.BankingService;
 import com.example.janackoverflow.saving.entity.InputAccount;
 import com.example.janackoverflow.saving.entity.Rule;
 import com.example.janackoverflow.saving.repository.InputAccountRepository;
 import com.example.janackoverflow.saving.repository.RuleRepository;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -31,11 +34,14 @@ public class SolutionService {
     private final RuleRepository ruleRepository;
     private final InputAccountRepository inputAccountRepository;
 
-    public SolutionService(SolutionRepository solutionRepository, IssueRepository issueRepository, RuleRepository ruleRepository, InputAccountRepository inputAccountRepository) {
+    private final BankingService bankingService;
+
+    public SolutionService(SolutionRepository solutionRepository, IssueRepository issueRepository, RuleRepository ruleRepository, InputAccountRepository inputAccountRepository, BankingService bankingService) {
         this.solutionRepository = solutionRepository;
         this.issueRepository = issueRepository;
         this.ruleRepository = ruleRepository;
         this.inputAccountRepository = inputAccountRepository;
+        this.bankingService = bankingService;
     }
 
     // 에러 해결 등록
@@ -55,6 +61,13 @@ public class SolutionService {
                 .orElseThrow(() -> new BusinessLogicException(ExceptionCode.ACCOUNT_NOT_FOUND));
         inputAccount.updateAcntAmount(inputAccount.getAcntAmount() + amount);
 
+        //입금
+        try {
+            bankingService.transfer(issue.getAmount(), inputAccount.getAcntNum());
+        } catch (JsonProcessingException e){
+            e.printStackTrace();
+            throw new RuntimeException();
+        }
         // 적금 만료 (계좌 금액 >= 목표 금액)일 경우, status(03)와 completed_at 변경
         if (inputAccount.getAcntAmount() >= inputAccount.getGoalAmount()) {
             inputAccount.updateStatus("03");  // 완료 상태로 변경
