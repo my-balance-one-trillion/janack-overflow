@@ -4,46 +4,44 @@ import axios from "axios";
 import dayjs from "dayjs";
 import {useAuthStore} from "../../../stores/auth";
 
-const issueList = ref([]);
+const monthlyList = ref({issue: [], solution: []});
+const current = ref(dayjs().format("YYYY-MM"));
+
 
 onMounted(async () => {
-  getMonthlyIssues();
+  await getMonthlyIssues();
 });
 
-
 const getMonthlyIssues = async () => {
-  // 현재 날짜를 기준으로 년도와 월 추출
-  const now = new Date();
-  const year = now.getFullYear();
-  const month = now.getMonth() + 1;
+  const [year, month] = current.value.split("-");
 
-  try {
-    const response = await axios.get(`/monthly-issues?year=${year}&month=${month}`,{
-      headers: {
-        Authorization: useAuthStore().token,
-      }
-    });
-    console.log(response.data);
-    issueList.value = response.data;
-  } catch (error) {
-    console.error(error);
-  }
+  await axios
+      .get(`/savings/monthly-issues?year=${year}&month=${month}`, {
+        headers: {
+          Authorization: useAuthStore().token,
+        }
+      })
+      .then((response) => {
+        monthlyList.value.issue = response.data.issue.reverse();
+        monthlyList.value.solution = response.data.solution.reverse();
+      })
+      .catch((error) => {
+      })
 };
 const now = dayjs().format("YYYY-MM");
-const current = ref(now);
 
 // 이전 월 조회
 const prevMonth = () => {
-  const [year, month] = current.value.split('-');
-  const prevDate = new Date(year, month - 2);
-  current.value = `${prevDate.getFullYear()}-${prevDate.getMonth() + 1}`;
+  current.value = dayjs(current.value).subtract(1, "month").format("YYYY-MM");
+  getMonthlyIssues();
 };
 
 // 다음 월 조회
 const nextMonth = () => {
-  const [year, month] = current.value.split('-');
-  const nextDate = new Date(year, month);
-  current.value = `${nextDate.getFullYear()}-${nextDate.getMonth() + 1}`;
+  if (current.value !== dayjs().format("YYYY-MM")) {
+    current.value = dayjs(current.value).add(1, "month").format("YYYY-MM");
+    getMonthlyIssues();
+  }
 };
 
 
@@ -59,19 +57,25 @@ const nextMonth = () => {
   <table class="w-full border-gray-300 border-t-4 border-b-4">
     <thead class="bg-gray-100 text-2xl flex w-full border-b-4">
     <tr class="flex w-full text-center">
-      <td class="p-3 w-1/5">날짜</td>
-      <td class="p-3 w-2/5">에러</td>
-      <td class="p-3 w-1/5">금액</td>
-      <td class="p-3 w-1/5">잔액</td>
+      <td class="px-5 py-3 w-1/4">날짜</td>
+      <td class="px-5 py-3 w-2/4">에러</td>
+      <td class="px-5 py-3 w-1/4">금액</td>
     </tr>
     </thead>
-    <tbody class="bg-grey-light flex flex-col items-center overflow-y-scroll w-full text-center h-60">
-    <tr v-for="(item, index) in issueList" :key="index" class="flex w-full border-b-2">
-      <td class="p-3 w-1/5">{{ dayjs(item.createdAt).format('YYYY. MM. DD hh:mm') }}</td>
-      <td class="p-3 w-2/5">{{ item.title }}</td>
-      <td class="p-3 w-1/5 text-main-red font-medium text-xl">{{ Number(item.amount).toLocaleString() }}</td>
-      <td class="p-3 w-1/5"></td>
-    </tr>
+    <tbody v-if="monthlyList.solution.length === 0"
+           class="bg-grey-light flex items-center justify-center overflow-y-scroll w-full text-center h-60">
+      <tr class="text-center">
+        <td class="p-3 text-xl text-center">내역이 없습니다.</td>
+      </tr>
+    </tbody>
+    <tbody v-else class="bg-grey-light flex flex-col items-center overflow-y-scroll w-full text-center h-60">
+      <tr v-for="(item, index) in monthlyList.solution" :key="index" class="flex w-full border-b-2">
+        <td class="px-5 py-3 w-1/4 text-left">{{ dayjs(item.createdAt).format('YYYY. MM. DD HH:mm') }}</td>
+        <td class="px-5 py-3 w-2/4">{{ monthlyList.issue[index].title }}</td>
+        <td class="px-5 py-3 w-1/4 text-main-red font-medium text-xl">
+          {{ Number(monthlyList.issue[index].amount).toLocaleString() }}
+        </td>
+      </tr>
     </tbody>
   </table>
 </template>

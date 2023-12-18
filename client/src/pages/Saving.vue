@@ -19,7 +19,6 @@ async function getAccountInProgress () {
         },
       })
       .then((response) => {
-        console.log(response);
         state.value = 1;
       })
       .catch((error) => {
