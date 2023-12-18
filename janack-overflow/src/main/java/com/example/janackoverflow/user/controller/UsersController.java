@@ -1,7 +1,7 @@
 package com.example.janackoverflow.user.controller;
 
 import com.example.janackoverflow.global.security.DTO.MailDTO;
-import com.example.janackoverflow.global.security.Service.MailService;
+//import com.example.janackoverflow.global.security.Service.MailService;
 import com.example.janackoverflow.global.security.auth.NowUserDetails;
 import com.example.janackoverflow.user.domain.request.UsersRequestDTO;
 import com.example.janackoverflow.user.service.UsersService;
@@ -19,7 +19,7 @@ import java.text.SimpleDateFormat;
 public class UsersController {
     private final UsersService usersService;
 
-    private MailService mailService;
+//    private MailService mailService;
 
     public UsersController(UsersService usersService){
         this.usersService = usersService;
@@ -55,31 +55,31 @@ public class UsersController {
     }
 
 //    이메일 인증
-    @PostMapping("/mailPass")
-    public ResponseEntity mailPass(@RequestBody UsersRequestDTO usersRequestDTO){
-
-        //메일 주소 유효성 검사
-        if(usersService.findByEmail(usersRequestDTO.getEmail()) == null){
-            return new ResponseEntity<>("입력하신 메일과 일치하는 회원이 없습니다.", HttpStatus.FORBIDDEN);
-        }
-
-        //입력한 메일이 유효하면, 임시 번호를 생성하고
-        int randNum = (int) (Math.random() * 10000) + 9999;
-        String tempPass = "temp" + randNum;
-
-        //DB에 업데이트 (서비스에서 암호화)
-        usersService.updateRandomPass(usersRequestDTO, tempPass);
-
-        //발급한 임시 번호를 입력받은 메일로 발송
-        MailDTO emailMessage = MailDTO.builder()
-                .to("coverunder@gmail.com")
-                .subject("제목")
-                .message("설정된 임시 비밀번호 : " + tempPass)
-                .build();
-        //mailService.sendMail(emailMessage);
-
-        return new ResponseEntity<>("회원님의 메일로 임시 비밀번호가 발송되었습니다.", HttpStatus.OK);
-    }
+//    @PostMapping("/mailPass")
+//    public ResponseEntity mailPass(@RequestBody UsersRequestDTO usersRequestDTO){
+//
+//        //메일 주소 유효성 검사
+//        if(usersService.findByEmail(usersRequestDTO.getEmail()) == null){
+//            return new ResponseEntity<>("입력하신 메일과 일치하는 회원이 없습니다.", HttpStatus.FORBIDDEN);
+//        }
+//
+//        //입력한 메일이 유효하면, 임시 번호를 생성하고
+//        int randNum = (int) (Math.random() * 10000) + 9999;
+//        String tempPass = "temp" + randNum;
+//
+//        //DB에 업데이트 (서비스에서 암호화)
+//        usersService.updateRandomPass(usersRequestDTO, tempPass);
+//
+//        //발급한 임시 번호를 입력받은 메일로 발송
+//        MailDTO emailMessage = MailDTO.builder()
+//                .to("coverunder@gmail.com")
+//                .subject("제목")
+//                .message("설정된 임시 비밀번호 : " + tempPass)
+//                .build();
+//        //mailService.sendMail(emailMessage);
+//
+//        return new ResponseEntity<>("회원님의 메일로 임시 비밀번호가 발송되었습니다.", HttpStatus.OK);
+//    }
 
     @GetMapping("/admin")
     public ResponseEntity admin(){
