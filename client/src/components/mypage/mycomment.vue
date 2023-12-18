@@ -97,8 +97,6 @@ async function getCommentList(i) {
   commentList.value = data;
   pageSet.value = pageDTO;
   pageInt = pageNumber;
-  console.log(pageInt);
-  console.log(response.data);
 }
 
 // ----------------------------
