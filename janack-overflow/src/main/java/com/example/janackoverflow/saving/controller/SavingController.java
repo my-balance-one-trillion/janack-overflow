@@ -8,13 +8,17 @@ import com.example.janackoverflow.issue.service.IssueService;
 import com.example.janackoverflow.issue.service.SolutionService;
 import com.example.janackoverflow.saving.domain.request.SavingRequestDTO;
 import com.example.janackoverflow.saving.domain.response.InputAccountResponseDTO;
+import com.example.janackoverflow.saving.domain.response.MonthlyAmountDTO;
+import com.example.janackoverflow.saving.domain.response.MonthlyCountIssueDTO;
 import com.example.janackoverflow.saving.domain.response.RuleResponseDTO;
 import com.example.janackoverflow.saving.entity.InputAccount;
 import com.example.janackoverflow.saving.entity.Rule;
 import com.example.janackoverflow.saving.service.InputAccountService;
 import com.example.janackoverflow.saving.service.RuleService;
 import com.example.janackoverflow.user.entity.Users;
+import com.querydsl.core.Tuple;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.catalina.User;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -83,7 +87,6 @@ public class SavingController {
         Users users = userDetails.getUser();
 
         List<IssueResponseDTO> solvedIssues = issueService.getSolvedIssuesByUserId(users);  // 해결한 에러 조회
-
         List<SolutionResponseDTO> monthlySolution = solutionService.getMonthlySolutions(solvedIssues, year, month);  // 년도월을 비교해서 조회
 
         List<IssueResponseDTO> monthlyIssues = issueService.getMonthlyIssues(monthlySolution);
@@ -95,7 +98,23 @@ public class SavingController {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
+    // 월별 적금 횟수 (에러 해결 횟수)
+    @GetMapping("/monthly-count")
+    public ResponseEntity<?> getMonthlyIssueCount(@AuthenticationPrincipal NowUserDetails userDetails){
+        Users users = userDetails.getUser();
+        List<IssueResponseDTO> solvedIssues = issueService.getSolvedIssuesByUserId(users);  // 해결한 에러 조회
+        List<MonthlyCountIssueDTO> solvedIssueCount = solutionService.getMonthlySolutionsCount(solvedIssues);
+        return new ResponseEntity<>(solvedIssueCount, HttpStatus.OK);
+    }
 
+    // 월별 누적 적금
+    @GetMapping("/monthly-amount")
+    public ResponseEntity<?> getMonthlyAmount(@AuthenticationPrincipal NowUserDetails userDetails){
+        Users users = userDetails.getUser();
+        List<MonthlyAmountDTO> accumulatedAmount = issueService.getMonthlyAmount(users);
+
+        return new ResponseEntity<>(accumulatedAmount, HttpStatus.OK);
+    }
     // 적금 기록 (사용자 적금 전부 조회)
     @GetMapping
     public ResponseEntity<?> getUserAccounts(@AuthenticationPrincipal NowUserDetails userDetails){

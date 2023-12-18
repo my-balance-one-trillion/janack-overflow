@@ -24,4 +24,5 @@ public interface IssueRepository extends JpaRepository<Issue, Long> {
     List<Issue> findTop10ByPublicStatusOrderByCreatedAtDesc(boolean publicStatus);
     List<Issue> findByUsersId(Long userId);
     List<Issue> findByUsers_IdAndStatus(Long userId, String status);
+    List<Issue> findByUsersIdAndStatusAndCreatedAtAfter(Long usersId, String status, LocalDateTime fiveMonthsAgo);
 }

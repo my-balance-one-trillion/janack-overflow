@@ -10,6 +10,7 @@ import com.example.janackoverflow.issue.entity.Issue;
 import com.example.janackoverflow.issue.entity.Solution;
 import com.example.janackoverflow.issue.repository.IssueRepository;
 import com.example.janackoverflow.issue.repository.SolutionRepository;
+import com.example.janackoverflow.saving.domain.response.MonthlyCountIssueDTO;
 import com.example.janackoverflow.main.service.BankingService;
 import com.example.janackoverflow.saving.entity.InputAccount;
 import com.example.janackoverflow.saving.entity.Rule;
@@ -25,6 +26,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class SolutionService {
@@ -46,7 +48,7 @@ public class SolutionService {
 
     // 에러 해결 등록
     @Transactional
-    public Solution createSolution(CreateSolutionRequestDTO solutionRequestDTO, Long issueId){
+    public Solution createSolution(CreateSolutionRequestDTO solutionRequestDTO, Long issueId) {
         Issue issue = issueRepository.findById(issueId)
                 .orElseThrow(() -> new BusinessLogicException(ExceptionCode.ERROR_NOT_FOUND));
 
@@ -92,7 +94,7 @@ public class SolutionService {
                 .orElseThrow(() -> new BusinessLogicException(ExceptionCode.ACCOUNT_NOT_FOUND))
                 .getId());
 
-        if(timeDiff < 30){
+        if (timeDiff < 30) {
             return rule.getUnderThirty();
         } else if (timeDiff < 60) {
             return rule.getUnderHour();
@@ -122,7 +124,7 @@ public class SolutionService {
         List<SolutionResponseDTO> monthlySolutions = new ArrayList<>();
 
         for (IssueResponseDTO issue : monthlyIssues) {
-            List<Solution> solutions = solutionRepository.findAllByIssueIdOrderByCreatedAtDesc(issue.getId());
+            List<Solution> solutions = solutionRepository.findByIssueId(issue.getId());
 
             for (Solution solution : solutions) {
                 LocalDateTime createdAt = solution.getCreatedAt();
@@ -134,4 +136,38 @@ public class SolutionService {
 
         return monthlySolutions;
     }
+
+    // 최근 5개월 간의 월별 적금 횟수 계산
+    @Transactional(readOnly = true)
+    public List<MonthlyCountIssueDTO> getMonthlySolutionsCount(List<IssueResponseDTO> solvedIssues) {
+        List<MonthlyCountIssueDTO> monthlyCounts = new ArrayList<>();
+        LocalDateTime currentDate = LocalDateTime.now();  // 현재 날짜
+
+        for (int i = 0; i < 5; i++) {  // 최근 5개월
+            LocalDateTime currentMonth = currentDate.minusMonths(i);
+            int count = 0;  // 적금 횟수
+
+            for (IssueResponseDTO issue : solvedIssues) {
+                List<Solution> solutions = solutionRepository.findByIssueId(issue.getId());
+
+                for (Solution solution : solutions) {
+                    LocalDateTime solutionDate = solution.getCreatedAt().toLocalDate().atStartOfDay();
+                    if (solutionDate.getYear() == currentMonth.getYear() && solutionDate.getMonth() == currentMonth.getMonth()) {
+                        count++;
+                    }
+                }
+            }
+
+            MonthlyCountIssueDTO monthlyCount = MonthlyCountIssueDTO.builder()
+                    .year(currentMonth.getYear())
+                    .month(currentMonth.getMonthValue())
+                    .count(count)
+                    .build();
+
+            monthlyCounts.add(monthlyCount);
+        }
+
+        return monthlyCounts;
+    }
+
 }
