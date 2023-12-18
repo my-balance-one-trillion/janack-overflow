@@ -59,17 +59,12 @@ public class UsersService {
                 .build();
     }
 
-//    public List<Users> readAllUser(){ //회원 전체 읽기
-//        List<Users> list = usersRepository.findAll();
-//
-//    }
-
-    public void updateProfileImage(UsersRequestDTO usersRequestDTO, long id){ // 프로필사진만 교체
-        Users users = usersRepository.findById(id).orElseThrow(RuntimeException::new);
-        Users updatedUser = users.toBuilder()
-                .profileImage(usersRequestDTO.getProfileImage())
+    public void updateRandomPass(UsersRequestDTO usersRequestDTO, String pass){ // 임시 패스워드로 업데이트
+        Users users = usersRepository.findByEmail(usersRequestDTO.getEmail()).orElseThrow(RuntimeException::new);
+        Users updatePassUser = users.toBuilder()
+                .password(passwordEncoder.encode(pass))
                 .build();
-        usersRepository.save(updatedUser);
+        usersRepository.save(updatePassUser);
     }
 
     public Users findByEmail(String email) { //UserDetails loadUserByUsername() 전용 서비스

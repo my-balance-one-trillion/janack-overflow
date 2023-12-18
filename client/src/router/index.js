@@ -16,9 +16,10 @@ import OpenAccountFinish from "@/components/Saving/OpenAccountFinish.vue";
 import SavingDelete from "@/components/Saving/SavingDelete.vue";
 import SavingRecord from "../components/Saving/SavingRecord.vue";
 import ChatRoom from "@/pages/chat/ChatRoom.vue";
-import ChatMain from "@/pages/chat/ChatMain.vue"
-import MyChat from "@/pages/chat/MyChat.vue"
+import ChatMain from "@/pages/chat/ChatMain.vue";
+import MyChat from "@/pages/chat/MyChat.vue";
 import Issue from "@/pages/Issue.vue";
+import PassMail from "@/components/PassMail.vue";
 
 const routes = [
     {path: "/", component: Main},
@@ -43,8 +44,8 @@ const routes = [
     {path: "/mypage", component: Mypage},
     {path: "/chat/:chatId", component: ChatRoom},
     {path: "/chat", component: ChatMain},
-    {path: "/chat/my/:userId", component: MyChat}
-
+    {path: "/chat/my/:userId", component: MyChat},
+    {path: "/passMail", component: PassMail},
 ];
 
 const router = createRouter({

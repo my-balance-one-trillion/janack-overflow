@@ -14,10 +14,12 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 public class SolutionResponseDTO {
 
+    private Long issueId;
     private LocalDateTime createdAt;
 
     public static SolutionResponseDTO toDto(Solution solution){
         return SolutionResponseDTO.builder()
+                .issueId(solution.getIssue().getId())
                 .createdAt(solution.getCreatedAt())
                 .build();
     }

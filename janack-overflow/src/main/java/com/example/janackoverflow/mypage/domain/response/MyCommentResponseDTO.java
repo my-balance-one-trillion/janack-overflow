@@ -11,15 +11,15 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
-public class myCommentResponseDTO {
+public class MyCommentResponseDTO {
     private Long id;
     private String comment;
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm")
     private LocalDateTime createdAt;
     private String issue_title;
 
-    public static myCommentResponseDTO toDto(Comment comment){
-        return myCommentResponseDTO.builder()
+    public static MyCommentResponseDTO toDto(Comment comment){
+        return MyCommentResponseDTO.builder()
                 .id(comment.getId())
                 .comment(comment.getContent())
                 .issue_title(comment.getIssue().getTitle())
