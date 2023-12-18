@@ -208,6 +208,9 @@
             </form>
         </div>
     </div>
+    <div>
+        <Monaco></Monaco>
+    </div>
 </template>
 
 <script setup>
@@ -217,6 +220,7 @@ import { FwbButton, FwbTextarea, FwbPagination } from 'flowbite-vue'
 import ClipboardJS from 'clipboard';
 import Spinner from "@/components/Spinner.vue";
 import Dropdown from "@/components/Dropdown.vue";
+import Monaco from "@/components/Monaco.vue";
 
 import 'highlight.js/styles/default.css';
 import hljs from 'highlight.js/lib/core';
@@ -308,16 +312,9 @@ async function getArticelList() {
         )
         .then((response) => {
             console.log(response.data);
-            // issue.value = response.data;
             articleList.value = response.data;
             console.log(response.data.length);
             articleLength.value = response.data.length;
-            // solution.value = response.data.solutionDTO;
-            // issueCodeBlock.value = response.data.code;
-            // code.value = response.data.code;
-            // solutionCodeBlock.value = response.data.solutionDTO.code;
-            // keywords.value = response.data.keyword.split(',').map(keyword => keyword.trim());
-            // solutionCode.value = response.data.solutionDTO.code;
         });
 }
 
