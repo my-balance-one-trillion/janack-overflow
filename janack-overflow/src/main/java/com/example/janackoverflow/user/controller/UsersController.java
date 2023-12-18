@@ -5,6 +5,8 @@ import com.example.janackoverflow.global.security.Service.MailService;
 import com.example.janackoverflow.global.security.auth.NowUserDetails;
 import com.example.janackoverflow.user.domain.request.UsersRequestDTO;
 import com.example.janackoverflow.user.service.UsersService;
+import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -19,6 +21,7 @@ import java.text.SimpleDateFormat;
 public class UsersController {
     private final UsersService usersService;
 
+    @Autowired
     private MailService mailService;
 
     public UsersController(UsersService usersService){
@@ -59,12 +62,14 @@ public class UsersController {
     public ResponseEntity mailPass(@RequestBody UsersRequestDTO usersRequestDTO){
 
         //메일 주소 유효성 검사
-        if(usersService.findByEmail(usersRequestDTO.getEmail()) == null){
+        try {
+            usersService.findByEmail(usersRequestDTO.getEmail());
+        } catch (Exception e){
             return new ResponseEntity<>("입력하신 메일과 일치하는 회원이 없습니다.", HttpStatus.FORBIDDEN);
         }
 
         //입력한 메일이 유효하면, 임시 번호를 생성하고
-        int randNum = (int) (Math.random() * 10000) + 9999;
+        int randNum = (int) (Math.random() * 9999) + 999;
         String tempPass = "temp" + randNum;
 
         //DB에 업데이트 (서비스에서 암호화)
@@ -72,18 +77,17 @@ public class UsersController {
 
         //발급한 임시 번호를 입력받은 메일로 발송
         MailDTO emailMessage = MailDTO.builder()
-                .to("coverunder@gmail.com")
-                .subject("제목")
-                .message("설정된 임시 비밀번호 : " + tempPass)
+                .to(usersRequestDTO.getEmail()) //작성한 email
+                .subject("임시 비밀번호 입니다")
+                .message("설정된 임시 비밀번호는 " + tempPass + " 입니다.")
                 .build();
-        //mailService.sendMail(emailMessage);
 
-        return new ResponseEntity<>("회원님의 메일로 임시 비밀번호가 발송되었습니다.", HttpStatus.OK);
-    }
+        if(mailService.sendMail(emailMessage)){
+            return new ResponseEntity<>("회원님의 메일로 임시 비밀번호가 발송되었습니다.", HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>("메일 발송에 실패했습니다..", HttpStatus.FORBIDDEN);
+        }
 
-    @GetMapping("/admin")
-    public ResponseEntity admin(){
-        return new ResponseEntity("어드민", HttpStatus.OK);
     }
 
 }

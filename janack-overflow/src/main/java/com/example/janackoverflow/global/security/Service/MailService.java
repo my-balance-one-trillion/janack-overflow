@@ -1,39 +1,44 @@
 package com.example.janackoverflow.global.security.Service;
 
 import com.example.janackoverflow.global.security.DTO.MailDTO;
+import jakarta.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;
-import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
 public class MailService {
 
-    private final JavaMailSender emailSender;
+    private final JavaMailSender javaMailSender;
 
-    public boolean sendSimpleMessage(MailDTO data) {
+    public boolean sendMail(MailDTO mailDTO) {
 
-        System.out.println(data);
+        System.out.println(mailDTO);
 
-        SimpleMailMessage message = new SimpleMailMessage();
+        MimeMessage mimeMessage = javaMailSender.createMimeMessage();
 
         try {
 
-//            message.setFrom(data.getEmail());
-//            message.setTo("보낼 메일 즉 나의 메일!");
-//            message.setSubject(data.getName());
-//            message.setText(data.getMessage() + data.getEmail());
+            MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage, false, "UTF-8");
 
-            emailSender.send(message);
+            mimeMessageHelper.setTo(mailDTO.getTo()); // 메일 수신자
+            mimeMessageHelper.setSubject(mailDTO.getSubject()); // 메일 제목
+            mimeMessageHelper.setText(mailDTO.getMessage(), false); // 메일 본문 내용, HTML 여부
 
-            System.out.println("전송 성공! message : " + message);
+            javaMailSender.send(mimeMessage);
+
+            System.out.println("전송 성공! message : " + mimeMessage);
 
             return true;
 
         } catch (Exception e){
+
             System.out.println("전송 실패");
+
             return false;
+
         }
     }
 }

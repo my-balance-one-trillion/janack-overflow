@@ -70,12 +70,13 @@ const login = async () => {
     );
 
     console.log(res);
+    window.alert(res.data);
 
-    window.alert("메일을 발송했습니다");
     router.push("/login");
+
   } catch (error) {
     console.log("발송 실패", error);
-    window.alert("메일 발송을 실패하였습니다");
+    window.alert(error.response.data);
   }
 };
 </script>
