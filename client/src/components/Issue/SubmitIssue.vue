@@ -1,7 +1,13 @@
 <script setup>
-import {ref, defineEmits, onMounted} from "vue";
+import { ref, defineEmits, onMounted } from "vue";
 import axios from "axios";
-import {useAuthStore} from "@/stores/auth";
+import { useAuthStore } from "@/stores/auth";
+import hljs from 'highlight.js/lib/core';
+import 'highlight.js/styles/default.css';
+import CodeEditor from 'simple-code-editor';
+import Monaco from "@/components/Monaco.vue";
+import Tagify from '@yaireo/tagify'
+import '@yaireo/tagify/src/tagify.scss';
 
 const issueInfo = ref({
   title: '',
@@ -10,6 +16,7 @@ const issueInfo = ref({
   code: '// 코드를 입력해주세요',
   keyword: '',
 });
+
 const emit = defineEmits(['step-changed']);
 const step = ref(1);
 const code = ref('');
@@ -36,7 +43,6 @@ onMounted(() => {
     // }
     issueInfo.value.keyword = tagify.value.map(tag => tag.value).join(',');
   });
-
   /*  document.querySelectorAll('code').forEach((block) => {
       hljs.highlightBlock(block);
     });*/
@@ -44,24 +50,25 @@ onMounted(() => {
 
 
 async function submitIssue() {
-  await axios
-      .post('/issues', issueInfo.value,
-          {
-            headers: {
-              Authorization: useAuthStore().token,
+    await axios
+        .post('/issues', issueInfo.value,
+            {
+                headers: {
+                    Authorization: useAuthStore().token,
+                }
             }
-          }
-      )
-      .then(() => {
-        step.value = 2;
-        emit('step-changed', step.value);
-      })
-      .catch((error) => {
-        console.log(error);
-      })
+        )
+        .then(() => {
+            step.value = 2;
+            emit('step-changed', step.value);
+        })
+        .catch((error) => {
+            console.log(error);
+        })
 }
 
 </script>
+
 <template>
   <div class="flex items-center justify-center mt-2 w-12/12 font-sub">
     <div class="w-full px-8 py-5 mx-auto my-4 bg-white rounded-lg shadow-md">
@@ -113,14 +120,6 @@ async function submitIssue() {
       <div>에러를 등록하면 자동으로 시간이 측정되어 적금할 수 있는 금액이 달라집니다.</div>
       <div>성공적인 에러 해결로 목표에 한 발짝 더 가까워지세요!</div>
     </div>
-    <div>
-      <button class="bg-main-red hover:bg-hover-red m-2 px-10 py-5 rounded-xl shadow" @click="submitIssue()">
-        <div class="text-white text-3xl font-bold font-main">에러 등록</div>
-      </button>
-    </div>
-  </div>
-
 </template>
 
-<style scoped>
-</style>
+<style scoped></style>
