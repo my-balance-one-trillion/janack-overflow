@@ -90,7 +90,7 @@ public class IssueController {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
 
-        Solution solution = solutionService.createSolution(solutionRequestDTO, userIssue.getId());
+        Solution solution = solutionService.createSolution(solutionRequestDTO, issue.getId());
 
 
         return new ResponseEntity<>(solution, HttpStatus.CREATED);
