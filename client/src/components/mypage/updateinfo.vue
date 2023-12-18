@@ -37,15 +37,15 @@
           >이름 변경</label
         >
       </div>
-      <div class="relative z-0 w-full mb-5 group">
-        <input
-          type="text"
-          name="birth"
-          id="floating_birth"
-          class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-sub-red appearance-none dark:text-white dark:border-gray-600 dark:focus:border-main-red focus:outline-none focus:ring-0 focus:border-main-red peer"
-          placeholder=" "
-          required
-          v-model="userInfo.birth"
+      <div class="relative z-50 w-full mb-5 group">
+        <DatePicker 
+        name="birth" 
+        id="floating_birth"
+        class="block py-2.5 px-0 w-full text-sm focus:ouline-none focus:borer-rose-600 focus:ring-0 dark:text-white dark:border-gray-600 dark:focus:border-main-red placeholder-transparent h-10 bg-transparent border-t-0 border-l-0 border-r-0 border-b-2 border-red-700"
+        v-model="birthDate"
+        :locale="locale"
+        :is-inline="true"
+        @update:model-value="updateBirth"
         />
         <label
           for="floating_birth"
@@ -191,8 +191,10 @@
 
 <script setup>
 import { useAuthStore } from "@/stores/auth";
-import { ref } from "vue";
+import { ref, reactive } from "vue";
 import axios from "axios";
+import {ko} from 'date-fns/locale';
+import DatePicker from 'vue3-datepicker';
 
 const authStore = useAuthStore();
 const userInfo = ref({ ...authStore.userInfo });
@@ -203,6 +205,13 @@ const passwordOk = ref('');
 const confirmOk = ref('');
 passwordOk.value = true;
 confirmOk.value = true;
+const locale = reactive(ko); //한글 달력
+
+const birthDate = ref(new Date(userInfo._rawValue.birth));
+
+function updateBirth(selectedDate) {
+  birthDate.value = new Date(selectedDate);
+}
 
 // ----------------------------
 // 회원정보 수정하기
@@ -210,18 +219,18 @@ confirmOk.value = true;
 
 async function updateInfo() {
   try {
-    let updateInfo = {
+    let updateInfo = reactive({
       name: userInfo.value.name,
       password: inputPassword.value,
       digit: userInfo.value.digit,
-      birth: userInfo.value.birth,
+      birth: birthDate.value.toISOString().split('T')[0], // 날짜를 YYYY-MM-DD 형식으로 포맷
       nickname: userInfo.value.nickname,
       holder: userInfo.value.holder,
       bankName: userInfo.value.bankName,
       outputAcntNum: userInfo.value.outputAcntNum,
       newPassword: inputUpdatePassword.value,
       newPasswordConfirm: inputUpdatePasswordConfirm.value,
-    };
+    });
     const response = await axios.put("/mypage/myinfo", updateInfo, {
       headers: {
         "content-type": "application/json",
@@ -246,5 +255,6 @@ async function updateInfo() {
     alert(error.response.data, "에러");
   }
 }
+
 </script>
 <style scoped></style>

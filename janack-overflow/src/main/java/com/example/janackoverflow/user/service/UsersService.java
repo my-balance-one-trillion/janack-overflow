@@ -28,11 +28,10 @@ public class UsersService {
 
         try {
             optionalUsers = usersRepository.findByNickname(users.getNickname()); //조회했는데, 있으면
-
-            return !optionalUsers.get().getId().equals(users.getId()) && true; //현재 사용자가 입력한 것과 일치해도 검사 스킵
+            return true;
         } catch (Exception e) {
             //입력한 걸 조회했는데, 결과가 없으면
-            return false; //현재 사용자가 입력한 것과 일치해도 검사 스킵
+            return false;
         }
 
     }
@@ -44,11 +43,10 @@ public class UsersService {
 
         try {
             optionalUsers = usersRepository.findByEmail(users.getEmail()); //조회했는데, 있으면
-
-            return !optionalUsers.get().getId().equals(users.getId()) && true; //현재 사용자가 입력한 것과 일치해도 검사 스킵
+            return true;
         } catch (Exception e) {
             //입력한 걸 조회했는데, 결과가 없으면
-            return false; //현재 사용자가 입력한 것과 일치해도 검사 스킵
+            return false;
         }
 
     }
@@ -89,7 +87,12 @@ public class UsersService {
 
     public Users findByEmail(String email) { //UserDetails loadUserByUsername() 전용 서비스
         System.out.println("findByEmail start! email : " + email);
-        return usersRepository.findByEmail(email).get();
+        try {
+            return usersRepository.findByEmail(email).get();
+        } catch (Exception e){
+            System.out.println("조회된 사용자가 없습니다");
+            return null;
+        }
     }
 
 }

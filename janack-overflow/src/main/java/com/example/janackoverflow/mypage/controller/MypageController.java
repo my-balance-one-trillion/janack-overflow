@@ -37,7 +37,8 @@ public class MypageController {
     public ResponseEntity<String> updateUser(@RequestBody UsersRequestDTO usersRequestDTO,
                                      @AuthenticationPrincipal NowUserDetails nowUserDetails){
 
-        if (usersService.isDuplicatedNick(usersRequestDTO)) { //닉네임 중복확인
+        if (!usersRequestDTO.getNickname().equals(nowUserDetails.getUser().getNickname()) //본인의 닉네임과 같으면 검사 제외
+        && usersService.isDuplicatedNick(usersRequestDTO)) { //닉네임 중복확인
             return new ResponseEntity<>("중복되는 닉네임입니다", HttpStatus.FORBIDDEN);
         } else {
             Long usersId = nowUserDetails.getId();
