@@ -1,15 +1,13 @@
 package com.example.janackoverflow.mypage.service;
 
-import com.example.janackoverflow.community.domain.CommentDTO;
 import com.example.janackoverflow.community.entity.Comment;
 import com.example.janackoverflow.community.repository.CommentRepository;
 import com.example.janackoverflow.global.pagination.PageResponseDTO;
 import com.example.janackoverflow.global.pagination.PaginationService;
-import com.example.janackoverflow.issue.domain.response.IssueResponseDTO;
 import com.example.janackoverflow.issue.entity.Issue;
 import com.example.janackoverflow.issue.repository.IssueRepository;
-import com.example.janackoverflow.mypage.domain.response.myCommentResponseDTO;
-import com.example.janackoverflow.mypage.domain.response.myIssueResponseDTO;
+import com.example.janackoverflow.mypage.domain.response.MyCommentResponseDTO;
+import com.example.janackoverflow.mypage.domain.response.MyIssueResponseDTO;
 import com.example.janackoverflow.user.domain.request.UsersRequestDTO;
 import com.example.janackoverflow.user.entity.Users;
 import com.example.janackoverflow.user.repository.UsersRepository;
@@ -84,9 +82,9 @@ public class MypageService {
     }
 
 //    내가 쓴글 보기
-    public PageResponseDTO<myIssueResponseDTO> readMyIssue(Long usersId, Pageable pageable){
+    public PageResponseDTO<MyIssueResponseDTO> readMyIssue(Long usersId, Pageable pageable){
         Page<Issue> myIssueList = issueRepository.findAllByUsers_idOrderByCreatedAtDesc(usersId,pageable);
-        List<myIssueResponseDTO> issueResponseDtolist = myIssueList.stream().map(issue -> myIssueResponseDTO.builder()
+        List<MyIssueResponseDTO> issueResponseDtolist = myIssueList.stream().map(issue -> MyIssueResponseDTO.builder()
                 .title(issue.getTitle())
                 .category(issue.getCategory())
                 .createdAt(issue.getCreatedAt())
@@ -99,10 +97,10 @@ public class MypageService {
     }
 
 //    내가 쓴 댓글 보기
-    public PageResponseDTO<myCommentResponseDTO> readMyComment(Long usersId, Pageable pageable){
+    public PageResponseDTO<MyCommentResponseDTO> readMyComment(Long usersId, Pageable pageable){
         Page<Comment> myCommentList = commentRepository.findAllByUsers_IdOrderByCreatedAtDesc(usersId,pageable);
         // 댓글DtoList
-        List<myCommentResponseDTO> commentResponseDtolist = myCommentList.stream().map(comment -> myCommentResponseDTO.builder()
+        List<MyCommentResponseDTO> commentResponseDtolist = myCommentList.stream().map(comment -> MyCommentResponseDTO.builder()
                 .id(comment.getId())
                 .comment(comment.getContent())
                 .issue_title(comment.getIssue().getTitle())

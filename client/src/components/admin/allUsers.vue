@@ -40,9 +40,9 @@
 									<span v-if="item.status == '03'" class="bg-yellow-300 text-white rounded-lg p-1">정지</span>
 								</td>
 								<td class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
-									<select id="countries"
+									<select :id="'userStatus_' + item.id" v-model="item.status"
+										@change="userStatusUpdate(item, pageSet.page)"
 										class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
-										<option selected>상태수정</option>
 										<option value="01">정상</option>
 										<option value="03">정지</option>
 										<option value="02">탈퇴</option>
@@ -63,12 +63,12 @@
 					</li>
 					<li v-for="i in pageInt">
 						<div
-							class="flex items-center justify-center px-3 h-8 leading-tight text-main-red bg-red-200 border border-gray-300 hover:bg-red-200 hover:text-hover-red dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
-							@click="getIssueList(i)" v-if="pageSet.page == i + 1">
+							class="flex items-center justify-center px-3 h-8 leading-tight text-main-grn bg-green-200 border border-gray-300 hover:bg-green-200 hover:text-hover-grn dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
+							@click="getUserList(i)" v-if="pageSet.page == i + 1">
 							{{ i + 1 }}</div>
 						<div
 							class="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
-							@click="getIssueList(i)" v-else>
+							@click="getUserList(i)" v-else>
 							{{ i + 1 }}</div>
 					</li>
 
@@ -92,6 +92,10 @@ const userList = ref([]);
 const pageSet = ref([]);
 let pageInt = reactive([]);
 
+// -------------------------------------
+// 유저 리스트 출력
+// -------------------------------------
+
 getUserList(0);
 async function getUserList(i) {
 	const response = await axios.get(`/admin/users?page=${i}&size=5`, {
@@ -103,9 +107,28 @@ async function getUserList(i) {
 	userList.value = data;
 	pageSet.value = pageDTO;
 	pageInt = pageNumber;
-	console.log(pageInt);
-	console.log(response.data);
 }
+
+// -------------------------------------
+// 유저 권한 수정
+// -------------------------------------
+
+async function userStatusUpdate(users, page) {
+	const statusUpdate = {
+		status: users.status
+	}
+	try {
+		await axios.put(`/admin/users/${users.id}`, statusUpdate, {
+			headers: {
+				"Authorization": useAuthStore().token
+			}
+		});
+		getUserList(page - 1);
+	} catch (error) {
+		console.log(error);
+	}
+}
+
 
 </script>
 

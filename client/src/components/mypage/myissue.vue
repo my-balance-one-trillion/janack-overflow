@@ -102,8 +102,6 @@ async function getIssueList(i) {
   issueList.value = data;
   pageSet.value = pageDTO;
   pageInt = pageNumber;
-  console.log(pageInt);
-  console.log(response.data);
 }
 
 </script>
