@@ -4,7 +4,7 @@
   <p class="text-xl my-4">에러 목록</p>
   <p class="text-[#919090]">작성한 에러를 확인할 수 있습니다.</p>
   <article class="">
-    <div class="w-full xl:w-8/12 m-12 xl:mb-0 px-4 mx-auto mt-2 flex flex-col items-center">
+    <div class="w-full xl:w-10/12 m-12 xl:mb-0 px-4 mx-auto mt-2 flex flex-col items-center">
       <div class="relative flex flex-col min-w break-words bg-white w-full my-12 shadow-lg">
         <div class="block overflow-x-auto">
           <table class="min-w-full">
@@ -63,8 +63,8 @@
           </li>
           <li v-for="i in pageInt">
             <div
-              class="flex items-center justify-center px-3 h-8 leading-tight text-main-red bg-white border border-gray-300 hover:bg-red-200 hover:text-hover-red dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
-              @click="getIssueList(i)" v-if="pageSet.page == i">
+              class="flex items-center justify-center px-3 h-8 leading-tight text-main-red bg-red-200 border border-gray-300 hover:bg-red-200 hover:text-hover-red dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
+              @click="getIssueList(i)" v-if="pageSet.page == i + 1">
               {{ i + 1 }}</div>
             <div
               class="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
@@ -102,8 +102,6 @@ async function getIssueList(i) {
   issueList.value = data;
   pageSet.value = pageDTO;
   pageInt = pageNumber;
-  console.log(pageInt);
-  console.log(response.data);
 }
 
 </script>

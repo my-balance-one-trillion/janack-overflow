@@ -33,12 +33,26 @@
                     </p>
                     <div>
                         <div class="p-3 border-0 rounded-xl bg-bg-grey">
-                            <div class="flex justify-end">
+                            <div class="flex items-center justify-end">
+                                <Dropdown @selectLang="handle"></Dropdown>
                                 <i :class="['p-2', 'fa-lg', 'fa-clipboard', 'issueCodeBlock', 'hover:cursor-pointer', hovered ? 'fa-solid' : 'fa-regular']"
                                     @click="copyToClipboard" @mouseover="hovered = true" @mouseout="hovered = false"></i>
-                                <!-- <i class=" fa-solid fa-copy"></i> -->
                             </div>
-                            <code class="java" ref="issueCodeBlock">{{ issue.code }}</code>
+                            <pre class="w-auto" v-if="lang === 'plain'" ref="issueCodeBlock">
+                                                    <code class="flex justify-start">{{ issue.code }}</code>
+                                                </pre>
+                            <pre v-if="lang === 'java'"
+                                v-highlightjs><code :class="lang" ref="issueCodeBlock" :style="codeStyle">{{ code }}</code></pre>
+                            <pre v-if="lang === 'javascript'"
+                                v-highlightjs><code :class="lang" ref="issueCodeBlock" :style="codeStyle">{{ code }}</code></pre>
+                            <pre v-if="lang === 'kotlin'"
+                                v-highlightjs><code :class="lang" ref="issueCodeBlock" :style="codeStyle">{{ code }}</code></pre>
+                            <pre v-if="lang === 'python'"
+                                v-highlightjs><code :class="lang" ref="issueCodeBlock" :style="codeStyle">{{ code }}</code></pre>
+                            <pre v-if="lang === 'sql'"
+                                v-highlightjs><code :class="lang" ref="issueCodeBlock" :style="codeStyle">{{ code }}</code></pre>
+                            <pre v-if="lang === 'html'"
+                                v-highlightjs><code :class="lang" ref="issueCodeBlock" :style="codeStyle">{{ code }}</code></pre>
                         </div>
                     </div>
                 </div>
@@ -52,7 +66,7 @@
                                     @click="copyToClipboard" @mouseover="hovered = true" @mouseout="hovered = false"></i>
                                 <!-- <i class=" fa-solid fa-copy"></i> -->
                             </div>
-                            <code class="javascript" ref="solutionCodeBlock">{{ solution.code }}</code>
+                            <pre v-highlightjs><code :class="lang" ref="issueCodeBlock">{{ solution.code }}</code></pre>
                         </div>
                     </div>
                 </div>
@@ -71,16 +85,20 @@
 
         <!-- 미디엄 추천 컨테이너 -->
         <h1 class="my-2 text-2xl">연관 미디엄 게시물</h1>
-        <div class="flex justify-center" v-if="!issue.articleList"><Spinner></Spinner></div>
+        <div class="flex justify-center" v-if="!issue.articleList">
+            <Spinner></Spinner>
+        </div>
         <div v-else-if="articleLength === 0" class="text-center">연관 게시물이 없습니다.</div>
         <div class="grid w-full h-full grid-cols-1 gap-4 px-2 py-4 md:h-auto md:grid-cols-3">
             <!--item 1-->
             <div v-for="article in issue.articleList" class="w-full mb-6 select-none">
                 <div class="relative pb-64">
                     <a :href="article.url" class="cursor-pointer">
-                        <img v-if="!article.imgUrl" class="absolute object-cover w-full h-full border-b-4 rounded-lg shadow-md cursor-pointer border-main-grn"
+                        <img v-if="!article.imgUrl"
+                            class="absolute object-cover w-full h-full border-b-4 rounded-lg shadow-md cursor-pointer border-main-grn"
                             src="../../public/images/errorImg.jpeg" alt="medium thumnail" />
-                        <img v-if="article.imgUrl" class="absolute object-cover w-full h-full border-b-4 rounded-lg shadow-md cursor-pointer border-main-grn"
+                        <img v-if="article.imgUrl"
+                            class="absolute object-cover w-full h-full border-b-4 rounded-lg shadow-md cursor-pointer border-main-grn"
                             :src="article.imgUrl" alt="medium thumnail" />
                     </a>
                 </div>
@@ -170,18 +188,21 @@ import { FwbBadge } from 'flowbite-vue';
 import { FwbButton, FwbTextarea, FwbPagination } from 'flowbite-vue'
 import ClipboardJS from 'clipboard';
 import Spinner from "@/components/Spinner.vue";
+import Dropdown from "@/components/Dropdown.vue";
 
-import java from 'highlight.js/lib/languages/java';
 import 'highlight.js/styles/default.css';
 import hljs from 'highlight.js/lib/core';
+import VueHighlightJS from 'vue3-highlightjs'
 
 import axios from 'axios';
-import { useRoute } from 'vue-router';
+import { useRoute, useRouter } from 'vue-router';
 import { useAuthStore } from '@/stores/auth';
 import { storeToRefs } from 'pinia';
+import { func } from 'prop-types';
 
 const authStore = useAuthStore()
 const { userInfo } = storeToRefs(authStore);
+const code = ref(null);
 
 const activeTab = ref(0);
 const tabs = ref([
@@ -205,12 +226,20 @@ const commentList = ref(null);
 const isLike = ref(false);
 const likeCnt = ref(0);
 const message = ref(null);
+const lang = ref(null);
+const codeStyle = ref(null);
+console.log(lang);
 
 watch(currentPage, async (newValue, oldValue) => {
     console.log("newValue :" + newValue + "oldValue : " + oldValue);
     currentPage.value = newValue;
     await getCommentListAPI();
 });
+
+async function handle(e) {
+    code.value = issue.value.code;
+    lang.value = e;
+}
 
 async function getIssueDetail() {
     await axios
@@ -384,8 +413,7 @@ onMounted(() => {
     getLikesAPI();
     getCommentListAPI();
     getIssueDetail();
-    hljs.highlightAll();
-
+    initFlowbite();
 });
 
 </script>
