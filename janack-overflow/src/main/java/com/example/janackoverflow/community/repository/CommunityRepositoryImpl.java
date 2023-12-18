@@ -41,7 +41,7 @@ public class CommunityRepositoryImpl implements CommunityRepository {
             return findAllByCategoryAndTitle(title, category, pageable);
         }
         List<Issue> Issues = jpaQueryFactory.selectFrom(issue)
-                .where(eqCategories(category).or(eqTitle(title)))
+                .where(eqPublicStatus(true).and(eqStatus("03")).and(eqCategories(category)).or(eqTitle(title)))
                 .orderBy(new OrderSpecifier<>(Order.DESC, issue.createdAt))
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
@@ -65,7 +65,7 @@ public class CommunityRepositoryImpl implements CommunityRepository {
     @Override
     public Page<Issue> findAllByCategoryAndTitle(String title, List<String> category, Pageable pageable) {
         List<Issue> Issues = jpaQueryFactory.selectFrom(issue)
-                .where(eqCategories(category).and(eqTitle(title)))
+                .where(eqPublicStatus(true).and(eqCategories(category)).and(eqTitle(title)))
                 .orderBy(new OrderSpecifier<>(Order.DESC, issue.createdAt))
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
@@ -84,7 +84,7 @@ public class CommunityRepositoryImpl implements CommunityRepository {
     private Long getCategoryCount(String title, List<String> category) {
         return jpaQueryFactory.select(issue.count())
                 .from(issue)
-                .where(eqCategories(category).or(eqTitle(title)))
+                .where(eqPublicStatus(true).and(eqStatus("03")).and(eqCategories(category)).or(eqTitle(title)))
                 .fetchOne();
     }
 
@@ -133,6 +133,28 @@ public class CommunityRepositoryImpl implements CommunityRepository {
 
         BooleanBuilder booleanBuilder = new BooleanBuilder();
         booleanBuilder.or(issue.category.eq(category));
+
+        return booleanBuilder;
+    }
+
+    private BooleanBuilder eqPublicStatus(boolean status){
+        if(!status){
+            return null;
+        }
+
+        BooleanBuilder booleanBuilder = new BooleanBuilder();
+        booleanBuilder.or(issue.publicStatus.eq(status));
+
+        return booleanBuilder;
+    }
+
+    private BooleanBuilder eqStatus(String status){
+        if(status == null){
+            return null;
+        }
+
+        BooleanBuilder booleanBuilder = new BooleanBuilder();
+        booleanBuilder.or(issue.status.eq(status));
 
         return booleanBuilder;
     }

@@ -2,8 +2,10 @@ package com.example.janackoverflow.saving.controller;
 
 import com.example.janackoverflow.global.security.auth.NowUserDetails;
 import com.example.janackoverflow.issue.domain.response.IssueResponseDTO;
+import com.example.janackoverflow.issue.domain.response.SolutionResponseDTO;
 import com.example.janackoverflow.issue.entity.Issue;
 import com.example.janackoverflow.issue.service.IssueService;
+import com.example.janackoverflow.issue.service.SolutionService;
 import com.example.janackoverflow.saving.domain.request.SavingRequestDTO;
 import com.example.janackoverflow.saving.domain.response.InputAccountResponseDTO;
 import com.example.janackoverflow.saving.domain.response.RuleResponseDTO;
@@ -12,17 +14,16 @@ import com.example.janackoverflow.saving.entity.Rule;
 import com.example.janackoverflow.saving.service.InputAccountService;
 import com.example.janackoverflow.saving.service.RuleService;
 import com.example.janackoverflow.user.entity.Users;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
+@Slf4j
 @RestController
 @RequestMapping("/savings")
 public class SavingController {
@@ -30,11 +31,13 @@ public class SavingController {
     private final InputAccountService inputAccountService;
     private final RuleService ruleService;
     private final IssueService issueService;
+    private final SolutionService solutionService;
 
-    public SavingController(InputAccountService inputAccountService, RuleService ruleService, IssueService issueService){
+    public SavingController(InputAccountService inputAccountService, RuleService ruleService, IssueService issueService, SolutionService solutionService){
         this.inputAccountService = inputAccountService;
         this.ruleService = ruleService;
         this.issueService = issueService;
+        this.solutionService = solutionService;
     }
 
     // 적금 개설
@@ -79,8 +82,17 @@ public class SavingController {
                                                            @RequestParam int year, @RequestParam int month) {
         Users users = userDetails.getUser();
 
-        List<Issue> monthlyIssues = issueService.getMonthlyIssuesByUserId(users, year, month);
-        return new ResponseEntity<>(monthlyIssues, HttpStatus.OK);
+        List<IssueResponseDTO> solvedIssues = issueService.getSolvedIssuesByUserId(users);  // 해결한 에러 조회
+
+        List<SolutionResponseDTO> monthlySolution = solutionService.getMonthlySolutions(solvedIssues, year, month);  // 년도월을 비교해서 조회
+
+        List<IssueResponseDTO> monthlyIssues = issueService.getMonthlyIssues(monthlySolution);
+
+        Map<String, Object> response = new HashMap<>();
+        response.put("issue", monthlyIssues);
+        response.put("solution", monthlySolution);
+
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
 

@@ -33,18 +33,18 @@
       최근 올라온<span class="text-main-red"> 에러</span>
     </div>
     <div class="flex flex-wrap justify-center my-5">
-      <!-- <MainPageCard
+      <MainPageCard
         v-for="(issue, index) in issueList"
         :issue="issue"
         :key="index"
-      /> -->
+      />
     </div>
   </div>
 
-  <div class="flex relative mt-36 text-center mx-auto">
+  <div class="flex relative w-5/6 min-h-[700px] mt-36 text-center mx-auto">
     <div class="absolute">
       <div
-        class="flex opacity-70 rounded-full justify-center items-center w-[350px] h-[350px]"
+        class="flex opacity-70 rounded-full justify-center items-center w-[320px] h-[320px]"
         style="background-color: #57846f"
       >
         <i class="fa-solid fa-8x fa-piggy-bank" style="color: #ffffff"></i>
@@ -60,7 +60,7 @@
     </div>
     <div class="absolute left-1/4">
       <div
-        class="flex opacity-70 rounded-full justify-center items-center w-[350px] h-[350px]"
+        class="flex opacity-70 rounded-full justify-center items-center w-[320px] h-[320px]"
         style="background-color: #d9b5b0"
       >
         <i class="fa-solid fa-8x fa-hourglass-half" style="color: #ffffff"></i>
@@ -76,7 +76,7 @@
     </div>
     <div class="absolute left-2/4">
       <div
-        class="flex opacity-70 rounded-full justify-center items-center w-[350px] h-[350px]"
+        class="flex opacity-70 rounded-full justify-center items-center w-[320px] h-[320px]"
         style="background-color: #b0d9c6"
       >
         <i
@@ -96,8 +96,8 @@
     </div>
     <div class="absolute left-3/4">
       <div
-        class="flex opacity-70 rounded-full items-center justify-center w-[350px] h-[350px]"
-        style="background-color: #caaacf; height: 360px; width: 360px"
+        class="flex opacity-70 rounded-full items-center justify-center w-[320px] h-[320px]"
+        style="background-color: #caaacf;"
       >
         <i class="fa-solid fa-8x fa-comments" style="color: #ffffff"></i>
       </div>
