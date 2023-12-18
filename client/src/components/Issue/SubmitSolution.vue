@@ -50,18 +50,18 @@ async function submitSolution() {
     </div>
   </div>
   <!--동의 여부-->
-  <div>
+  <div class="my-5">
     <label class="flex items-center cursor-pointer relative" for="toggle-checked">
       <input id="toggle-checked" v-model="solution.publicStatus" checked="" class="sr-only" type="checkbox">
-      <div class="toggle-bg bg-gray-200 border-2 border-gray-200 h-6 w-11 rounded-full"></div>
-      <span class="ml-3 text-gray-900 text-sm">동의할 경우, 작성한 에러가 자동으로 커뮤니티에 공개됩니다.</span>
+      <div class="toggle-bg bg-gray-200 border-2 border-gray-200 h-7 w-11 rounded-full"></div>
+      <span class="ml-3 text-gray-900 text-md">동의할 경우, 작성한 에러가 자동으로 커뮤니티에 공개됩니다.</span>
     </label>
   </div>
 
-  <div class="flex justify-between items-center">
-    <div>
-      <div>에러가 성공적으로 해결되었다면, 해결 완료 버튼을 눌러주세요.</div>
-      <div>시간에 따라 자동으로 적금되어, 당신의 성장을 기록합니다.</div>
+  <div class="flex justify-between items-center my-7">
+    <div class="space-y-3">
+      <div class="text-lg">에러가 성공적으로 해결되었다면, 해결 완료 버튼을 눌러주세요.</div>
+      <div class="text-lg">시간에 따라 자동으로 적금되어, 당신의 성장을 기록합니다.</div>
     </div>
     <div>
       <button class="bg-main-grn hover:bg-hover-grn m-2 px-10 py-5 rounded-xl shadow" @click="submitSolution()">
