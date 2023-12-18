@@ -22,6 +22,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Date;
 import java.util.Enumeration;
+import java.util.NoSuchElementException;
 
 
 public class JwtAuthenticationFilter extends AbstractAuthenticationProcessingFilter {//UsernamePasswordAuthenticationFilter{
@@ -65,6 +66,26 @@ public class JwtAuthenticationFilter extends AbstractAuthenticationProcessingFil
 			e.printStackTrace();
 		}
 
+		try{
+			usersService.findByEmail(loginRequestDTO.getEmail()); //입력받은 사용자와 DB일치 여부 확인
+		} catch (NoSuchElementException e){
+
+			response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+			response.setContentType("text/plain"); // MIME 타입 설정
+			response.setCharacterEncoding("UTF-8"); // 문자 인코딩 설정
+
+			PrintWriter writer = null;
+			try {
+				writer = response.getWriter();
+			} catch (IOException ex) {
+				throw new RuntimeException(ex);
+			}
+
+			writer.println("일치하는 사용자가 없습니다");
+
+			return null;
+		}
+
 		//로그인 시도하는 유저의 상태 조회
 		String statusNum = usersService.findByEmail(loginRequestDTO.getEmail()).getStatus();
 		
@@ -103,7 +124,7 @@ public class JwtAuthenticationFilter extends AbstractAuthenticationProcessingFil
 						loginRequestDTO.getEmail(),
 						loginRequestDTO.getPassword());
 		
-		System.out.println("JwtAuthenticationFilter : 토큰 생성 완료");
+		System.out.println("JwtAuthenticationFilter : authenticationToken 생성");
 		
 		// authenticate() 함수가 호출 되면 AuthenticationProvider가 UserDetailsService 객체의
 		// loadUserByUsername(토큰의 첫 번째 파라미터 값) 를 호출하고
@@ -155,17 +176,14 @@ public class JwtAuthenticationFilter extends AbstractAuthenticationProcessingFil
 
 		System.out.println("login complete");
 
-		System.out.println(request.getRequestURL());
-		System.out.println(request.getHeaderNames());
-
-		Enumeration<String> headerNames = request.getHeaderNames();
-
-		while (headerNames.hasMoreElements()) {
-			String headerName = headerNames.nextElement();
-			String headerValue = request.getHeader(headerName);
-
-			System.out.println(headerName + ": " + headerValue);
-		}
+//		Enumeration<String> headerNames = request.getHeaderNames();
+//
+//		while (headerNames.hasMoreElements()) {
+//			String headerName = headerNames.nextElement();
+//			String headerValue = request.getHeader(headerName);
+//
+//			System.out.println(headerName + ": " + headerValue);
+//		}
 
 		// 리다이렉트 <- /login 페이지 진입 하기 전의 페이지 정보가 들어오지 않아서 주석처리
 		//response.sendRedirect(String.valueOf());

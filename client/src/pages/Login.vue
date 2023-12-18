@@ -91,7 +91,6 @@ const login = async () => {
 
   } catch (error) {
     console.log("로그인 실패", error);
-    console.log(error);
     window.alert(error.response.data);
   }
 };
