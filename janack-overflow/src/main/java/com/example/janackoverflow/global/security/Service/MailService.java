@@ -20,10 +20,10 @@ public class MailService {
 
         try {
 
-            message.setFrom(data.getEmail());
-            message.setTo("보낼 메일 즉 나의 메일!");
-            message.setSubject(data.getName());
-            message.setText(data.getMessage() + data.getEmail());
+//            message.setFrom(data.getEmail());
+//            message.setTo("보낼 메일 즉 나의 메일!");
+//            message.setSubject(data.getName());
+//            message.setText(data.getMessage() + data.getEmail());
 
             emailSender.send(message);
 
