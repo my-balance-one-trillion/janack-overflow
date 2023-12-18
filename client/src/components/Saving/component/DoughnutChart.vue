@@ -55,7 +55,7 @@ onMounted(() => {
       },
     });
 
-    chart.options.plugins.afterDraw = (chart) => {
+    /*chart.options.plugins.afterDraw = (chart) => {
       const ctx = chart.ctx;
       const canvasCenterX = chart.canvas.width / 2;
       const canvasCenterY = chart.canvas.height / 2;
@@ -66,7 +66,7 @@ onMounted(() => {
       ctx.font = '24px bold Arial';
 
       ctx.fillText(`${progressRate}%`, canvasCenterX, canvasCenterY);
-    };
+    };*/
 
   }
 });

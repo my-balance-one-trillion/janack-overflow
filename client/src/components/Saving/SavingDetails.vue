@@ -1,8 +1,7 @@
 <script setup>
-import HorizontalBarChart from "./Details/HorizontalBarChart.vue";
-import LineChart from "./Details/LineChart.vue";
 import MyAccount from "./Details/MyAccount.vue";
 import MonthlyDetails from "./Details/MonthlyDetails.vue";
+import Chart from "./Details/Chart.vue";
 
 </script>
 
@@ -21,18 +20,9 @@ import MonthlyDetails from "./Details/MonthlyDetails.vue";
 
     <!--  대시보드 -->
     <div>
-      <div class="flex justify-center  p-7 bg-gray-100 rounded-3xl shadow">
-        <div class="p-4 border m-auto bg-white rounded-xl">
-          <div class="text-2xl">월별 적금 횟수</div>
-          <div class="">
-            <HorizontalBarChart/>
-          </div>
-        </div>
-        <div class="p-4 border m-auto bg-white rounded-xl">
-          <div class="text-2xl">월별 적금 추이</div>
-          <div class="">
-            <LineChart/>
-          </div>
+      <div class="w-full p-7 bg-gray-100 rounded-3xl shadow">
+        <div class="p-4 border bg-white rounded-xl">
+            <chart/>
         </div>
       </div>
     </div>

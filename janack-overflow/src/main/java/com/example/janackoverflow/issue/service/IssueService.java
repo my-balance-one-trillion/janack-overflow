@@ -176,17 +176,15 @@ public class IssueService {
         LocalDateTime currentDate = LocalDateTime.now();
         LocalDateTime fiveMonthsAgo = currentDate.minusMonths(5);
 
-        List<MonthlyAmountDTO> result = jpaQueryFactory
+        return jpaQueryFactory
                 .select(Projections.fields(MonthlyAmountDTO.class,
                         issue.createdAt.year().as("year"),
                         issue.createdAt.month().as("month"),
-                        issue.amount.sum().as("amount")))
+                        issue.amount.sum().coalesce(0).as("amount")))
                 .from(issue)
                 .where(issue.users.eq(users).and(issue.status.eq("03")))
                 .where(issue.createdAt.between(fiveMonthsAgo, currentDate))
                 .groupBy(issue.createdAt.year(), issue.createdAt.month())
                 .fetch();
-
-        return result;
     }
 }
