@@ -27,8 +27,8 @@
 					<h4>목표 달성률</h4>
 					<div class="p-5 border border-gray-400 rounded-xl">
 						<div class="achive-header mb-5">
-							<h4 class="text-lg text-main-red">{{ amount.goalName }}</h4>
-							<p class="text-sm">{{ amount.acntAmount }} <span> / </span> {{ amount.goalAmount }}</p>
+							<h4 class="text-lg text-main-red">{{ achive.goalName }}</h4>
+							<p class="text-sm">{{ achive.acntAmount }} <span> / </span> {{ achive.goalAmount }}</p>
 						</div>
 						<canvas id="acquisitions"></canvas>
 					</div>
@@ -36,6 +36,10 @@
 				<div class="average w-60">
 					<h4>월간 글쓴 기록</h4>
 					<div class="p-5 border border-gray-400 rounded-xl">
+						<div class="achive-header mb-5">
+							<h4 class="text-lg text-main-red"> {{ currentMonth.month }}월 작성건</h4>
+							<p class="text-sm"> {{ currentMonth.count }} 건</p>
+						</div>
 						<canvas id="acquisitions2"></canvas>
 					</div>
 				</div>
@@ -57,8 +61,9 @@ import axios from 'axios';
 const authStore = useAuthStore();
 const myCount = ref({ issues: 0, comments: 0 });
 const percent = ref('');
-const amount = ref('');
-const month = ref('');
+const achive = ref('');
+const month = ref([]);
+const currentMonth = ref('');
 
 // -----------------------------------
 // 가입 유지일 구하기
@@ -81,17 +86,17 @@ onMounted(async () => {
 				authorization: authStore.token,
 			},
 		}),
-		axios.get('/savings/monthly-amount', {
+		axios.get('/savings/monthly-count', {
 			headers: {
 				Authorization: authStore.token,
 			},
 		})
 	]);
-	amount.value = percentResponse.data.nowAccount;
+	achive.value = percentResponse.data.nowAccount;
 	month.value = monthResponse.data
+	currentMonth.value = monthResponse.data[0];
 	myCount.value = myCountResponse.data;
-	percent.value = ((amount.value.acntAmount / amount.value.goalAmount) * 100).toFixed(0);
-	console.log(month.value);
+	percent.value = ((achive.value.acntAmount / achive.value.goalAmount) * 100).toFixed(0);
 
 	const goal = [percent.value, 100 - percent.value];
 
@@ -124,7 +129,7 @@ onMounted(async () => {
 	});
 
 	// 도넛 차트에 플러그인 적용하여 생성
-	new Chart(ctx, {
+	const goalChart = new Chart(ctx, {
 		type: 'doughnut',
 		data: {
 			datasets: [
@@ -149,12 +154,12 @@ onMounted(async () => {
 	// -----------------------------------
 	// 월간 차트
 	// -----------------------------------
-	new Chart(
+	const monthChart = new Chart(
 		document.getElementById('acquisitions2'),
 		{
 			type: 'bar',
 			options: {
-				aspectRatio: 2 / 3,
+				aspectRatio: 1 / 1,
 				elements: {
 					rectangle: {
 						borderRadius: 20,
@@ -174,12 +179,14 @@ onMounted(async () => {
 				}
 			},
 			data: {
-				labels: data2.map(row => row.month),
+				labels: month.value.map(row => row.month),
 				datasets: [
 					{
 						label: '월별 게시글 현황',
-						data: data2.map(row => row.count),
+						data: month.value.map(row => row.count),
 						borderRadius: 20,
+						backgroundColor:
+							'#BF1131',
 					}
 				]
 			}
