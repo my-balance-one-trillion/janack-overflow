@@ -58,7 +58,7 @@ const state = reactive({
 
 const login = async () => {
   try {
-    const response = await axios.post(
+    const res = await axios.post(
       "http://localhost:8081/mailPass",
       state.input,
       {
@@ -68,6 +68,8 @@ const login = async () => {
         },
       }
     );
+
+    console.log(res);
 
     window.alert("메일을 발송했습니다");
     router.push("/login");

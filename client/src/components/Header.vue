@@ -44,6 +44,7 @@
 <script setup>
 import { ref } from "vue";
 import { useAuthStore } from "@/stores/auth";
+import axios from "axios";
 
 const menuBar = ref(null);
 const nav = ref(null);
@@ -55,6 +56,8 @@ function removeToken() {
   localStorage.removeItem("token");
   authStore.clearToken();
   alert("로그아웃되었습니다.");
+
+  // axios.get("http://localhost:8081/logout")
 }
 
 function menuOnClick() {

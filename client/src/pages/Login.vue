@@ -72,7 +72,7 @@ const state = reactive({
 
 const login = async () => {
   try {
-    const response = await axios.post(
+    const res = await axios.post(
       "http://localhost:8081/login",
       state.input,
       {
@@ -82,18 +82,17 @@ const login = async () => {
         },
       }
     );
+    
+    authStore.setToken(res.headers.authorization);
 
-    // 기존 코드
-    // localStorage.setItem("token", response.headers.authorization);
-
-    // 변경된 코드
-    authStore.setToken(response.headers.authorization);
-
+    console.log(res.data);
     window.alert("로그인이 수행되었습니다");
     router.push("/");
+
   } catch (error) {
     console.log("로그인 실패", error);
-    window.alert("로그인 실패했습니다");
+    console.log(error);
+    window.alert(error.response.data);
   }
 };
 </script>

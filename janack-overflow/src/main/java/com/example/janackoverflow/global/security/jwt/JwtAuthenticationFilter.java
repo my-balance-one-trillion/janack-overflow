@@ -4,6 +4,7 @@ import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.example.janackoverflow.global.security.DTO.LoginRequestDTO;
 import com.example.janackoverflow.global.security.auth.NowUserDetails;
+import com.example.janackoverflow.user.service.UsersService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -18,7 +19,9 @@ import org.springframework.security.web.authentication.AbstractAuthenticationPro
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.Date;
+import java.util.Enumeration;
 
 
 public class JwtAuthenticationFilter extends AbstractAuthenticationProcessingFilter {//UsernamePasswordAuthenticationFilter{
@@ -30,6 +33,9 @@ public class JwtAuthenticationFilter extends AbstractAuthenticationProcessingFil
 
 	@Autowired
 	private JwtProperties jwtProperties;
+
+	@Autowired
+	private UsersService usersService;
 
 	private LoginRequestDTO loginRequestDTO;
 
@@ -58,8 +64,40 @@ public class JwtAuthenticationFilter extends AbstractAuthenticationProcessingFil
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+
+		//로그인 시도하는 유저의 상태 조회
+		String statusNum = usersService.findByEmail(loginRequestDTO.getEmail()).getStatus();
 		
-		// 유저네임, 패스워드 토큰 생성
+		if(!statusNum.equals("01")){ // 상태 01이 아니면
+			//인가 과정 중단
+
+			response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+			response.setContentType("text/plain"); // MIME 타입 설정
+			response.setCharacterEncoding("UTF-8"); // 문자 인코딩 설정
+
+			PrintWriter writer = null;
+			try {
+				writer = response.getWriter();
+			} catch (IOException e) {
+				throw new RuntimeException(e);
+			}
+			
+			switch (statusNum){
+				case "02" : {
+					writer.println("탈퇴 처리된 사용자 입니다");
+					break;
+				}
+
+				case "03" : {
+					writer.println("정지된 사용자 입니다");
+					break;
+				}
+			}
+			
+			return null; //null을 반환하여 토큰 생성 차단
+		}
+		
+		// 유저네임 패스워드 토큰 생성
 		UsernamePasswordAuthenticationToken authenticationToken = 
 				new UsernamePasswordAuthenticationToken(
 						loginRequestDTO.getEmail(),
@@ -118,15 +156,19 @@ public class JwtAuthenticationFilter extends AbstractAuthenticationProcessingFil
 		System.out.println("login complete");
 
 		System.out.println(request.getRequestURL());
-		System.out.println(request.getRequestURI());
+		System.out.println(request.getHeaderNames());
 
-		// "/" 로 리다이렉트
-		String scheme = request.getScheme(); //http 또는 https
-		String serverName = request.getServerName();
-		int serverPort = request.getServerPort();
+		Enumeration<String> headerNames = request.getHeaderNames();
 
-		response.sendRedirect(scheme + "://" + serverName + ":" + serverPort + "/");
+		while (headerNames.hasMoreElements()) {
+			String headerName = headerNames.nextElement();
+			String headerValue = request.getHeader(headerName);
 
+			System.out.println(headerName + ": " + headerValue);
+		}
+
+		// 리다이렉트 <- /login 페이지 진입 하기 전의 페이지 정보가 들어오지 않아서 주석처리
+		//response.sendRedirect(String.valueOf());
 
 	}
 	
