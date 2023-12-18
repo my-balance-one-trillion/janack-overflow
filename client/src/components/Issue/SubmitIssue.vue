@@ -4,9 +4,9 @@ import axios from "axios";
 import {useAuthStore} from "@/stores/auth";
 
 const issueInfo = ref({
-  title:'',
-  content:'',
-  category:'',
+  title: '',
+  content: '',
+  category: '',
   code: '// 코드를 입력해주세요',
   keyword: '',
 });
@@ -14,16 +14,17 @@ const emit = defineEmits(['step-changed']);
 const step = ref(1);
 const code = ref('');
 
-import hljs from 'highlight.js/lib/core';
-import 'highlight.js/styles/default.css';
 import CodeEditor from 'simple-code-editor';
+
 
 import Tagify from '@yaireo/tagify'
 import '@yaireo/tagify/src/tagify.scss';
+// import 'highlight.js/scss/isbl-editor-dark.scss';
+
+
 const tagInput = ref(null);
 
 onMounted(() => {
-  // hljs.highlightAll();
   const tagify = new Tagify(tagInput.value, {
     whitelist: ['java', 'spring', 'python'],
     maxTags: 3,
@@ -34,9 +35,11 @@ onMounted(() => {
     //   tagify.removeTags(e.detail.tag);
     // }
     issueInfo.value.keyword = tagify.value.map(tag => tag.value).join(',');
-    console.log(issueInfo.value.keyword);
   });
 
+  /*  document.querySelectorAll('code').forEach((block) => {
+      hljs.highlightBlock(block);
+    });*/
 });
 
 
@@ -61,7 +64,7 @@ async function submitIssue() {
 </script>
 <template>
   <div class="flex items-center justify-center mt-2 w-12/12 font-sub">
-    <div class="w-full px-8 py-5 mx-auto my-4 text-lg bg-white rounded-lg shadow-md">
+    <div class="w-full px-8 py-5 mx-auto my-4 bg-white rounded-lg shadow-md">
       <!--  에러 title -->
       <input
           v-model="issueInfo.title"
@@ -74,11 +77,11 @@ async function submitIssue() {
       <!--에러 키워드, 카테고리-->
       <div class="flex justify-between mb-4">
         <div>
-          <input ref="tagInput" type="text" placeholder="키워드"/>
+          <input ref="tagInput" placeholder="키워드 (최대 3개)" type="text"/>
         </div>
         <div>
           <select v-model="issueInfo.category"
-                  class="bg-gray-50 border-4 border-gray-300 text-gray-900 text-xl rounded-lg focus:ring-main-red focus:border-main-red block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white">
+                  class="bg-gray-50 border-4 border-gray-300 text-gray-900 text-xl rounded-lg focus:ring-main-red focus:border-main-red block w-full p-2.5">
             <option selected value="syntax">syntax</option>
             <option value="language">language</option>
             <option value="database">database</option>
@@ -98,8 +101,9 @@ async function submitIssue() {
       />
       <!--에러 코드-->
       <div>
-        <CodeEditor v-model="issueInfo.code" :languages="[['java', 'Java'],['python', 'Python'],['javascript', 'Javascript']]" :line-nums="true" theme="isbl-editor-dark"
-                    style="margin-top: 0;" width="100%"></CodeEditor>
+        <CodeEditor v-model="issueInfo.code"
+                    :languages="[['java', 'Java'],['python', 'Python'],['javascript', 'Javascript']]" :line-nums="true"
+                    theme="isbl-editor-dark" width="100%"></CodeEditor>
       </div>
     </div>
   </div>
