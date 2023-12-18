@@ -16,7 +16,7 @@
     </span>
     </div>
     <div
-      class="flex flex-col flex-auto flex-shrink-0 rounded-2xl justify-end max-h-[800px] min-h-[600px] bg-gray-100 p-4"
+      class="flex flex-col flex-auto flex-shrink-0 rounded-2xl justify-end max-h-[800px] min-h-[800px] bg-gray-100 p-4"
     >
       <div class="flex flex-col h-full overflow-x-auto mb-4">
         <div class="flex flex-col h-full overflow-y-scroll" ref="chatDiv">

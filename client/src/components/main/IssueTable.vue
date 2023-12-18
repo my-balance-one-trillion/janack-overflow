@@ -3,15 +3,15 @@
   <body class="antialiased font-main">
     <div class="mx-auto px-4 sm:px-8">
       <div class="py-8">
-        <div class="mx-4 sm:-mx-8 px-4 sm:px-8 py-4">
+        <div class="mx-4 sm:mx-8 px-4 sm:px-8 py-4">
           <div
-            class="inline-block min-w-full shadow rounded-lg overflow-y-scroll h-[500px]"
+            class="inline-block min-w-fit overflow-x-auto shadow rounded-lg overflow-y-scroll h-[500px]"
           >
-            <table class="min-w-full leading-normal">
-              <tbody class="w-[600px]">
+            <table class="leading-normal">
+              <tbody>
                 <template v-for="(issue, index) in issueList">
-                  <router-link :to="'/community/detail' + issue.id">
-                    <tr class="w-[300px]">
+                    <router-link :to="'community/detail/'+issue.id">
+                    <tr>
                       <td
                         class="px-5 py-5 border-b border-gray-200 bg-white text-lg"
                       >
@@ -40,7 +40,7 @@
                         </p>
                       </td>
                       <td
-                        class="flex px-5 py-5 border-b border-gray-200 bg-white text-2xl justify-end"
+                        class="flex px-5 py-5 border-b border-gray-200 bg-white text-2xl justify-end whitespace-nowrap"
                       >
                         <!-- 진행중: 01 -->
                         <template v-if="issue.status == '01'">
@@ -79,13 +79,13 @@
                         </template>
                       </td>
                     </tr>
-                  </router-link>
+                </router-link>
                 </template>
               </tbody>
             </table>
-            <div
+            <!-- <div
               class="px-5 py-1 bg-white border-t flex flex-col xs:flex-row items-center xs:justify-between"
-            ></div>
+            ></div> -->
           </div>
         </div>
       </div>
