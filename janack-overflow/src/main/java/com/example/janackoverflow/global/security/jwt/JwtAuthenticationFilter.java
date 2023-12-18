@@ -2,7 +2,7 @@ package com.example.janackoverflow.global.security.jwt;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
-import com.example.janackoverflow.global.security.LoginRequestDTO;
+import com.example.janackoverflow.global.security.DTO.LoginRequestDTO;
 import com.example.janackoverflow.global.security.auth.NowUserDetails;
 import com.example.janackoverflow.user.service.UsersService;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -19,7 +19,10 @@ import org.springframework.security.web.authentication.AbstractAuthenticationPro
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.Date;
+import java.util.Enumeration;
+import java.util.NoSuchElementException;
 
 
 public class JwtAuthenticationFilter extends AbstractAuthenticationProcessingFilter {//UsernamePasswordAuthenticationFilter{
@@ -31,6 +34,9 @@ public class JwtAuthenticationFilter extends AbstractAuthenticationProcessingFil
 
 	@Autowired
 	private JwtProperties jwtProperties;
+
+	@Autowired
+	private UsersService usersService;
 
 	private LoginRequestDTO loginRequestDTO;
 
@@ -59,14 +65,66 @@ public class JwtAuthenticationFilter extends AbstractAuthenticationProcessingFil
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+
+		try{
+			usersService.findByEmail(loginRequestDTO.getEmail()); //입력받은 사용자와 DB일치 여부 확인
+		} catch (NoSuchElementException e){
+
+			response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+			response.setContentType("text/plain"); // MIME 타입 설정
+			response.setCharacterEncoding("UTF-8"); // 문자 인코딩 설정
+
+			PrintWriter writer = null;
+			try {
+				writer = response.getWriter();
+			} catch (IOException ex) {
+				throw new RuntimeException(ex);
+			}
+
+			writer.println("일치하는 사용자가 없습니다");
+
+			return null;
+		}
+
+		//로그인 시도하는 유저의 상태 조회
+		String statusNum = usersService.findByEmail(loginRequestDTO.getEmail()).getStatus();
 		
-		// 유저네임, 패스워드 토큰 생성
+		if(!statusNum.equals("01")){ // 상태 01이 아니면
+			//인가 과정 중단
+
+			response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+			response.setContentType("text/plain"); // MIME 타입 설정
+			response.setCharacterEncoding("UTF-8"); // 문자 인코딩 설정
+
+			PrintWriter writer = null;
+			try {
+				writer = response.getWriter();
+			} catch (IOException e) {
+				throw new RuntimeException(e);
+			}
+			
+			switch (statusNum){
+				case "02" : {
+					writer.println("탈퇴 처리된 사용자 입니다");
+					break;
+				}
+
+				case "03" : {
+					writer.println("정지된 사용자 입니다");
+					break;
+				}
+			}
+			
+			return null; //null을 반환하여 토큰 생성 차단
+		}
+		
+		// 유저네임 패스워드 토큰 생성
 		UsernamePasswordAuthenticationToken authenticationToken = 
 				new UsernamePasswordAuthenticationToken(
 						loginRequestDTO.getEmail(),
 						loginRequestDTO.getPassword());
 		
-		System.out.println("JwtAuthenticationFilter : 토큰 생성 완료");
+		System.out.println("JwtAuthenticationFilter : authenticationToken 생성");
 		
 		// authenticate() 함수가 호출 되면 AuthenticationProvider가 UserDetailsService 객체의
 		// loadUserByUsername(토큰의 첫 번째 파라미터 값) 를 호출하고
@@ -117,6 +175,19 @@ public class JwtAuthenticationFilter extends AbstractAuthenticationProcessingFil
 		System.out.println("jwtToken : " + jwtToken);
 
 		System.out.println("login complete");
+
+//		Enumeration<String> headerNames = request.getHeaderNames();
+//
+//		while (headerNames.hasMoreElements()) {
+//			String headerName = headerNames.nextElement();
+//			String headerValue = request.getHeader(headerName);
+//
+//			System.out.println(headerName + ": " + headerValue);
+//		}
+
+		// 리다이렉트 <- /login 페이지 진입 하기 전의 페이지 정보가 들어오지 않아서 주석처리
+		//response.sendRedirect(String.valueOf());
+
 	}
 	
 }

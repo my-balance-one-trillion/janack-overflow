@@ -1,4 +1,4 @@
-package com.example.janackoverflow.global.security;
+package com.example.janackoverflow.global.security.DTO;
 
 import lombok.Data;
 

@@ -1,16 +1,13 @@
 package com.example.janackoverflow.mypage.controller;
 
-import com.example.janackoverflow.community.domain.CommentDTO;
 import com.example.janackoverflow.global.pagination.PageResponseDTO;
 import com.example.janackoverflow.global.security.auth.NowUserDetails;
-import com.example.janackoverflow.issue.domain.response.IssueResponseDTO;
-import com.example.janackoverflow.mypage.domain.response.myCommentResponseDTO;
-import com.example.janackoverflow.mypage.domain.response.myIssueResponseDTO;
+import com.example.janackoverflow.mypage.domain.response.MyCommentResponseDTO;
+import com.example.janackoverflow.mypage.domain.response.MyIssueResponseDTO;
 import com.example.janackoverflow.user.service.UsersService;
 import com.example.janackoverflow.mypage.service.MypageService;
 import com.example.janackoverflow.user.domain.request.UsersRequestDTO;
 import com.example.janackoverflow.user.domain.response.UsersResponseDTO;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -58,18 +55,17 @@ public class MypageController {
     @GetMapping("mypage/myissue")
     public ResponseEntity readMyIssue( @AuthenticationPrincipal NowUserDetails nowUserDetails,
                                        Pageable pageable){
-        System.out.println(pageable);
         Long usersId = nowUserDetails.getId();
-        PageResponseDTO<myIssueResponseDTO> myIssueList = mypageService.readMyIssue(usersId, pageable);
-        System.out.println(myIssueList);
+        PageResponseDTO<MyIssueResponseDTO> myIssueList = mypageService.readMyIssue(usersId, pageable);
         return new ResponseEntity(myIssueList, HttpStatus.OK);
     }
 
 //    내가쓴 댓글 보기
     @GetMapping("/mypage/mycomment")
-    public ResponseEntity readMyComment( @AuthenticationPrincipal NowUserDetails nowUserDetails){
+    public ResponseEntity readMyComment( @AuthenticationPrincipal NowUserDetails nowUserDetails,
+                                         Pageable pageable){
         Long usersId = nowUserDetails.getId();
-        Page<myCommentResponseDTO> myCommentList = mypageService.readMyComment(usersId);
+        PageResponseDTO<MyCommentResponseDTO> myCommentList = mypageService.readMyComment(usersId, pageable);
         return new ResponseEntity(myCommentList ,HttpStatus.OK);
     }
 
