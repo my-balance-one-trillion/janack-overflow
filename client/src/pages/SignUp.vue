@@ -70,6 +70,7 @@
                   <div class="flex justify-between gap-3">
                     <div class="relative">
                       <input
+                      @input="formatPhone"
                       @blur="phoneCheck"
                       autocomplete="off" id="digit" name="digit" type="text" v-model="state.input.digit"
                       class="focus:border-main-red focus:ouline-none focus:ring-0 peer placeholder-transparent bg-gray-50 h-10 w-full border-t-0 border-l-0 border-r-0 border-b-2 
@@ -195,6 +196,18 @@ export default {
       }
     })
 
+    const formatPhone = () => {
+      let input = state.input.digit.replace(/[^0-9]/g, '');
+
+      if(input.length <= 3){
+        state.input.digit = input;
+      }else if (input.length <= 7) {
+        state.input.digit = `${input.slice(0, 3)}-${input.slice(3)}`;
+      } else {
+        state.input.digit = `${input.slice(0, 3)}-${input.slice(3, 7)}-${input.slice(7)}`;
+      }
+    }
+
     const exMail = /^[A-Za-z0-9_\.\-]+@[A-Za-z0-9\-]+\.[A-Za-z0-9\-]+/;
     const exPhone = /^[0-9]{3}\-([0-9]{3}|[0-9]{4})\-([0-9]{3}|[0-9]{4})/;
     const exPass = /^[A-Za-z0-9_\.\-`~!@#\$%^&*\|\\?;:+=\[\]<>\(\),_'"-]{9,}/;
@@ -261,6 +274,7 @@ export default {
       state, 
       mailCheck,
       passCheck,
+      formatPhone,
       phoneCheck,
       signup
     }

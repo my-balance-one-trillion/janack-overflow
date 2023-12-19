@@ -5,7 +5,6 @@
         <img src="/images/logo.svg" alt="" class="object-contain" />
       </router-link>
     </div>
-    {{ role.role }}
     <div class="flex justify-between gap-4 h-auto">
       <div class="login-wrap">
         <div class="mx-auto" @click="removeToken" v-if="authStore.token">
