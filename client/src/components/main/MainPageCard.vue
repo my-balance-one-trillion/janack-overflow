@@ -15,7 +15,7 @@
             <span class="ml-2">{{ props.issue.likes }}</span>
           </div>
         </div>
-        <p class="mt-2 text-gray-600 overflow-hidden"
+        <p class="mt-2 overflow-hidden text-gray-600"
            style="height: 80px; overflow: hidden;">{{ props.issue.content.length>90? props.issue.content.substr(0, 90) + '....' : props.issue.content }}</p>
       </div>
       <div class="flex items-center justify-between mt-4">
@@ -32,6 +32,7 @@
   </div>
 </template>
 <script setup>
+import { FwbBadge } from 'flowbite-vue';
     const props = defineProps({
         issue:{
             type: Object

@@ -1,22 +1,22 @@
 <template>
-  <div class="min-h-screen bg-white py-6 flex flex-col justify-center sm:py-12">
+  <div class="flex flex-col justify-center min-h-screen py-6 bg-white sm:py-12">
     <div class="relative py-3 sm:max-w-xl sm:mx-auto">
       <div
-        class="absolute inset-0 bg-gradient-to-r from-red-300 to-red-600 shadow-lg transform -skew-y-6 sm:skew-y-0 sm:-rotate-6 sm:rounded-3xl">
+        class="absolute inset-0 transform -skew-y-6 shadow-lg bg-gradient-to-r from-red-300 to-red-600 sm:skew-y-0 sm:-rotate-6 sm:rounded-3xl">
       </div>
 
-      <div class="relative px-4 py-10 bg-gray-50 shadow-lg sm:rounded-3xl sm:p-20">
+      <div class="relative px-4 py-10 shadow-lg bg-gray-50 sm:rounded-3xl sm:p-20">
         <div class="max-w-md mx-auto">
           <div>
             <h1 class="text-3xl font-semibold text-center">Login</h1>
           </div>
 
           <div class="divide-y divide-gray-200">
-            <div class="py-8 text-base leading-6 space-y-4 text-gray-700 sm:text-lg sm:leading-7">
+            <div class="py-8 space-y-4 text-base leading-6 text-gray-700 sm:text-lg sm:leading-7">
               <div class="relative pl-14" @keyup.enter="login">
                 <div class="relative">
                   <input autocomplete="off" id="email" name="email" type="text"
-                    class="focus:ouline-none focus:ring-0 focus:border-main-red peer placeholder-transparent bg-gray-50 h-10 w-10/12 border-t-0 border-l-0 border-r-0 border-b-2 border-red-700 text-gray-900 focus:outline-none focus:borer-rose-600"
+                    class="w-10/12 h-10 text-gray-900 placeholder-transparent border-t-0 border-b-2 border-l-0 border-r-0 border-red-700 focus:ouline-none focus:ring-0 focus:border-main-red peer bg-gray-50 focus:outline-none focus:borer-rose-600"
                     v-model="state.input.email" placeholder="Email" />
                   <label for="email"
                     class="absolute left-0 -top-3.5 text-gray-600 text-sm peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-440 peer-placeholder-shown:top-2 transition-all peer-focus:-top-3.5 peer-focus:text-gray-600 peer-focus:text-sm">Email</label>
@@ -26,7 +26,7 @@
 
                 <div class="relative">
                   <input autocomplete="off" id="password" name="password" type="password"
-                    class="focus:ouline-none focus:ring-0 focus:border-main-red peer placeholder-transparent bg-gray-50 h-10 w-10/12 border-t-0 border-l-0 border-r-0 border-b-2 border-red-700 text-gray-900 focus:outline-none focus:borer-rose-600"
+                    class="w-10/12 h-10 text-gray-900 placeholder-transparent border-t-0 border-b-2 border-l-0 border-r-0 border-red-700 focus:ouline-none focus:ring-0 focus:border-main-red peer bg-gray-50 focus:outline-none focus:borer-rose-600"
                     v-model="state.input.password" placeholder="Password" />
                   <label for="password"
                     class="absolute left-0 -top-3.5 text-gray-600 text-sm peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-440 peer-placeholder-shown:top-2 transition-all peer-focus:-top-3.5 peer-focus:text-gray-600 peer-focus:text-sm">Password</label>
@@ -34,7 +34,7 @@
               </div>
 
               <div class="relative flex justify-center">
-                <button class="bg-red-700 text-white rounded-3xl px-28 py-1" @click="login">
+                <button class="py-1 text-white bg-red-700 rounded-3xl px-28" @click="login">
                   로그인
                 </button>
               </div>
@@ -87,7 +87,17 @@ const login = async () => {
 
     console.log(res.data);
     window.alert("로그인이 수행되었습니다");
-    router.push("/");
+    // router.push("/");
+    const previousRoute = sessionStorage.getItem('previousRoute');
+    console.log(previousRoute);
+    if (previousRoute) {
+      // 이전 페이지로 이동
+      sessionStorage.removeItem('previousRoute');
+      router.push(previousRoute);
+    } else {
+      // 이전 페이지가 없을 경우 기본 경로로 이동
+      router.push("/");
+    }
 
   } catch (error) {
     console.log("로그인 실패", error);
