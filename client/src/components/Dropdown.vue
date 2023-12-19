@@ -1,5 +1,5 @@
 <template>
-    <div component-to-re-render :key="componentKey" class="flex items-center w-fit">
+    <div class="flex items-center w-fit">
         <!-- <div class="flex items-center w-fit"> -->
         <label for="langs" class="block w-20 mb-2 text-xs font-bold text-gray-900 dark:text-white">언어 선택</label>
         <!-- </div> -->
@@ -20,11 +20,9 @@
 import { onMounted, ref } from 'vue';
 import { initFlowbite } from 'flowbite';
 import { defineEmits } from 'vue'
-import { func } from 'prop-types';
 
 const selectedLang = ref('plain');
 const emit = defineEmits(['selectLang']);
-const componentKey = ref(0);
 
 const handleLangChange = (event) => {
     selectedLang.value = event.target.value;

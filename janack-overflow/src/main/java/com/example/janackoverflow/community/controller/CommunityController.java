@@ -1,7 +1,7 @@
 package com.example.janackoverflow.community.controller;
 
 import com.example.janackoverflow.community.domain.CommentDTO;
-import com.example.janackoverflow.community.entity.Comment;
+import com.example.janackoverflow.community.domain.MediumArticle;
 import com.example.janackoverflow.community.entity.Likes;
 import com.example.janackoverflow.community.service.CommentService;
 import com.example.janackoverflow.community.service.CommunityService;
@@ -9,20 +9,16 @@ import com.example.janackoverflow.community.service.LikesService;
 import com.example.janackoverflow.global.security.auth.NowUserDetails;
 import com.example.janackoverflow.issue.domain.IssueDTO;
 import com.example.janackoverflow.issue.service.IssueService;
-import jakarta.annotation.Nullable;
+import com.example.janackoverflow.mypage.service.MypageService;
 import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
@@ -34,12 +30,14 @@ public class CommunityController {
     private final LikesService likesService;
     private final CommentService commentService;
     private final IssueService issueService;
+    private final MypageService mypageService;
 
-    public CommunityController(CommunityService communityService, LikesService likesService, CommentService commentService, IssueService issueService) {
+    public CommunityController(CommunityService communityService, LikesService likesService, CommentService commentService, IssueService issueService, MypageService mypageService) {
         this.communityService = communityService;
         this.likesService = likesService;
         this.commentService = commentService;
         this.issueService = issueService;
+        this.mypageService = mypageService;
     }
 
 
@@ -112,6 +110,17 @@ public class CommunityController {
     }
 
 
+    @GetMapping(value = "/solvedissue/{issueId}/articles")
+    public ResponseEntity<List<MediumArticle>> getArticles(@PathVariable("issueId")long issueId){
+        try {
+            return ResponseEntity.ok(communityService.getMediumApi(issueId));
+        } catch (IOException | InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+
+    }
+
+
     @GetMapping(value = "/solvedissue")
     public ResponseEntity<Page<IssueDTO.ResponseDTO>> getCommunity(@RequestParam(name = "order", required = false) String order,
                                                                    @RequestParam(name = "category", required = false) String category,
@@ -168,6 +177,14 @@ public class CommunityController {
                                                                      @RequestParam(required = false, defaultValue = "0", name = "pageNo") int pageNo) {
         log.info("/solvedissue/filter : " + ", pageNo : " + pageNo + ", category : " + category);
         return ResponseEntity.ok(communityService.getIssueBySelectedCategory(category, pageNo));
+    }
+
+    @DeleteMapping("/comment/{commentId}")
+    public ResponseEntity<?> deleteMyComment(@PathVariable("commentId") Long commentId,
+                                          @AuthenticationPrincipal NowUserDetails nowUserDetails){
+        Long usersId = nowUserDetails.getId();
+        mypageService.deleteMyComment(commentId, usersId);
+        return new ResponseEntity(HttpStatus.RESET_CONTENT);
     }
 }
 
