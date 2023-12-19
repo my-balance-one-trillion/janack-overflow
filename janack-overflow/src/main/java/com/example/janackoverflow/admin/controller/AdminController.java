@@ -67,4 +67,10 @@ public class AdminController {
         List<Map<String, Object>> signTrend = adminService.readSign6Month();
         return new ResponseEntity(signTrend,HttpStatus.OK);
     }
+
+    @GetMapping("/admin/solutiontrend")
+    public ResponseEntity readSolution6Month(){
+        List<Map<String, Object>> solutionTrend = adminService.readSolution6Month();
+        return new ResponseEntity(solutionTrend,HttpStatus.OK);
+    }
 }
