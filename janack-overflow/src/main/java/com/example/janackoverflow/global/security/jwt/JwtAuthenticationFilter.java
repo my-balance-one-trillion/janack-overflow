@@ -81,41 +81,9 @@ public class JwtAuthenticationFilter extends AbstractAuthenticationProcessingFil
 				throw new RuntimeException(ex);
 			}
 
-			writer.println("일치하는 사용자가 없습니다");
+			writer.println("입력하신 Email과 일치하는 사용자가 없습니다");
 
 			return null;
-		}
-
-		//로그인 시도하는 유저의 상태 조회
-		String statusNum = usersService.findByEmail(loginRequestDTO.getEmail()).getStatus();
-		
-		if(!statusNum.equals("01")){ // 상태 01이 아니면
-			//인가 과정 중단
-
-			response.setStatus(HttpServletResponse.SC_FORBIDDEN);
-			response.setContentType("text/plain"); // MIME 타입 설정
-			response.setCharacterEncoding("UTF-8"); // 문자 인코딩 설정
-
-			PrintWriter writer = null;
-			try {
-				writer = response.getWriter();
-			} catch (IOException e) {
-				throw new RuntimeException(e);
-			}
-			
-			switch (statusNum){
-				case "02" : {
-					writer.println("탈퇴 처리된 사용자 입니다");
-					break;
-				}
-
-				case "03" : {
-					writer.println("정지된 사용자 입니다");
-					break;
-				}
-			}
-			
-			return null; //null을 반환하여 토큰 생성 차단
 		}
 		
 		// 유저네임 패스워드 토큰 생성
@@ -136,8 +104,41 @@ public class JwtAuthenticationFilter extends AbstractAuthenticationProcessingFil
 		// Tip: AuthenticationProvider의 디폴트 암호화 방식은 BCryptPasswordEncoder 타입
 
 		try{
+
 			Authentication authentication =
 					authenticationManager.authenticate(authenticationToken);
+
+			//로그인 시도하는 유저의 상태 조회
+			String statusNum = usersService.findByEmail(loginRequestDTO.getEmail()).getStatus();
+
+			if(!statusNum.equals("01")){ // 상태 01이 아니면
+				//인가 과정 중단
+
+				response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+				response.setContentType("text/plain"); // MIME 타입 설정
+				response.setCharacterEncoding("UTF-8"); // 문자 인코딩 설정
+
+				PrintWriter writer = null;
+				try {
+					writer = response.getWriter();
+				} catch (IOException e) {
+					throw new RuntimeException(e);
+				}
+
+				switch (statusNum){
+					case "02" : {
+						writer.println("탈퇴 처리된 사용자 입니다");
+						break;
+					}
+
+					case "03" : {
+						writer.println("정지된 사용자 입니다");
+						break;
+					}
+				}
+
+				return null; //null을 반환하여 인가 과정 중단
+			}
 
 			NowUserDetails principalDetailis = (NowUserDetails) authentication.getPrincipal();
 
