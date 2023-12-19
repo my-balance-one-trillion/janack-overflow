@@ -31,58 +31,15 @@
                     <p class="w-full break-all">
                         {{ issue.content }}
                     </p>
-                    <div>
-                        <div class="p-3 border-0 rounded-xl bg-bg-grey">
-                            <div class="flex items-center justify-end">
-                                <Dropdown @selectLang="handle"></Dropdown>
-                                <i :class="['p-2', 'fa-lg', 'fa-clipboard', 'issueCodeBlock', 'hover:cursor-pointer', hovered ? 'fa-solid' : 'fa-regular']"
-                                    @click="copyToClipboard" @mouseover="hovered = true" @mouseout="hovered = false"></i>
-                            </div>
-                            <pre class="w-auto" v-if="lang === 'plain'" ref="issueCodeBlock">
-                                                                <code class="flex justify-start">{{ issue.code }}</code>
-                                                            </pre>
-                            <pre v-if="lang === 'java'"
-                                v-highlightjs><code :class="lang" ref="issueCodeBlock" :style="codeStyle">{{ code }}</code></pre>
-                            <pre v-if="lang === 'javascript'"
-                                v-highlightjs><code :class="lang" ref="issueCodeBlock" :style="codeStyle">{{ code }}</code></pre>
-                            <pre v-if="lang === 'kotlin'"
-                                v-highlightjs><code :class="lang" ref="issueCodeBlock" :style="codeStyle">{{ code }}</code></pre>
-                            <pre v-if="lang === 'python'"
-                                v-highlightjs><code :class="lang" ref="issueCodeBlock" :style="codeStyle">{{ code }}</code></pre>
-                            <pre v-if="lang === 'sql'"
-                                v-highlightjs><code :class="lang" ref="issueCodeBlock" :style="codeStyle">{{ code }}</code></pre>
-                            <pre v-if="lang === 'html'"
-                                v-highlightjs><code :class="lang" ref="issueCodeBlock" :style="codeStyle">{{ code }}</code></pre>
-                        </div>
+                    <div class="flex flex-col">
+                        <Monaco :code="issue.code"></Monaco>
                     </div>
                 </div>
 
                 <div v-show="activeTab === 1" class="w-full">
                     <p class="w-full break-all">{{ solution.content }}</p>
                     <div>
-                        <div class="p-3 border-0 rounded-xl bg-bg-grey">
-                            <div class="flex justify-end">
-                                <Dropdown @selectLang="solutionCodehandle"></Dropdown>
-                                <i :class="['p-2', 'fa-lg', 'fa-clipboard', 'solutionCodeBlock', 'hover:cursor-pointer', hovered ? 'fa-solid' : 'fa-regular']"
-                                    @click="copyToClipboard" @mouseover="hovered = true" @mouseout="hovered = false"></i>
-                                <!-- <i class=" fa-solid fa-copy"></i> -->
-                            </div>
-                            <pre class="w-auto" v-if="lang === 'plain'" ref="solutionCodeBlock">
-                                                                <code class="flex justify-start">{{ solutionCode }}</code>
-                                                            </pre>
-                            <pre v-if="lang === 'java'"
-                                v-highlightjs><code :class="lang" ref="solutionCodeBlock" :style="codeStyle">{{ solutionCode }}</code></pre>
-                            <pre v-if="lang === 'javascript'"
-                                v-highlightjs><code :class="lang" ref="solutionCodeBlock" :style="codeStyle">{{ solutionCode }}</code></pre>
-                            <pre v-if="lang === 'kotlin'"
-                                v-highlightjs><code :class="lang" ref="solutionCodeBlock" :style="codeStyle">{{ solutionCode }}</code></pre>
-                            <pre v-if="lang === 'python'"
-                                v-highlightjs><code :class="lang" ref="solutionCodeBlock" :style="codeStyle">{{ solutionCode }}</code></pre>
-                            <pre v-if="lang === 'sql'"
-                                v-highlightjs><code :class="lang" ref="solutionCodeBlock" :style="codeStyle">{{ solutionCode }}</code></pre>
-                            <pre v-if="lang === 'html'"
-                                v-highlightjs><code :class="lang" ref="solutionCodeBlock" :style="codeStyle">{{ solutionCode }}</code></pre>
-                        </div>
+                        <Monaco :code="solutionCode"></Monaco>
                     </div>
                 </div>
             </div>
@@ -208,33 +165,23 @@
             </form>
         </div>
     </div>
-    <div>
-        <Monaco></Monaco>
-    </div>
 </template>
 
 <script setup>
 import { onMounted, ref, watch } from 'vue';
 import { FwbBadge } from 'flowbite-vue';
 import { FwbButton, FwbTextarea, FwbPagination } from 'flowbite-vue'
-import ClipboardJS from 'clipboard';
 import Spinner from "@/components/Spinner.vue";
-import Dropdown from "@/components/Dropdown.vue";
 import Monaco from "@/components/Monaco.vue";
-
-import 'highlight.js/styles/default.css';
-import hljs from 'highlight.js/lib/core';
-import VueHighlightJS from 'vue3-highlightjs'
 
 import axios from 'axios';
 import { useRoute, useRouter } from 'vue-router';
 import { useAuthStore } from '@/stores/auth';
 import { storeToRefs } from 'pinia';
-import { func } from 'prop-types';
 
 const authStore = useAuthStore()
 const { userInfo } = storeToRefs(authStore);
-
+const router = useRouter();
 const activeTab = ref(0);
 const tabs = ref([
     "에러",
@@ -262,6 +209,7 @@ const message = ref(null);
 const lang = ref(null);
 const codeStyle = ref(null);
 const articleList = ref(null);
+const closedIssueFlag = ref(false);
 
 console.log(userInfo.value.id);
 
@@ -290,19 +238,39 @@ async function solutionCodehandle(e) {
 async function getIssueDetail() {
     await axios
         .get(
-            "/community/detail/" + route.params.id
+            "/community/detail/" + route.params.id,
+            {
+                headers: {
+                    Authorization: useAuthStore().token,
+                },
+            }
         )
         .then((response) => {
             console.log(response.data);
             issue.value = response.data;
-            // articleLength.value = response.data.articleList.length;
             solution.value = response.data.solutionDTO;
             issueCodeBlock.value = response.data.code;
             code.value = response.data.code;
             solutionCodeBlock.value = response.data.solutionDTO.code;
             keywords.value = response.data.keyword.split(',').map(keyword => keyword.trim());
             solutionCode.value = response.data.solutionDTO.code;
+            closedIssueFlag.value = true;
+        })
+        .catch((error) => {
+            console.log(error);
+            closedIssueFlag.value = false;
+            alert("잘못된 접근입니다.");
+            router.push('/community');
         });
+
+    if (closedIssueFlag.value === false) {
+        return;
+    } else {
+        getLikesCnt();
+        getLikesAPI();
+        getCommentListAPI();
+        getArticelList();
+    }
 }
 
 async function getArticelList() {
@@ -377,39 +345,6 @@ async function deleteMyComment(commentid) {
     }
 }
 
-let clipboardInstance = null; // ClipboardJS 인스턴스를 저장할 변수
-
-function copyToClipboard(event) {
-    const className = '.' + event.target.classList[3];
-    console.log(className);
-
-    let targetElement = null;
-    if (className === '.solutionCodeBlock') {
-        targetElement = solutionCodeBlock.value;
-    } else {
-        targetElement = issueCodeBlock.value;
-    }
-
-    if (clipboardInstance) {
-        clipboardInstance.destroy();
-    }
-
-    clipboardInstance = new ClipboardJS(className, {
-        text: function () {
-            return targetElement.innerText;
-        }
-    });
-
-    clipboardInstance.on('success', function (e) {
-        alert('코드가 클립보드에 복사되었습니다.');
-    });
-
-    clipboardInstance.on('error', function (e) {
-        console.error('코드복사 중 오류가 발생했습니다:', e);
-    });
-
-}
-
 const getLikesAPI = async () => {
     const url = `/community/likes/${route.params.id}/${userInfo.value.id}`; //usersId
 
@@ -476,12 +411,9 @@ const cancleLikeAPI = async () => {
 };
 
 onMounted(() => {
-    getLikesCnt();
-    getLikesAPI();
-    getCommentListAPI();
-    getIssueDetail();
-    getArticelList();
     initFlowbite();
+    getIssueDetail();
+
 });
 
 </script>
