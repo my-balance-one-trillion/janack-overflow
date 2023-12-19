@@ -108,7 +108,7 @@ async function getIssueList(i) {
 
 function pageForward(i) {
 
-  let warpForward = i - 5;
+  let warpForward = i - 6;
   if (warpForward <= 0) {
     getIssueList(0);
   } else {
