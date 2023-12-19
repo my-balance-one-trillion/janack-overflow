@@ -144,7 +144,7 @@ public class CommunityService {
                                 usersRepository.findById(issue.getUsers().getId()).orElseThrow(() ->
                                         new IllegalArgumentException("해당 유저를 찾을 수 없습니다.")).toIssueDto(),
                                 null,
-                                null, null
+                                null
                         )
                 ).orElseThrow(() -> new IllegalArgumentException("없는 이슈번호입니다."));
         //작성자 체크, 포기 상태 체크
