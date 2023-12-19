@@ -109,9 +109,9 @@ public class UsersController {
                         "        </div>\n" +
                         "\n" +
                         "        <div style=\"padding-top:5%;text-align:center\">\n" +
-                        "          <a href=\"http://localhost:5173/mypage\" \n" +
+                        "          <a href=\"http://localhost:5173/login\" \n" +
                         "          style=\"font-family:'Google Sans',Roboto,RobotoDraft,Helvetica,Arial,sans-serif;line-height:16px;color:#ffffff;font-weight:400;text-decoration:none;font-size:14px;display:inline-block;padding:10px 24px;background-color: rgba(185, 28, 28);border-radius:5px;min-width:90px\" target=\"_blank\">\n" +
-                        "          회원정보 수정하기\n" +
+                        "          로그인\n" +
                         "          </a>\n" +
                         "        </div>\n" +
                         "      </div>\n" +

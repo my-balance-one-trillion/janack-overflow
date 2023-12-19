@@ -92,7 +92,7 @@ public class SecurityConfig {
                                 .requestMatchers("/admin", "/admin/**").hasRole("ADMIN")
 
                                 //화이트 리스트
-                                .requestMatchers("/image/**", "/css/**", "/", "/login", "/signup", "/community/**", "/saving/**", "/main/**", "/issue/**", "/ws/**", "/chatrooms/**").permitAll()
+                                .requestMatchers("/image/**", "/css/**", "/", "/login", "/signup", "/community/**", "/saving/**", "/savings/**", "/main/**", "/issue/**", "/ws/**", "/chatrooms/**").permitAll()
                                 
                                 //위에 작성된 url을 제외한 나머지는 인증절차 필요 (403 발생)
                                 .requestMatchers("/image/**", "/css/**", "/", "/login", "/logout", "/signup", "/mailPass", "/community/**", "/saving/**", "/main/**", "/issue/**", "/ws/**", "/chatrooms/**", "/message/**").permitAll()
