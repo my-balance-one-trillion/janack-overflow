@@ -6,35 +6,23 @@
         {{ roomInfo.roomName }}
       </span>
       <span v-if="userInfo">
-        <button
-          v-if="roomInfo.usersId == userInfo.id"
-          class="rounded-[15px] bg-main-red text-white w-fit h-fit px-5"
-          @click="deleteChatRoom"
-        >
+        <button v-if="roomInfo.usersId == userInfo.id" class="rounded-[15px] bg-main-red text-white w-fit h-fit px-5"
+          @click="deleteChatRoom">
           삭제
         </button>
       </span>
     </div>
     <div
-      class="flex flex-col flex-auto flex-shrink-0 rounded-2xl justify-end max-h-[800px] min-h-[800px] bg-gray-100 p-4"
-    >
+      class="flex flex-col flex-auto flex-shrink-0 rounded-2xl justify-end max-h-[800px] min-h-[800px] bg-gray-100 p-4">
       <div class="flex flex-col h-full mb-4 overflow-x-auto">
         <div class="flex flex-col h-full overflow-y-scroll" ref="chatDiv">
           <div class="grid grid-cols-12 gap-y-2">
-            <template
-              v-if="Object.keys(userInfo).length > 0"
-              v-for="(item, idx) in recvList"
-              :key="idx"
-            >
+            <template v-if="Object.keys(userInfo).length > 0" v-for="(item, idx) in recvList" :key="idx">
               <!-- 입장 메시지 -->
-              <div
-                v-if="item.type == 'ENTER' || item.type == 'QUIT'"
-                class="col-start-1 col-end-13 p-3 rounded-lg flex justify-center items-center"
-              >
+              <div v-if="item.type == 'ENTER' || item.type == 'QUIT'"
+                class="col-start-1 col-end-13 p-3 rounded-lg flex justify-center items-center">
                 <div class="flex flex-row-reverse items-center justify-start">
-                  <div
-                    class="relative px-4 py-2 mr-3 text-sm bg-indigo-100 shadow rounded-xl"
-                  >
+                  <div class="relative px-4 py-2 mr-3 text-sm bg-indigo-100 shadow rounded-xl">
                     <div>
                       {{ item.usersDTO.nickname + "님이 " + item.content }}
                     </div>
@@ -42,14 +30,9 @@
                 </div>
               </div>
               <!-- 자기 메세지 -->
-              <div
-                v-else-if="item.usersDTO.id == userInfo.id"
-                class="col-start-6 col-end-13 p-3 rounded-lg"
-              >
+              <div v-else-if="item.usersDTO.id == userInfo.id" class="col-start-6 col-end-13 p-3 rounded-lg">
                 <div class="flex flex-row-reverse items-center justify-start">
-                  <div
-                    class="relative px-4 py-2 mr-3 text-sm bg-indigo-100 shadow rounded-xl"
-                  >
+                  <div class="relative px-4 py-2 mr-3 text-sm bg-indigo-100 shadow rounded-xl">
                     <div>
                       {{ item.content }}
                     </div>
@@ -66,14 +49,9 @@
                   {{ item.usersDTO.nickname }}
                 </div>
                 <div class="flex flex-row items-center">
-                  <img
-                    class="w-10 h-10 rounded-full"
-                    :src="'/images/' + item.usersDTO.profileImage"
-                  />
+                  <img class="w-10 h-10 rounded-full" :src="'/images/' + item.usersDTO.profileImage" />
 
-                  <div
-                    class="relative px-4 py-2 ml-3 text-sm bg-white shadow rounded-xl"
-                  >
+                  <div class="relative px-4 py-2 ml-3 text-sm bg-white shadow rounded-xl">
                     {{ item.content }}
                   </div>
                   <div class="text-xs px-3">
@@ -85,39 +63,23 @@
           </div>
         </div>
       </div>
-      <div
-        class="flex flex-row items-center w-full h-16 px-4 bg-white rounded-xl"
-      >
+      <div class="flex flex-row items-center w-full h-16 px-4 bg-white rounded-xl">
         <div class="flex-grow">
           <div class="relative w-full">
-            <input
-              class="flex w-full h-10 pl-4 border rounded-xl focus:outline-none focus:border-indigo-300"
-              type="text"
-              v-model="messageReq.content"
-              @keyup.enter="sendMessage"
-            />
+            <input class="flex w-full h-10 pl-4 border rounded-xl focus:outline-none focus:border-indigo-300" type="text"
+              v-model="messageReq.content" @keyup.enter="sendMessage" />
           </div>
         </div>
         <div class="ml-2">
           <button
             class="flex items-center justify-center flex-shrink-0 px-4 py-1 text-white bg-indigo-500 hover:bg-indigo-600 rounded-xl"
-            @click="sendMessage"
-          >
+            @click="sendMessage">
             <span>Send</span>
             <span class="ml-2">
-              <svg
-                class="w-4 h-4 -mt-px transform rotate-45"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"
-                ></path>
+              <svg class="w-4 h-4 -mt-px transform rotate-45" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                xmlns="http://www.w3.org/2000/svg">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path>
               </svg>
             </span>
           </button>
@@ -125,10 +87,7 @@
       </div>
     </div>
     <div v-if="roomInfo.usersId != userInfo.id" class="flex justify-end">
-      <button
-        class="rounded-[10px] bg-main-red text-white w-fit h-fit px-2 py-1 my-2"
-        @click="quit"
-      >
+      <button class="rounded-[10px] bg-main-red text-white w-fit h-fit px-2 py-1 my-2" @click="quit">
         나가기
       </button>
     </div>
@@ -207,7 +166,7 @@ onMounted(async () => {
     router.go(-1);
   }
   connect();
-  
+
   await axios
     .get("/chatrooms/enter/" + chatId, {
       headers: {
@@ -246,7 +205,7 @@ function connect() {
         console.log("구독으로 받은 메시지 입니다.", res.body);
         recvList.value.push(JSON.parse(res.body));
       });
-      if (isNewUser.value){
+      if (isNewUser.value) {
         enter();
       }
       messageReq.value.type = "TALK";
