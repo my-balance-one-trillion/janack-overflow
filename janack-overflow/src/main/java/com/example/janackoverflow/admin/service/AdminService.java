@@ -1,5 +1,6 @@
 package com.example.janackoverflow.admin.service;
 
+import com.example.janackoverflow.community.repository.CommentRepository;
 import com.example.janackoverflow.global.pagination.PageResponseDTO;
 import com.example.janackoverflow.global.pagination.PaginationService;
 import com.example.janackoverflow.issue.entity.Issue;
@@ -13,19 +14,28 @@ import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 
 import org.springframework.data.domain.Pageable;
+
+import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Service
 public class AdminService {
     private final UsersRepository usersRepository;
     private final PaginationService paginationService;
     private final IssueRepository issueRepository;
+    private final CommentRepository commentRepository;
 
     public AdminService(UsersRepository usersRepository,PaginationService paginationService,
-                        IssueRepository issueRepository){
+                        IssueRepository issueRepository,
+                        CommentRepository commentRepository){
         this.usersRepository = usersRepository;
         this.paginationService = paginationService;
         this.issueRepository = issueRepository;
+        this.commentRepository = commentRepository;
     }
 
 //    유저 전체보기 -> 유저를 다 불러온다->그러려면 유저 객체를 아니 dto를 받아와서 생성해야한다
@@ -75,4 +85,35 @@ public class AdminService {
         issue.updatePublicStatus(issuePub);
         issueRepository.save(issue);
     }
+
+//    각종 수치
+    public List<Long> readAllCount(){
+        List<Long> count = Stream.of(
+                usersRepository.count(),
+                issueRepository.count(),
+                commentRepository.count()
+        ).collect(Collectors.toList());
+        System.out.println(count);
+        return count;
+    }
+
+//    6개월간 가입자 추이
+public List<Map<String, Object>> readSign6Month() {
+    LocalDateTime endDate = LocalDateTime.now();
+    LocalDateTime startDate = endDate.minusMonths(6);
+
+    List<Object[]> userCountsByMonth = usersRepository.countUsersByMonthLast6Months(startDate, endDate);
+
+    List<Map<String, Object>> signList = userCountsByMonth.stream()
+            .map(row -> {
+                Map<String, Object> data = new HashMap<>();
+                data.put("month", row[0]);
+                data.put("userCount", ((Number) row[1]).intValue());
+                return data;
+            })
+            .collect(Collectors.toList());
+
+    System.out.println(signList);
+    return signList;
+}
 }

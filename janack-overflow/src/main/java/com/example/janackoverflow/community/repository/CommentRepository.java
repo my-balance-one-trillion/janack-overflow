@@ -8,7 +8,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 
 public interface CommentRepository extends JpaRepository<Comment, Long> {
-
+    Integer countByUsers_id(Long usersId);
     public Page<Comment> findAllByIssue_IdOrderByCreatedAtDesc(Long id, Pageable pageable);
     public Page<Comment> findAllByUsers_IdOrderByCreatedAtDesc(Long id, Pageable pageable);
     void deleteByIdAndUsers_Id(Long id, Long usersId);
