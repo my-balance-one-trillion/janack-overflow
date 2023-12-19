@@ -35,7 +35,7 @@ const getAccountInProgress = async () => {
       <div class="text-left space-y-3">
         <div class="inline-flex items-center bg-red-100 text-main-red text-xs px-4 py-2 rounded-full shadow">Day {{ daydiff }}</div>
         <div class="text-2xl text-main-red">{{  accountInfo.acntName  }}<span class="text-black"> 적금</span></div>
-        <div class="">{{  accountInfo.acntNum }}</div>
+        <div class="">농협 {{  accountInfo.acntNum }}</div>
       </div>
       <div class="text-3xl text-main-red font-bold">{{ Number(accountInfo.acntAmount).toLocaleString() }}<span class="text-black font-medium"> 원</span></div>
     </div>

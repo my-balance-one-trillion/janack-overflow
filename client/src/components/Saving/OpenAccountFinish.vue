@@ -59,7 +59,7 @@ onMounted(async () => {
     </div>
     <div class="my-16 flex justify-between">
       <div class="text-3xl font-medium">적금 계좌</div>
-      <div class="text-3xl text-gray-700 font-light">{{ accountInfo.acntNum }}</div>
+      <div class="text-3xl text-gray-700 font-light">농협 {{ accountInfo.acntNum }}</div>
     </div>
     <div class="my-16 mb-10 flex justify-between">
       <div class="text-3xl font-medium">가입일</div>
