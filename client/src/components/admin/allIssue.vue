@@ -10,19 +10,19 @@
 					<table class="min-w-full">
 						<thead class="bg-white border-b">
 							<tr>
-								<th scope="col" class="text-sm font-medium text-sub-red px-6 py-4 text-left 5/12">
+								<th scope="col" class="text-sm font-medium text-sub-red px-6 py-4 text-left">
 									에러명
 								</th>
-								<th scope="col" class="text-sm font-medium text-sub-red px-6 py-4 text-left w-2/12">
+								<th scope="col" class="text-sm font-medium text-sub-red px-6 py-4 text-center">
 									작성한 유저
 								</th>
-								<th scope="col" class="text-sm font-medium text-sub-red px-6 py-4 text-left w-2/12">
+								<th scope="col" class="text-sm font-medium text-sub-red px-6 py-4 text-center">
 									작성일
 								</th>
-								<th scope="col" class="text-sm font-medium text-sub-red px-6 py-4 text-left w-2/12">
+								<th scope="col" class="text-sm font-medium text-sub-red px-6 py-4 text-center">
 									카테고리
 								</th>
-								<th scope="col" class="text-sm font-medium text-sub-red px-6 py-4 text-left w-2/12">
+								<th scope="col" class="text-sm font-medium text-sub-red px-6 py-4 text-center">
 									공개여부
 								</th>
 							</tr>
@@ -30,19 +30,19 @@
 						<tbody>
 							<tr class="bg-white border-b" v-for="item in issueList">
 
-								<td class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
+								<td class="text-sm text-gray-900 font-light px-6 py-4 line-clamp-1 w-64 h-9">
 									{{ item.title }}
 								</td>
-								<td class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
+								<td class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap text-center">
 									{{ item.users.email }}
 								</td>
-								<td class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
+								<td class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap text-center">
 									{{ item.createdAt }}
 								</td>
-								<td class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
+								<td class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap text-center">
 									{{ item.category }}
 								</td>
-								<td class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
+								<td class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap w-32 text-center">
 									<span v-if="item.publicStatus == true" class="bg-main-grn text-white rounded-lg p-1 cursor-pointer"
 										@click="userStatusUpdate(item.id, false, pageSet.page)">
 										공개</span>
