@@ -7,6 +7,10 @@ import HighlightJS from 'highlight.js';
 import {onMounted, ref} from "vue";
 import axios from "axios";
 import {useAuthStore} from "../stores/auth";
+import {Codemirror} from "vue-codemirror";
+import {java} from '@codemirror/lang-java'
+import {nord} from "@uiw/codemirror-theme-nord";
+import Monaco from "@/components/Monaco.vue";
 import dayjs from "dayjs";
 import { useRouter, useRoute } from "vue-router";
 
@@ -98,7 +102,7 @@ onMounted(async () => {
     <div
          class="flex items-center justify-center w-full p-2 mt-10 text-3xl text-center rounded-xl bg-bg-grey">
       <div
-          class="w-full py-2 mx-1 border-0 cursor-pointer rounded-xl bg-main-red text-white font-bold border-b-4 border-white">
+          class="w-full py-2 mx-1 border-0 rounded-xl bg-main-red text-white font-bold border-b-4 border-white">
         포기한 에러
       </div>
     </div>
@@ -120,16 +124,11 @@ onMounted(async () => {
               </fwb-badge>
             </div>
           </div>
-          <p class="">{{ issue.content }}</p>
+          <p class="" v-html="issue.content"></p>
           <div>
-            <div class="p-3 border-0 rounded-xl bg-bg-grey">
-              <div class="flex justify-end">
-                <i :class="['p-2', 'fa-lg', 'fa-clipboard', 'issueCodeBlock', 'hover:cursor-pointer', hovered ? 'fa-solid' : 'fa-regular']"
-                   @click="copyToClipboard" @mouseout="hovered = false" @mouseover="hovered = true"></i>
-                <!-- <i class=" fa-solid fa-copy"></i> -->
-              </div>
-              <code ref="issueCodeBlock" v-highlightjs class="javascript">{{ issue.code }}</code>
-            </div>
+            <div class="my-5">
+              <Monaco :code="issue.code"></Monaco>
+          </div>
           </div>
         </div>
       </div>

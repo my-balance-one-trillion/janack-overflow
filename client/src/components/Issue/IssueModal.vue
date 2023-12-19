@@ -44,7 +44,7 @@ onMounted(async () => {
             </div>
             <div class="mt-5 space-y-2">
               <div class="text-gray-600 text-xl">에러 해결이 성공적으로 완료되었습니다.</div>
-              <div class="text-gray-600 text-xl">지정한 목표에 따라 자동으로 적금되었습니다.</div>
+              <div class="text-gray-600 text-xl">지정한 목표 금액에 따라 자동으로 적금되었습니다.</div>
             </div>
           </div>
           <div class="flex justify-evenly my-8">

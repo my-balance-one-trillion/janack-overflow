@@ -116,6 +116,7 @@ public class SavingController {
 
         return new ResponseEntity<>(accumulatedAmount, HttpStatus.OK);
     }
+
     // 적금 기록 (사용자 적금 전부 조회)
     @GetMapping
     public ResponseEntity<?> getUserAccounts(@AuthenticationPrincipal NowUserDetails userDetails){

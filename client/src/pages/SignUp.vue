@@ -18,7 +18,11 @@
                 <form>
                 <div class="relative">
                   <input autocomplete="off" id="email" name="email" type="text" v-model="state.input.email"
-                  class="w-full h-10 text-gray-900 placeholder-transparent border-t-0 border-b-2 border-l-0 border-r-0 border-red-700 focus:border-main-red focus:ouline-none focus:ring-0 peer bg-gray-50 focus:outline-none focus:borer-rose-600" placeholder="Email" required/>
+                  class="focus:border-main-red focus:ouline-none focus:ring-0 peer placeholder-transparent bg-gray-50 h-10 w-full border-t-0 border-l-0 border-r-0 border-b-2
+                  border-red-700 text-gray-900
+                  focus:outline-none focus:borer-rose-600" 
+                  @blur="mailCheck"
+                  placeholder="Email" required/>
                   <label for="email" 
                   class="absolute left-0 -top-3.5 text-gray-600 text-sm peer-placeholder-shown:text-base 
                   peer-placeholder-shown:text-gray-440 peer-placeholder-shown:top-2 
@@ -28,8 +32,11 @@
                 <br>
                 
                 <div class="relative">
-                  <input autocomplete="off" id="password" name="password" type="password" v-model="state.input.password"
-                  class="w-full h-10 text-gray-900 placeholder-transparent border-t-0 border-b-2 border-l-0 border-r-0 border-red-700 focus:border-main-red focus:ouline-none focus:ring-0 peer bg-gray-50 focus:outline-none focus:borer-rose-600" placeholder="Password" required/>
+                  <input 
+                  @blur="passCheck"
+                  autocomplete="off" id="password" name="password" type="password" v-model="state.input.password"
+                  class="focus:border-main-red focus:ouline-none focus:ring-0 peer placeholder-transparent bg-gray-50 h-10 w-full border-t-0 border-l-0 border-r-0 border-b-2 
+                  border-red-700 text-gray-900 focus:outline-none focus:borer-rose-600" placeholder="Password" required/>
                   <label for="password" 
                   class="absolute left-0 -top-3.5 text-gray-600 text-sm peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-440 peer-placeholder-shown:top-2 transition-all peer-focus:-top-3.5 peer-focus:text-gray-600 peer-focus:text-sm">패스워드</label>
                 </div>
@@ -60,8 +67,12 @@
                   
                   <div class="flex justify-between gap-3">
                     <div class="relative">
-                      <input autocomplete="off" id="digit" name="digit" type="text" v-model="state.input.digit"
-                      class="w-full h-10 text-gray-900 placeholder-transparent border-t-0 border-b-2 border-l-0 border-r-0 border-red-700 focus:border-main-red focus:ouline-none focus:ring-0 peer bg-gray-50 focus:outline-none focus:borer-rose-600" placeholder="Digit" required/>
+                      <input
+                      @input="formatPhone"
+                      @blur="phoneCheck"
+                      autocomplete="off" id="digit" name="digit" type="text" v-model="state.input.digit"
+                      class="focus:border-main-red focus:ouline-none focus:ring-0 peer placeholder-transparent bg-gray-50 h-10 w-full border-t-0 border-l-0 border-r-0 border-b-2 
+                      border-red-700 text-gray-900 focus:outline-none focus:borer-rose-600" placeholder="Digit" required/>
                       <label for="digit" 
                       class="absolute left-0 -top-3.5 text-gray-600 text-sm peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-440 peer-placeholder-shown:top-2 transition-all peer-focus:-top-3.5 peer-focus:text-gray-600 peer-focus:text-sm">전화번호</label>
                     </div>
@@ -180,7 +191,55 @@ export default {
       }
     })
 
-    const signup = async () => {      
+    const formatPhone = () => {
+      let input = state.input.digit.replace(/[^0-9]/g, '');
+
+      if(input.length <= 3){
+        state.input.digit = input;
+      }else if (input.length <= 7) {
+        state.input.digit = `${input.slice(0, 3)}-${input.slice(3)}`;
+      } else {
+        state.input.digit = `${input.slice(0, 3)}-${input.slice(3, 7)}-${input.slice(7)}`;
+      }
+    }
+
+    const exMail = /^[A-Za-z0-9_\.\-]+@[A-Za-z0-9\-]+\.[A-Za-z0-9\-]+/;
+    const exPhone = /^[0-9]{3}\-([0-9]{3}|[0-9]{4})\-([0-9]{3}|[0-9]{4})/;
+    const exPass = /^[A-Za-z0-9_\.\-`~!@#\$%^&*\|\\?;:+=\[\]<>\(\),_'"-]{9,}/;
+
+    const mailCheck = () => { //이메일 input 포커스 나가면 체크
+      if(exMail.test(state.input.email) === false) {
+        alert('이메일 형식이 올바르지 않습니다.');
+        return false;
+      }
+    }
+
+    const passCheck = () => {
+      if(exPass.test(state.input.password) === false) {
+        alert('보안을 위해 패스워드는 최소 9자 이상 작성해주세요');
+        return false;
+      }
+    }
+
+    const phoneCheck = () => {
+      if(exPhone.test(state.input.digit) === false) {
+        alert('전화번호 형식이 올바르지 않습니다.\n하이픈(-) 포함');
+        return false;
+      }
+    }
+
+    const signup = async () => {     
+      //axios 실행하기 전에 체크
+      if(exMail.test(state.input.email) === false) {
+        alert('이메일 형식이 올바르지 않습니다.');
+        return false;
+      }
+      
+      if(exPhone.test(state.input.digit) === false) {
+        alert('전화번호 형식이 올바르지 않습니다.\n하이픈(-) 포함');
+        return false;
+      }
+
       const res = await axios.post('http://localhost:8081/signup', state.input, 
         {
           headers : {
@@ -208,6 +267,10 @@ export default {
       day,
       locale,
       state, 
+      mailCheck,
+      passCheck,
+      formatPhone,
+      phoneCheck,
       signup
     }
   }

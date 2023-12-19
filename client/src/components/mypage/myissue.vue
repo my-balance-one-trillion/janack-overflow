@@ -4,25 +4,25 @@
   <p class="text-xl my-4">에러 목록</p>
   <p class="text-[#919090]">작성한 에러를 확인할 수 있습니다.</p>
   <article class="">
-    <div class="w-full xl:w-10/12 m-12 xl:mb-0 px-4 mx-auto mt-2 flex flex-col items-center">
+    <div class="w-full xl:w-11/12 m-12 xl:mb-0 px-4 mx-auto mt-2 flex flex-col items-center">
       <div class="relative flex flex-col min-w break-words bg-white w-full my-12 shadow-lg">
         <div class="block overflow-x-auto">
           <table class="min-w-full">
             <thead class="bg-white border-b">
               <tr>
-                <th scope="col" class="text-m font-medium text-sub-red px-6 py-4 text-left w-1/12">
+                <th scope="col" class="text-m font-medium text-main-red px-4 py-4 text-left w-5/12">
                   에러명
                 </th>
-                <th scope="col" class="text-m font-medium text-sub-red px-6 py-4 text-left w-5/12">
+                <th scope="col" class="text-m font-medium text-main-red px-4 py-4 text-left w-2/12">
                   등록일
                 </th>
-                <th scope="col" class="text-sm font-medium text-sub-red px-6 py-4 text-left w-2/12">
+                <th scope="col" class="text-m font-medium text-main-red px-4 py-4 text-center w-2/12">
                   카테고리
                 </th>
-                <th scope="col" class="text-sm font-medium text-sub-red px-6 py-4 text-left w-2/12">
+                <th scope="col" class="text-m font-medium text-main-red px-4 py-4 text-center w-1/12">
                   조회수
                 </th>
-                <th scope="col" class="text-sm font-medium text-sub-red px-6 py-4 text-left w-2/12">
+                <th scope="col" class="text-m font-medium text-main-red px-4 py-4 text-center w-2/12">
                   해결여부
                 </th>
               </tr>
@@ -30,20 +30,20 @@
             <tbody>
               <tr class="bg-white border-b" v-for="item in issueList">
 
-                <td class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
+                <td class="text-m text-gray-900 font-light px-6 py-4 whitespace-nowrap">
                   {{ item.title }}
                 </td>
-                <td class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
+                <td class="text-m text-gray-900 font-light px-6 py-4 whitespace-nowrap">
                   {{ item.createdAt }}
 
                 </td>
-                <td class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
+                <td class="text-m text-gray-900 font-light px-6 py-4 whitespace-nowrap text-center">
                   {{ item.category }}
                 </td>
-                <td class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
+                <td class="text-m text-gray-900 font-light px-6 py-4 whitespace-nowrap text-center">
                   {{ item.views }}
                 </td>
-                <td class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
+                <td class="text-m text-gray-900 font-light px-6 py-4 whitespace-nowrap text-center">
                   <span v-if="item.status == '01'" class="bg-main-red text-white rounded-lg p-1"> 진행중</span>
                   <span v-if="item.status == '02'" class="bg-yellow-300 text-white rounded-lg p-1"> 포기</span>
                   <span v-if="item.status == '03'" class="bg-main-grn text-white rounded-lg p-1"> 해결</span>
@@ -58,7 +58,8 @@
         <ul class="inline-flex -space-x-px text-sm">
           <li>
             <div
-              class="flex items-center justify-center px-3 h-8 ms-0 leading-tight text-gray-500 bg-white border border-e-0 border-gray-300 rounded-s-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">
+              class="flex items-center justify-center px-3 h-8 ms-0 leading-tight text-gray-500 bg-white border border-e-0 border-gray-300 rounded-s-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
+              @click="pageForward(pageSet.page)">
               Previous</div>
           </li>
           <li v-for="i in pageInt">
@@ -73,8 +74,9 @@
           </li>
 
           <li>
-            <div href="#"
-              class="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 rounded-e-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">
+            <div
+              class="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 rounded-e-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
+              @click="pageNext(pageSet.page)">
               Next</div>
           </li>
         </ul>
@@ -102,6 +104,26 @@ async function getIssueList(i) {
   issueList.value = data;
   pageSet.value = pageDTO;
   pageInt = pageNumber;
+}
+
+function pageForward(i) {
+
+  let warpForward = i - 6;
+  if (warpForward <= 0) {
+    getIssueList(0);
+  } else {
+    getIssueList(warpForward);
+
+  }
+}
+
+function pageNext(i) {
+  let warpNext = i + 4;
+  if (warpNext > pageSet.value.totalPages - 1) {
+    getIssueList(pageSet.value.totalPages - 1);
+  } else {
+    getIssueList(warpNext);
+  }
 }
 
 </script>

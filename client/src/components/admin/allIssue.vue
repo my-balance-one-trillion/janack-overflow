@@ -61,7 +61,8 @@
 				<ul class="inline-flex -space-x-px text-sm">
 					<li>
 						<div
-							class="flex items-center justify-center px-3 h-8 ms-0 leading-tight text-gray-500 bg-white border border-e-0 border-gray-300 rounded-s-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">
+							class="flex items-center justify-center px-3 h-8 ms-0 leading-tight text-gray-500 bg-white border border-e-0 border-gray-300 rounded-s-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
+							@click="pageForward(pageSet.page)">
 							Previous</div>
 					</li>
 					<li v-for="i in pageInt">
@@ -76,8 +77,9 @@
 					</li>
 
 					<li>
-						<div href="#"
-							class="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 rounded-e-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">
+						<div
+							class="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 rounded-e-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
+							@click="pageNext(pageSet.page)">
 							Next</div>
 					</li>
 				</ul>
@@ -124,6 +126,25 @@ async function userStatusUpdate(usersId, bool, page) {
 
 	} catch (error) {
 		console.log(error);
+	}
+}
+
+function pageForward(i) {
+	let warpForward = i - 6;
+	if (warpForward <= 0) {
+		getIssueList(0);
+	} else {
+		getIssueList(warpForward);
+
+	}
+}
+
+function pageNext(i) {
+	let warpNext = i + 4;
+	if (warpNext > pageSet.value.totalPages - 1) {
+		getIssueList(pageSet.value.totalPages - 1);
+	} else {
+		getIssueList(warpNext);
 	}
 }
 
