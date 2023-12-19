@@ -25,7 +25,7 @@ public class MailService {
 
             mimeMessageHelper.setTo(mailDTO.getTo()); // 메일 수신자
             mimeMessageHelper.setSubject(mailDTO.getSubject()); // 메일 제목
-            mimeMessageHelper.setText(mailDTO.getMessage(), false); // 메일 본문 내용, HTML 여부
+            mimeMessageHelper.setText(mailDTO.getMessage(), true); // 메일 본문 내용, HTML 여부
 
             javaMailSender.send(mimeMessage);
 
