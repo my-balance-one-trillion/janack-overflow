@@ -7,7 +7,7 @@ import Chart from "./Details/Chart.vue";
 
 <template>
 
-  <div class="w-full space-y-14">
+  <div class="space-y-14">
     <!--    나의 적금-->
     <div class="my-10 text-2xl text-main-red">나의 적금</div>
     <my-account/>

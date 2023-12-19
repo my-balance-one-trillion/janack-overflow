@@ -16,7 +16,7 @@
         <div class="flex items-center justify-center mt-2 w-12/12 font-sub">
             <div class="w-full px-8 py-5 mx-auto my-4 text-lg bg-white rounded-lg shadow-md">
                 <div v-show="activeTab === 0" class="w-full">
-                    <h1 class="py-4 text-3xl font-bold">{{ issue.title }}</h1>
+                    <h1 class="py-4 text-3xl font-bold break-words">{{ issue.title }}</h1>
                     <div class="flex justify-between mb-4">
                         <div class="flex">
                             <fwb-badge v-for="keyword of keywords"
@@ -62,7 +62,7 @@
             <Spinner></Spinner>
         </div>
         <div v-else-if="articleLength === 0" class="text-center">연관 게시물이 없습니다.</div>
-        <div class="grid w-full h-full grid-cols-1 gap-4 px-2 py-4 md:h-auto md:grid-cols-3">
+        <div v-else class="grid w-full h-full grid-cols-1 gap-4 px-2 py-4 md:h-auto md:grid-cols-3">
             <!--item 1-->
             <div v-for="article in articleList" class="w-full mb-6 select-none">
                 <div class="relative pb-64">
@@ -88,7 +88,7 @@
                                     article.claps }}</span></i>
                             </div>
 
-                            <a class="block mt-2 text-lg font-medium text-gray-800 truncate hover:underline"
+                            <a class="block mt-2 text-lg font-medium text-gray-800 truncate line-clamp-1 hover:underline"
                                 :href="article.url" target='_blank'>
                                 {{ article.title }}
                             </a>
@@ -96,7 +96,7 @@
                         <div class="flex flex-col justify-between w-full px-4 pb-3">
                             <div class="w-fit">
                                 <div class="text-gray-800 w-fit">
-                                    <p class="overflow-hidden text-sm opacity-75 h-14 w-fit text-ellipsis">
+                                    <p class="overflow-hidden text-sm opacity-75 line-clamp-2 h-14 w-fit text-ellipsis">
                                         {{ article.subTitle }}
                                     </p>
                                 </div>
@@ -305,6 +305,10 @@ async function getArticelList() {
             articleList.value = response.data;
             console.log(response.data.length);
             articleLength.value = response.data.length;
+        })
+        .catch((error) => {
+            console.log(error);
+            articleLength.value = 0;
         });
 }
 

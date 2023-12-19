@@ -1,19 +1,19 @@
 <template>
-  <div class="min-h-screen py-6 flex flex-col  sm:py-12">
+  <div class="flex flex-col min-h-screen py-6 sm:py-12">
     <div class="relative py-3 sm:max-w-xl sm:mx-auto">
       <div class="absolute inset-0 bg-gradient-to-r 
       from-green-700 to-red-600 shadow-lg transform 
       -skew-y-6 sm:skew-y-0 sm:-rotate-6 sm:rounded-3xl">
       </div>
       
-      <div class="relative px-4 py-10 bg-gray-50 shadow-lg sm:rounded-3xl sm:p-20">
+      <div class="relative px-4 py-10 shadow-lg bg-gray-50 sm:rounded-3xl sm:p-20">
         <div class="max-w-md mx-auto">
           <div>
-            <h1 class="text-2xl text-center font-semibold">Sign Up</h1>
+            <h1 class="text-2xl font-semibold text-center">Sign Up</h1>
           </div>
           
           <div class="divide-y divide-gray-200">
-            <div class="py-8 text-base leading-6 space-y-4 text-gray-700 sm:text-lg sm:leading-7">
+            <div class="py-8 space-y-4 text-base leading-6 text-gray-700 sm:text-lg sm:leading-7">
               <div class="relative">
                 <form>
                 <div class="relative">
@@ -47,16 +47,14 @@
                   <div class="flex justify-between gap-3">
                     <div class="relative">
                       <input autocomplete="off" id="name" name="name" type="text" v-model="state.input.name"
-                      class="focus:border-main-red focus:ouline-none focus:ring-0 peer placeholder-transparent bg-gray-50 h-10 w-full border-t-0 border-l-0 border-r-0 border-b-2 
-                      border-red-700 text-gray-900 focus:outline-none focus:borer-rose-600" placeholder="Name" required/>
+                      class="w-full h-10 text-gray-900 placeholder-transparent border-t-0 border-b-2 border-l-0 border-r-0 border-red-700 focus:border-main-red focus:ouline-none focus:ring-0 peer bg-gray-50 focus:outline-none focus:borer-rose-600" placeholder="Name" required/>
                       <label for="name" 
                       class="absolute left-0 -top-3.5 text-gray-600 text-sm peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-440 peer-placeholder-shown:top-2 transition-all peer-focus:-top-3.5 peer-focus:text-gray-600 peer-focus:text-sm">이름</label>
                     </div>
 
                     <div class="relative">
                       <input autocomplete="off" id="nickName" name="nickName" type="text" v-model="state.input.nickname"
-                      class="focus:border-main-red focus:ouline-none focus:ring-0 peer placeholder-transparent bg-gray-50 h-10 w-full border-t-0 border-l-0 border-r-0 border-b-2 
-                      border-red-700 text-gray-900 focus:outline-none focus:borer-rose-600" placeholder="Nick Name" required/>
+                      class="w-full h-10 text-gray-900 placeholder-transparent border-t-0 border-b-2 border-l-0 border-r-0 border-red-700 focus:border-main-red focus:ouline-none focus:ring-0 peer bg-gray-50 focus:outline-none focus:borer-rose-600" placeholder="Nick Name" required/>
                       <label for="nickName" 
                       class="absolute left-0 -top-3.5 text-gray-600 text-sm peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-440 peer-placeholder-shown:top-2 transition-all peer-focus:-top-3.5 peer-focus:text-gray-600 peer-focus:text-sm">닉네임</label>
                     </div>
@@ -79,7 +77,7 @@
 
                     <div class="relative">
                       <DatePicker
-                        class="w-full  focus:ouline-none focus:borer-rose-600 focus:ring-0 placeholder-transparent h-10 bg-gray-50 border-t-0 border-l-0 border-r-0 border-b-2 border-red-700"
+                        class="w-full h-10 placeholder-transparent border-t-0 border-b-2 border-l-0 border-r-0 border-red-700 focus:ouline-none focus:borer-rose-600 focus:ring-0 bg-gray-50"
                         v-model="datePic"
                         :locale="locale"
                         :is-inline="true"
@@ -100,16 +98,14 @@
                   <div class="flex justify-between gap-3">
                     <div class="relative">
                       <input autocomplete="off" id="bankName" name="bankName" type="text" v-model="state.input.bankName"
-                      class="focus:border-main-red focus:ouline-none focus:ring-0 peer placeholder-transparent bg-gray-50 h-10 w-full border-t-0 border-l-0 border-r-0 border-b-2 
-                      border-red-700 text-gray-900 focus:outline-none focus:borer-rose-600" placeholder="bankName" required/>
+                      class="w-full h-10 text-gray-900 placeholder-transparent border-t-0 border-b-2 border-l-0 border-r-0 border-red-700 focus:border-main-red focus:ouline-none focus:ring-0 peer bg-gray-50 focus:outline-none focus:borer-rose-600" placeholder="bankName" required/>
                       <label for="bankName" 
                       class="absolute left-0 -top-3.5 text-gray-600 text-sm peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-440 peer-placeholder-shown:top-2 transition-all peer-focus:-top-3.5 peer-focus:text-gray-600 peer-focus:text-sm">은행명</label>
                     </div>
 
                     <div class="relative">
                       <input autocomplete="off" id="holder" name="holder" type="text" v-model="state.input.holder"
-                      class="focus:border-main-red focus:ouline-none focus:ring-0 peer placeholder-transparent bg-gray-50 h-10 w-full border-t-0 border-l-0 border-r-0 border-b-2 
-                      border-red-700 text-gray-900 focus:outline-none focus:borer-rose-600" placeholder="holder" required/>
+                      class="w-full h-10 text-gray-900 placeholder-transparent border-t-0 border-b-2 border-l-0 border-r-0 border-red-700 focus:border-main-red focus:ouline-none focus:ring-0 peer bg-gray-50 focus:outline-none focus:borer-rose-600" placeholder="holder" required/>
                       <label for="holder" 
                       class="absolute left-0 -top-3.5 text-gray-600 text-sm peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-440 peer-placeholder-shown:top-2 transition-all peer-focus:-top-3.5 peer-focus:text-gray-600 peer-focus:text-sm">예금주</label>
                     </div>
@@ -119,8 +115,7 @@
 
                   <div class="relative">
                     <input autocomplete="off" id="outputAcntNum" name="outputAcntNum" type="text" v-model="state.input.outputAcntNum"
-                    class="focus:border-main-red focus:ouline-none focus:ring-0 peer placeholder-transparent bg-gray-50 h-10 w-full border-t-0 border-l-0 border-r-0 border-b-2 
-                    border-red-700 text-gray-900 focus:outline-none focus:borer-rose-600" placeholder="outputAcntNum" required/>
+                    class="w-full h-10 text-gray-900 placeholder-transparent border-t-0 border-b-2 border-l-0 border-r-0 border-red-700 focus:border-main-red focus:ouline-none focus:ring-0 peer bg-gray-50 focus:outline-none focus:borer-rose-600" placeholder="outputAcntNum" required/>
                     <label for="outputAcntNum" 
                     class="absolute left-0 -top-3.5 text-gray-600 text-sm peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-440 peer-placeholder-shown:top-2 transition-all peer-focus:-top-3.5 peer-focus:text-gray-600 peer-focus:text-sm">계좌번호</label>
                   </div>
@@ -130,7 +125,7 @@
               </div>
               
               <div class="relative flex justify-center"> 
-                <button class="bg-red-700 text-white rounded-3xl px-28 py-1" @click = "signup">회원가입</button>
+                <button class="py-1 text-white bg-red-700 rounded-3xl px-28" @click = "signup">회원가입</button>
               </div>
               
             </div>
@@ -147,7 +142,7 @@
 
   <!-- <div class="modal-wrap" v-show="modalCheck">
     <div class="modal-container">
-      <h1 class="text-2xl text-center font-semibold">반가워요!</h1>
+      <h1 class="text-2xl font-semibold text-center">반가워요!</h1>
       <p>회원가입이 완료되었습니다!</p>
       <div class="modal-btn">
         <button @click="modalOpen">로그인 화면으로</button>
@@ -237,7 +232,7 @@ export default {
           console.log(res.headers);
           
           window.alert(`회원가입이 수행되었습니다`);
-          router.push('/login')
+          router.push('/login');
 
         }).catch( (error) => {
           console.log("put error", error.response.data);
