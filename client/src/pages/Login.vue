@@ -71,25 +71,24 @@ const state = reactive({
 });
 
 const login = async () => {
-  try {
-    const res = await axios.post(
-      "/login",
-      state.input,
-      {
-        headers: {
-          "Content-Type": "application/json",
-          "X-Requested-With": "XMLHttpRequest",
-        },
-      }
-    );
-    
-    authStore.setToken(res.headers.authorization);
+  const res = await axios.post(
+    "/login",
+    state.input,
+    {
+      headers: {
+        "Content-Type": "application/json",
+        "X-Requested-With": "XMLHttpRequest",
+      },
+    }
+  );
 
-    console.log(res.data);
-    window.alert("로그인이 수행되었습니다");
-    // router.push("/");
+  authStore.setToken(res.headers.authorization);
+  await authStore.getUserInfo();
+  window.alert("로그인이 수행되었습니다");
+  if (authStore.userInfo.role === 'ADMIN') {
+    router.push('/admin');
+  } else {
     const previousRoute = sessionStorage.getItem('previousRoute');
-    console.log(previousRoute);
     if (previousRoute) {
       // 이전 페이지로 이동
       sessionStorage.removeItem('previousRoute');
@@ -98,11 +97,9 @@ const login = async () => {
       // 이전 페이지가 없을 경우 기본 경로로 이동
       router.push("/");
     }
-
-  } catch (error) {
-    console.log("로그인 실패", error);
-    window.alert(error.response.data);
   }
+
+
 };
 </script>
 

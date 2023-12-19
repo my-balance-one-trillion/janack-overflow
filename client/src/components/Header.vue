@@ -29,8 +29,8 @@
           </router-link>
         </div>
       </div>
-      <div class="w-7"></div>
-      <div class="mx-auto bars-wrap">
+      <div class="w-7" v-if="role.role !== 'ADMIN'"></div>
+      <div class="mx-auto bars-wrap" v-if="role.role !== 'ADMIN'">
         <button id="menu">
           <div ref="menuBar" id="menu-bar" @click="menuOnClick">
             <div id="bar1" class="bar"></div>
@@ -69,7 +69,7 @@ role.value = props;
 console.log(role.value.role)
 
 function removeToken() {
-  location.reload();
+  // location.reload();
   localStorage.removeItem("token");
   authStore.clearToken();
   alert("로그아웃되었습니다.");
