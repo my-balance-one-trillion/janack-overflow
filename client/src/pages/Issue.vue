@@ -54,14 +54,11 @@ const showModal = (modalState, id) => {
 }
 </script>
 <template>
-  <div class="flex flex-col w-10/12 mx-auto">
+  <div class="flex flex-col w-10/12 mx-auto min-h-screen">
     <!-- 에러 / 해결 제목박스 -->
     <div v-if="step !== 3"
          class="flex items-center justify-center w-full p-2 mt-10 text-3xl text-center rounded-xl bg-bg-grey">
-      <div
-          class="w-full py-2 mx-1 border-0 cursor-pointer rounded-xl bg-main-red text-white font-bold border-b-4 border-white">
-        에러
-      </div>
+      <div class="w-full py-2 mx-1 border-0 cursor-pointer rounded-xl bg-main-red text-white font-bold border-b-4 border-white">에러</div>
     </div>
 
     <div v-if="step === 3"
