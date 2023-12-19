@@ -1,26 +1,25 @@
 <template>
-  <div class="flex mt-20 my-5">
-    <div class="">
-      <img src="/images/main-text.svg" width="700px">
-      <!-- <div class="-space-y-10">
-        <div class="truncate" style="font-size: 96px">
-          <span class="text-sub-red">코딩</span>하며 마주친
-        </div>
-        <div style="font-size: 96px">
-          <span class="text-main-red">에러</span>를
-          <span class="text-main-grn">기록</span>하고
-        </div>
+  <div class="flex my-5 mt-20">
+    <div class="flex flex-col h-full">
+      <img src="/images/main-text.svg" width="700px" />
+      <div class="flex items-center content-center min-h-[300px]">
+        <router-link
+          to="/intro"
+          type="button"
+          class="px-10 py-5 m-2 mx-auto shadow bg-main-red hover:bg-hover-red rounded-xl w-fit"
+        >
+          <div class="text-4xl font-bold text-white ">
+            적금 생성하기
+          </div>
+        </router-link>
       </div>
-      <div class="block" style="color: #7c7a7a; font-size: 48px">
-        해결되면 저축도 하고!<br />
-        해결한 경험을 공유해보세요!
-      </div> -->
     </div>
+
     <div class="relative my-2">
       <div class="absolute top-0 right-0">
         <img
-          class="z-1 float-right"
-          :src="isGifPlaying ? '/images/main-coin.gif' : ''"
+          class="float-right z-1"
+          src="/images/main-coin.gif"
           alt="gif"
           width="286px"
           height="216px"
@@ -50,7 +49,7 @@
       >
         <i class="fa-solid fa-8x fa-piggy-bank" style="color: #ffffff"></i>
       </div>
-      <div class="text-center my-12">
+      <div class="my-12 text-center">
         <div style="font-size: 35px">적금 서비스</div>
         <div style="font-size: 21px">
           코딩하다가 만났던<br />에러를 해결하는<br />
@@ -66,7 +65,7 @@
       >
         <i class="fa-solid fa-8x fa-hourglass-half" style="color: #ffffff"></i>
       </div>
-      <div class="text-center my-12">
+      <div class="my-12 text-center">
         <div style="font-size: 35px">스톱워치</div>
         <div style="font-size: 21px">
           에러 해결 시간에<br />
@@ -85,7 +84,7 @@
           style="color: #ffffff"
         ></i>
       </div>
-      <div class="text-center my-12">
+      <div class="my-12 text-center">
         <div style="font-size: 35px">에러노트</div>
         <div style="font-size: 21px">
           에러를 설명과 <br />코드를 함께 <br />
@@ -98,11 +97,11 @@
     <div class="absolute left-3/4">
       <div
         class="flex opacity-70 rounded-full items-center justify-center w-[320px] h-[320px]"
-        style="background-color: #caaacf;"
+        style="background-color: #caaacf"
       >
         <i class="fa-solid fa-8x fa-comments" style="color: #ffffff"></i>
       </div>
-      <div class="text-center my-12">
+      <div class="my-12 text-center">
         <div class="items-center" style="font-size: 35px">커뮤니티</div>
         <div style="font-size: 21px">
           자신이 해결한 에러를<br />공유하고 사용자들과<br />
@@ -119,11 +118,9 @@ import axios from "axios";
 import MainPageCard from "./MainPageCard.vue";
 
 const issueList = ref([]);
-const isGifPlaying = ref(true);
 
 onMounted(() => {
-  axios.get("http://localhost:8081/main/unlogin")
-  .then((response) => {
+  axios.get("http://localhost:8081/main/unlogin").then((response) => {
     issueList.value = response.data;
     // console.log("response", issueList.value);
   });
