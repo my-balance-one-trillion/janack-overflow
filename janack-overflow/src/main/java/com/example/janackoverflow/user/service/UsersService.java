@@ -83,12 +83,7 @@ public class UsersService {
 
     public Users findByEmail(String email) { //UserDetails loadUserByUsername() 전용 서비스
         System.out.println("findByEmail start! email : " + email);
-        try {
-            return usersRepository.findByEmail(email).get();
-        } catch (Exception e){
-            System.out.println("조회된 사용자가 없습니다");
-            return null;
-        }
+        return usersRepository.findByEmail(email).get();
     }
 
 }
