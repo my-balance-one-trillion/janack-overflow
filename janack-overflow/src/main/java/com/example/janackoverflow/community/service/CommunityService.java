@@ -131,23 +131,22 @@ public class CommunityService {
     }
 
     @Transactional
-    public IssueDTO.ResponseDTO detailSolvedIssue(long issueId) {
+    public IssueDTO.ResponseDTO detailSolvedIssue(long issueId, long usersId) {
         // 이슈, 좋아요, 댓글
-        Issue issueView = issueRepository.findById(issueId).orElseThrow(() -> new IllegalArgumentException("해당 이슈가 없습니다."));
-        issueView.updateViews(); // 조회수 +1
 
+        // TODO 비공개 게시물 안들어오게
+
+//        Issue issueView = issueRepository.findById(issueId).orElseThrow(() -> new IllegalArgumentException("해당 이슈가 없습니다."));
         Pageable pageable = PageRequest.of(0, 5, Sort.by(Sort.Direction.DESC, "id"));
         Optional<Issue> optIssue = issueRepository.findById(issueId);
-
-        // TODO map 에 있는지 없는지 확인
-//        if (articleMap.get(issueId) == null) {
-//            try {
-//                mediumArticleList = getMediumApi(optIssue.orElseThrow(() -> new IllegalArgumentException("해당 이슈를 찾을 수 없습니다.")).getKeyword());
-//                articleMap.put(issueId, mediumArticleList);
-//            } catch (IOException | InterruptedException e) {
-//                throw new RuntimeException(e);
-//            }
-//        }
+        log.info("optIssue.get().isPublicStatus() : "+ optIssue.get().isPublicStatus());
+        if(!optIssue.get().isPublicStatus()) {
+            if(optIssue.get().getUsers().getId() != usersId) {
+//                log.info("!!!!!!!!!!!!! "+ usersId + optIssue.get().getUsers().getId() );
+                return null;
+            }
+        }
+        optIssue.get().updateViews(); // 조회수 +1
 
         // TODO solutionDTO 추가
         IssueDTO.ResponseDTO responseDTO = optIssue.
@@ -209,7 +208,7 @@ public class CommunityService {
         } catch (ParseException e) {
             throw new RuntimeException(e);
         }
-
+        log.info("success API : " + articleList.size());
         articleMap.put(issueId, articleList);
 
         return articleList;

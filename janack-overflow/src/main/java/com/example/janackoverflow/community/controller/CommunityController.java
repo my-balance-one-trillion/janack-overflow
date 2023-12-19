@@ -129,8 +129,16 @@ public class CommunityController {
     }
 
     @GetMapping(value = "/detail/{issueId}")
-    public ResponseEntity<IssueDTO.ResponseDTO> getIssueDetail(@PathVariable(value = "issueId") long issueId) {
-        return ResponseEntity.ok(communityService.detailSolvedIssue(issueId));
+    public ResponseEntity<IssueDTO.ResponseDTO> getIssueDetail(@PathVariable(value = "issueId") long issueId,
+                                                               @AuthenticationPrincipal NowUserDetails nowUserDetails) {
+
+        // 사용자가 url로 다른 비공개이거나 포기인 issue 가져올 경우
+        IssueDTO.ResponseDTO issueDto =  communityService.detailSolvedIssue(issueId, nowUserDetails.getUser().getId());
+        log.info(" is null ? : " + issueDto);
+        if (issueDto == null) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(issueDto);
     }
 
     @Transactional
