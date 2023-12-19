@@ -5,7 +5,6 @@
         <img src="/images/logo.svg" alt="" class="object-contain" />
       </router-link>
     </div>
-    {{ role.role }}
     <div class="flex justify-between gap-4 h-auto">
       <div class="login-wrap">
         <div class="mx-auto" @click="removeToken" v-if="authStore.token">
@@ -22,11 +21,11 @@
       <div class="contol-wrap" v-if="authStore.token">
         <div class="mx-auto" v-if="role.role == 'USER'">
           <router-link to="/mypage">
-            <i class="fa-solid fa-gear fa-2xl"></i> </router-link>
+            <i class="fa-regular fa-circle-user fa-2xl"></i> </router-link>
         </div>
         <div class="mx-auto" v-if="role.role == 'ADMIN'">
           <router-link to="/admin">
-            <i class="fa-regular fa-circle-user fa-2xl"></i>
+            <i class="fa-solid fa-gear fa-2xl"></i>
           </router-link>
         </div>
       </div>
@@ -70,6 +69,7 @@ role.value = props;
 console.log(role.value.role)
 
 function removeToken() {
+  location.reload();
   localStorage.removeItem("token");
   authStore.clearToken();
   alert("로그아웃되었습니다.");

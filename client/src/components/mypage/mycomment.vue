@@ -5,38 +5,38 @@
   <p class="text-[#919090]">작성한 댓글을 확인할 수 있습니다.</p>
 
   <article class="">
-    <div class="w-full xl:w-10/12 m-12 xl:mb-0 px-4 mx-auto mt-2 flex flex-col items-center">
+    <div class="w-full xl:w-11/12 m-12 xl:mb-0 px-4 mx-auto mt-2 flex flex-col items-center">
       <div class="relative flex flex-col min-w break-words bg-white w-full my-12 shadow-lg rounded">
         <div class="block overflow-x-auto">
           <table class="min-w-full">
             <thead class="bg-white border-b">
               <tr>
-                <th scope="col" class="text-sm font-medium text-gray-900 px-6 py-4 text-left w-5/12">
+                <th scope="col" class="text-m font-medium text-gray-900 px-6 py-4 text-left w-4/12">
                   댓글내용
                 </th>
-                <th scope="col" class="text-sm font-medium text-gray-900 px-6 py-4 text-left w-2/12">
+                <th scope="col" class="text-m font-medium text-gray-900 px-6 py-4 text-left w-4/12">
                   원본글
                 </th>
-                <th scope="col" class="text-sm font-medium text-gray-900 px-6 py-4 text-left w-2/12">
+                <th scope="col" class="text-m font-medium text-gray-900 px-6 py-4 text-left w-2/12">
                   작성일
                 </th>
-                <th scope="col" class="text-sm font-medium text-gray-900 px-6 py-4 text-left w-2/12">
+                <th scope="col" class="text-m font-medium text-gray-900 px-6 py-4 text-left w-2/12">
                   삭제하기
                 </th>
               </tr>
             </thead>
             <tbody>
               <tr class="border-b" v-for="item in commentList">
-                <td class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
+                <td class="text-m text-gray-900 font-light px-6 py-4 whitespace-nowrap">
                   {{ item.comment }}
                 </td>
-                <td class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
+                <td class="text-m text-gray-900 font-light px-6 py-4 whitespace-nowrap">
                   {{ item.issue_title }}
                 </td>
-                <td class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
+                <td class="text-m text-gray-900 font-light px-6 py-4 whitespace-nowrap">
                   {{ item.createdAt }}
                 </td>
-                <td class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
+                <td class="text-m text-gray-900 font-light px-6 py-4 whitespace-nowrap">
                   <span class="text-main-red font-bold cursor-pointer" @click="deleteMyComment(item.id)">Delete</span>
                 </td>
               </tr>
@@ -49,7 +49,8 @@
         <ul class="inline-flex -space-x-px text-sm">
           <li>
             <div
-              class="flex items-center justify-center px-3 h-8 ms-0 leading-tight text-gray-500 bg-white border border-e-0 border-gray-300 rounded-s-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">
+              class="flex items-center justify-center px-3 h-8 ms-0 leading-tight text-gray-500 bg-white border border-e-0 border-gray-300 rounded-s-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
+              @click="pageForward(pageSet.page)">
               Previous</div>
           </li>
           <li v-for="i in pageInt">
@@ -64,8 +65,9 @@
           </li>
 
           <li>
-            <div href="#"
-              class="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 rounded-e-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">
+            <div
+              class="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 rounded-e-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
+              @click="pageNext(pageSet.page)">
               Next</div>
           </li>
         </ul>
@@ -117,5 +119,23 @@ async function deleteMyComment(commentid) {
   }
 }
 
+function pageForward(i) {
+  let warpForward = i - 5;
+  if (warpForward <= 0) {
+    getCommentList(0);
+  } else {
+    getCommentList(warpForward);
+
+  }
+}
+
+function pageNext(i) {
+  let warpNext = i + 4;
+  if (warpNext > pageSet.value.totalPages - 1) {
+    getCommentList(pageSet.value.totalPages - 1);
+  } else {
+    getCommentList(warpNext);
+  }
+}
 </script>
 <style scoped></style>
