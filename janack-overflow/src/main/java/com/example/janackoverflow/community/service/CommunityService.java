@@ -137,8 +137,7 @@ public class CommunityService {
         Users users = usersRepository.findById(usersId)
                 .orElseThrow(() -> new IllegalArgumentException("없는 유저입니다."));
 
-        IssueDTO.ResponseDTO responseDTO = optIssue.
-                map(issue -> issue.
+        IssueDTO.ResponseDTO responseDTO = optIssue.map(issue -> issue.
                         toDetailDto(
                                 likesService.getIssueLikes(issue.getId()),
                                 usersRepository.findById(issue.getUsers().getId()).orElseThrow(() ->
