@@ -114,12 +114,12 @@ async function submitIssue() {
         <codemirror v-model="issueInfo.code" :autofocus="true" :extensions="extensions" :font-size="20"
             :indent-with-tab="true" :style="{ height: '200px' }" :tab-size="4" class="text-lg" placeholder="// 코드를 입력하세요" />
     </div>
+  </div>
 
-    <div class="flex items-center justify-between">
-        <div>
-            <div>에러를 등록하면 자동으로 시간이 측정되어 적금할 수 있는 금액이 달라집니다.</div>
-            <div>성공적인 에러 해결로 목표에 한 발짝 더 가까워지세요!</div>
-        </div>
+  <div class="flex justify-between items-center">
+    <div>
+      <div>에러를 등록하면 자동으로 시간이 측정되어 적금할 수 있는 금액이 달라집니다.</div>
+      <div>성공적인 에러 해결로 목표에 한 발짝 더 가까워지세요!</div>
     </div>
     <div>
         <button class="px-10 py-5 m-2 shadow bg-main-red hover:bg-hover-red rounded-xl" @click="submitIssue()">

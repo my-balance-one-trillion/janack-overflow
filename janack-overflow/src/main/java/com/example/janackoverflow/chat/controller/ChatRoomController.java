@@ -64,7 +64,7 @@ public class ChatRoomController {
         try {
             Long userId = nowUserDetails.getUser().getId();
             ChatRoomDTO.ResponseDTO chatRoomDTO = chatRoomService.read(roomId);
-            List<ChatMessageDTO.ResponseDTO> chatMessageList = chatMessageService.readAll(roomId);
+            List<ChatMessageDTO.ResponseDTO> chatMessageList = chatMessageService.readChatMessages(roomId, userId);
             Map<String, Object> responseMap = new HashMap<>();
             responseMap.put("roomInfo", chatRoomDTO);
             responseMap.put("messageList", chatMessageList);
@@ -78,15 +78,13 @@ public class ChatRoomController {
     @GetMapping("/enter/{roomId}")
     public ResponseEntity<?> enterChatRoom(@AuthenticationPrincipal NowUserDetails nowUserDetails,
                                            @PathVariable(value = "roomId") Long roomId){
-
-
         Long userId = nowUserDetails.getUser().getId();
         //유저 수 다 찼을때 못들어오게 하기
         if(!chatRoomService.isMax(roomId)) {
             chatRoomService.enterChatRoom(roomId, userId);
             return ResponseEntity.ok("입장");
         } else {
-            return ResponseEntity.noContent().build();
+            return ResponseEntity.badRequest().body("인원이 다 찼습니다.");
         }
 
 
