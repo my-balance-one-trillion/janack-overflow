@@ -16,9 +16,6 @@
             <div class="py-8 text-base leading-6 space-y-4 text-gray-700 sm:text-lg sm:leading-7">
               <div class="relative">
                 <form>
-                  <!-- <p class="flexed ml-20 mt-0 text-red-700 text-sm" :class="{ 'hidden': emailCheck }">
-                    패스워드가 일치하지 않습니다.
-                  </p> -->
                 <div class="relative">
                   <input autocomplete="off" id="email" name="email" type="text" v-model="state.input.email"
                   class="focus:border-main-red focus:ouline-none focus:ring-0 peer placeholder-transparent bg-gray-50 h-10 w-full border-t-0 border-l-0 border-r-0 border-b-2
