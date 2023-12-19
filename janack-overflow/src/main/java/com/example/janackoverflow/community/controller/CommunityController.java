@@ -114,7 +114,11 @@ public class CommunityController {
     @GetMapping(value = "/solvedissue/{issueId}/articles")
     public ResponseEntity<List<MediumArticle>> getArticles(@PathVariable("issueId")long issueId){
         try {
-            return ResponseEntity.ok(communityService.getMediumApi(issueId));
+            List<MediumArticle> list =  communityService.getMediumApi(issueId);
+            if(list == null) {
+                return ResponseEntity.notFound().build();
+            }
+            return ResponseEntity.ok(list);
         } catch (IOException | InterruptedException e) {
             throw new RuntimeException(e);
         }
