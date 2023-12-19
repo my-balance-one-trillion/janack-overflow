@@ -25,7 +25,7 @@
           height="216px"
         />
       </div>
-      <img class="z-2 top-3" src="/images/mainImg1.png" />
+      <img class="z-2 top-3 w-[657px] h-[657px]" src="/images/mainImg1.png" />
     </div>
   </div>
   <div class="main-middle">

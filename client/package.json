@@ -3,10 +3,11 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "dev": "vite",
+    "dev": "vite --host 0.0.0.0 --port 5173",
     "build": "vite build",
     "preview": "vite preview"
   },
+  
   "dependencies": {
     "@codemirror/lang-html": "^6.4.7",
     "@codemirror/lang-java": "^6.0.1",

@@ -50,14 +50,17 @@ ChartJS.register({
 const data = {
   datasets: [
     {
-      label: ['달성률'],
+      labels: ['목표'],
       backgroundColor: ['#025939', '#F0F2F2'],
-      data: [percent, 100-percent]
+      data: [p.acntAmount, p.goalAmount]
     }
   ],
   
 }
 const options = {
+  legend : {
+    display : false
+  },
   responsive: false,
   cutout: '90%',
   maintainAspectRatio: false

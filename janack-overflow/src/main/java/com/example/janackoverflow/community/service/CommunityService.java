@@ -8,6 +8,7 @@ import com.example.janackoverflow.issue.domain.IssueDTO;
 import com.example.janackoverflow.issue.entity.Issue;
 import com.example.janackoverflow.issue.repository.IssueRepository;
 import com.example.janackoverflow.issue.service.SolutionService;
+import com.example.janackoverflow.user.entity.Users;
 import com.example.janackoverflow.user.repository.UsersRepository;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -128,6 +129,30 @@ public class CommunityService {
         log.info("issuePageList.size() :" + issuePageList.size());
         // TODO pageImpl 하나만 사용해서 구현하기 현재 repo안에서도 사용중
         return new PageImpl<>(issuePageList, pageable, issueList.getTotalElements());
+    }
+
+    //포기한 이슈 조회
+    public IssueDTO.ResponseDTO detailGivenUpIssue(long issueId, long usersId){
+        Optional<Issue> optIssue = issueRepository.findById(issueId);
+        Users users = usersRepository.findById(usersId)
+                .orElseThrow(() -> new IllegalArgumentException("없는 유저입니다."));
+
+        IssueDTO.ResponseDTO responseDTO = optIssue.
+                map(issue -> issue.
+                        toDetailDto(
+                                likesService.getIssueLikes(issue.getId()),
+                                usersRepository.findById(issue.getUsers().getId()).orElseThrow(() ->
+                                        new IllegalArgumentException("해당 유저를 찾을 수 없습니다.")).toIssueDto(),
+                                null,
+                                null, null
+                        )
+                ).orElseThrow(() -> new IllegalArgumentException("없는 이슈번호입니다."));
+        //작성자 체크, 포기 상태 체크
+        if(users.getId() != usersId && optIssue.get().getStatus().equals("02")){
+            return null;
+        }
+
+        return responseDTO;
     }
 
     @Transactional

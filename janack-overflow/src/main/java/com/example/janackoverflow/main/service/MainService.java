@@ -42,7 +42,8 @@ public class MainService {
 
         InputAccount inputAccount = inputAccountRepository.findByUsersIdAndStatus(userId, "01")
                 .orElseThrow(() -> new IllegalArgumentException("not found"));
-        Long savingCnt = issueRepository.countByUsersIdAndCreatedAtAfter(1L, inputAccount.getCreatedAt());
+
+        Long savingCnt = issueRepository.countByUsersIdAndInputAccountIdAndStatus(userId, inputAccount.getId(), "03");
         int dayCnt = LocalDateTime.now().getDayOfYear()-inputAccount.getCreatedAt().getDayOfYear()+1;
         return NowAccountResponseDTO.toDto(inputAccount, savingCnt, dayCnt);
 
@@ -55,7 +56,9 @@ public class MainService {
 
         InputAccount inputAccount = inputAccountRepository.findTop1ByUsersIdAndStatusOrderByCreatedAtDesc(userId, "03")
                 .orElseThrow(() -> new IllegalArgumentException("not found"));
-        Long savingCnt = issueRepository.countByUsersIdAndCreatedAtAfter(1L, inputAccount.getCreatedAt());
+
+        Long savingCnt = issueRepository.countByUsersIdAndInputAccountIdAndStatus(userId, inputAccount.getId(), "03");
+
         int dayCnt = LocalDateTime.now().getDayOfYear()-inputAccount.getCreatedAt().getDayOfYear()+1;
         return NowAccountResponseDTO.toDto(inputAccount, savingCnt, dayCnt);
 
