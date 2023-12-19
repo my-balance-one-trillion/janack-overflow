@@ -2,27 +2,26 @@
 import {ref, defineEmits, onMounted} from "vue";
 import axios from "axios";
 import {useAuthStore} from "@/stores/auth";
+import Tagify from '@yaireo/tagify'
+import '@yaireo/tagify/src/tagify.scss';
+import {Codemirror} from "vue-codemirror";
+import {java} from '@codemirror/lang-java'
+import {html} from '@codemirror/lang-html'
+import {nord, nordInit} from '@uiw/codemirror-theme-nord';
 
 const issueInfo = ref({
   title: '',
   content: '',
   category: '',
-  code: '// 코드를 입력해주세요',
+  code: '',
   keyword: '',
 });
+
 const emit = defineEmits(['step-changed']);
 const step = ref(1);
-const code = ref('');
-
-import CodeEditor from 'simple-code-editor';
-
-
-import Tagify from '@yaireo/tagify'
-import '@yaireo/tagify/src/tagify.scss';
-// import 'highlight.js/scss/isbl-editor-dark.scss';
-
 
 const tagInput = ref(null);
+const extensions = [java(), nord]
 
 onMounted(() => {
   const tagify = new Tagify(tagInput.value, {
@@ -36,10 +35,6 @@ onMounted(() => {
     // }
     issueInfo.value.keyword = tagify.value.map(tag => tag.value).join(',');
   });
-
-  /*  document.querySelectorAll('code').forEach((block) => {
-      hljs.highlightBlock(block);
-    });*/
 });
 
 
@@ -62,6 +57,7 @@ async function submitIssue() {
 }
 
 </script>
+
 <template>
   <div class="flex items-center justify-center mt-2 w-12/12 font-sub">
     <div class="w-full px-8 py-5 mx-auto my-4 bg-white rounded-lg shadow-md">
@@ -101,9 +97,9 @@ async function submitIssue() {
       />
       <!--에러 코드-->
       <div>
-        <CodeEditor v-model="issueInfo.code"
-                    :languages="[['java', 'Java'],['python', 'Python'],['javascript', 'Javascript']]" :line-nums="true"
-                    theme="isbl-editor-dark" width="100%"></CodeEditor>
+        <!--        <code-editor v-model="issueInfo.code" class="text-lg" @update:modelValue="updateCode"></code-editor>-->
+        <codemirror v-model="issueInfo.code" :autofocus="true" :extensions="extensions"
+                    :font-size="20" :indent-with-tab="true" :style="{ height: '200px' }" :tab-size="4" class="text-lg" placeholder="// 코드를 입력하세요"/>
       </div>
     </div>
   </div>
@@ -119,8 +115,6 @@ async function submitIssue() {
       </button>
     </div>
   </div>
-
 </template>
 
-<style scoped>
-</style>
+<style scoped></style>

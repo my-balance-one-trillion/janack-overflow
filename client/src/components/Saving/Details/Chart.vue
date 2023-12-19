@@ -40,7 +40,8 @@ const getData = async () => {
           label: '월별 적금 횟수',
           type: 'bar',
           data: countData.map(item => item.count),
-          backgroundColor: 'rgba(191,96,113, 0.7)',
+          borderColor: '#f53e52',
+          backgroundColor: 'rgba(254,163,170,0.4)',
           yAxisID: 'y1',
         },
         {
@@ -48,8 +49,8 @@ const getData = async () => {
           type: 'line',
           data: countData.map(item => amountMap[item.month] || 0),
           borderColor: 'rgb(191, 17, 49)',
-          backgroundColor: 'rgba(191,96,113, 0.7)',
           yAxisID: 'y2',
+          tension: 0.2
         },
       ],
     };
@@ -72,8 +73,22 @@ const getData = async () => {
           position: 'right',
           beginAtZero: true,
           suggestedMin: 0,
+          ticks: { // y축 단위 설정
+            callback: function(value, index, values) {
+              return value + '원';
+            }
+          }
         },
       },
+      plugins: {
+        legend: {
+          labels: {
+            font: {
+              size: 18,
+            }
+          }
+        }
+      }
     };
 
     // 차트 생성

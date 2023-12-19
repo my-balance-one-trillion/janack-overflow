@@ -21,7 +21,7 @@ public interface IssueRepository extends JpaRepository<Issue, Long> {
     Page<Issue> findAllByUsers_idOrderByCreatedAtDesc(Long id, Pageable pageble);
     Page<Issue> findByPublicStatusAndStatusOrderByCreatedAtDesc(Boolean publicStatus, String status, Pageable pageable);
     List<Issue> findByUsersIdAndCreatedAtAfterOrderByCreatedAtDesc(Long userId, LocalDateTime aWeekAgo);
-    Long countByUsersIdAndCreatedAtAfter(Long userId, LocalDateTime createAt);
+    Long countByUsersIdAndInputAccountIdAndStatus(Long userId, Long InputAccountId, String status);
     List<Issue> findTop10ByPublicStatusOrderByCreatedAtDesc(boolean publicStatus);
     List<Issue> findByUsersId(Long userId);
     List<Issue> findByUsers_IdAndStatus(Long userId, String status);

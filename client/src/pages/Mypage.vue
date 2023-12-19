@@ -89,20 +89,33 @@
   </main>
 </template>
 <script setup>
-import { ref } from "vue";
+import { onMounted, ref } from "vue";
 import { useAuthStore } from "@/stores/auth";
-
 import Dashboard from "@/components/mypage/Dashboard.vue";
 import ProfileImage from "@/components/mypage/ProfileImage.vue";
 import UpdateInfo from "@/components/mypage/UpdateInfo.vue";
 import MyIssue from "@/components/mypage/MyIssue.vue";
 import MyComment from "@/components/mypage/MyComment.vue";
 
+
 const authStore = useAuthStore();
 const currentComponent = ref("Dashboard");
+
+
+
+const props = defineProps(['component']);
+
+onMounted(()=>{
+  console.log("fromMain", props.component);
+  if(props.component === 'myissue'){
+    changeComponent("myissue");
+  }
+})
+
 
 const changeComponent = (component) => {
   currentComponent.value = component;
 };
+
 </script>
 <style scoped></style>
