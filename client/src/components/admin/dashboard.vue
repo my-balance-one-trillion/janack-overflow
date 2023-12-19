@@ -23,7 +23,7 @@
 				</div>
 			</div>
 		</div>
-		<div class="achievement w-60">
+		<div class="user-trend w-60">
 			<h4 class="text-lg mb-5">유저수 증가 추이</h4>
 			<div class="p-5 border border-gray-400 rounded-xl h-80">
 				<div class="achive-header mb-5">
@@ -33,13 +33,18 @@
 				<canvas id="user-trend"></canvas>
 			</div>
 		</div>
-		<!-- <div class="average w-60">
-			<h4 class="text-lg mb-5">월간 글쓴 기록</h4>
+		<div class="solution-trend w-60">
+			<h4 class="text-lg mb-5">문제해결 추이</h4>
 			<div class="p-5 border border-gray-400 rounded-xl h-80">
 				<div class="achive-header mb-5">
+					<h4 class="text-lg text-main-grn">6개월간 평균문제 해결건</h4>
+					<p class="text-sm">
+						<span> {{ avarageSolution }}</span>
+					</p>
 				</div>
+				<canvas id="solution-trend"></canvas>
 			</div>
-		</div> -->
+		</div>
 
 	</article>
 </template>
@@ -52,13 +57,15 @@ import Chart from 'chart.js/auto';
 
 const allCount = ref([]);
 const userTrend = ref([]);
+const solutionTrend = ref([]);
 const CurrentUserTrend = ref('');
+const avarageSolution = ref('');
 
 // -----------------------------------
 // 각종 수치
 // -----------------------------------
 onMounted(async () => {
-	const [countResponse, userTrendResponse] = await Promise.all([
+	const [countResponse, userTrendResponse, solutionResponse] = await Promise.all([
 		axios.get('/admin/count', {
 			headers: {
 				"Authorization": useAuthStore().token
@@ -69,15 +76,25 @@ onMounted(async () => {
 				"Authorization": useAuthStore().token
 			}
 		}),
+		axios.get('/admin/solutiontrend', {
+			headers: {
+				"Authorization": useAuthStore().token
+			}
+		}),
 
 	])
 	allCount.value = countResponse.data;
 	userTrend.value = userTrendResponse.data;
+	solutionTrend.value = solutionResponse.data;
 	CurrentUserTrend.value = userTrend.value[0]
 
-
+	const data = solutionTrend.value.map(entry => entry.count);
+	const total = data.reduce((acc, count) => acc + count, 0);
+	const average = total / data.length;
+	avarageSolution.value = average.toFixed(2);
+	console.log(avarageSolution.value);
 	// -----------------------------------
-	// 월간 차트
+	// 월간 가입자 차트
 	// -----------------------------------
 	new Chart(document.getElementById('user-trend'),
 		{
@@ -107,7 +124,7 @@ onMounted(async () => {
 				labels: userTrend.value.map(row => row.month),
 				datasets: [
 					{
-						label: '월별 게시글 현황',
+						label: '가입자수',
 						data: userTrend.value.map(row => row.userCount),
 						borderRadius: 20,
 						backgroundColor:
@@ -117,9 +134,49 @@ onMounted(async () => {
 			}
 		}
 	);
+
+	// -----------------------------------
+	// 월간 이슈해결 차트
+	// -----------------------------------
+	new Chart(document.getElementById('solution-trend'),
+		{
+			type: 'bar',
+			options: {
+				aspectRatio: 1 / 1,
+				elements: {
+					rectangle: {
+						borderRadius: 20,
+					},
+				},
+				scales: {
+					x: {
+						grid: {
+							display: false // x 축의 배경 그리드를 숨김
+						}
+					},
+					y: {
+						grid: {
+							display: false // y 축의 배경 그리드를 숨김
+						}
+					}
+				},
+				plugins: {} // 플러그인 비활성화
+			},
+			data: {
+				labels: solutionTrend.value.map(row => row.month),
+				datasets: [
+					{
+						label: '문제해결수',
+						data: solutionTrend.value.map(row => row.count),
+						borderRadius: 20,
+						backgroundColor:
+							'#025939',
+					}
+				]
+			}
+		}
+	);
 })
-
-
 </script>
 
 <style scoped></style>

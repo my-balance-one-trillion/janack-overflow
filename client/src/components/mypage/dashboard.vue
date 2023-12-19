@@ -23,7 +23,7 @@
 					</div>
 				</div>
 			</div>
-			<div class="achievement w-60">
+			<div class="achievement w-60" v-if="achive != undefined">
 				<h4 class="text-lg mb-5">목표 달성률</h4>
 				<div class="p-5 border border-gray-400 rounded-xl h-80">
 					<div class="achive-header mb-5">
@@ -71,7 +71,7 @@ const timeDiff = Math.abs(currentDate.getTime() - targetDate.getTime());
 const daysDiff = Math.ceil(timeDiff / (1000 * 3600 * 24));
 
 onMounted(async () => {
-	const [myCountResponse, percentResponse, monthResponse] = await Promise.all([
+	const [myCountResponse, achiveResponse, monthResponse] = await Promise.all([
 		axios.get('/mypage/mycount', {
 			headers: {
 				authorization: authStore.token,
@@ -88,71 +88,73 @@ onMounted(async () => {
 			},
 		})
 	]);
-	achive.value = percentResponse.data.nowAccount;
+	myCount.value = myCountResponse.data;
+	achive.value = achiveResponse.data.nowAccount;
 	month.value = monthResponse.data
 	currentMonth.value = monthResponse.data[0];
-	myCount.value = myCountResponse.data;
-	percent.value = ((achive.value.acntAmount / achive.value.goalAmount) * 100).toFixed(0);
-
-	const goal = [percent.value, 100 - percent.value];
 
 	const goalChartCtx = document.getElementById('achievement').getContext('2d');
 	const monthChartCtx = document.getElementById('average');
 
+
 	// -----------------------------------
 	// 목표 차트
 	// -----------------------------------
+	if (achive.value) {
+		percent.value = ((achive.value.acntAmount / achive.value.goalAmount) * 100).toFixed(0);
+		const goal = [percent.value, 100 - percent.value];
 
-	Chart.register({
-		id: 'doughnutlabel',
-		beforeDraw: function (chart) {
-			if (chart.canvas.id === 'achievement') {
-				const width = chart.width;
-				const height = chart.height;
-				const ctx = chart.ctx;
+		Chart.register({
+			id: 'doughnutlabel',
+			beforeDraw: function (chart) {
+				if (chart.canvas.id === 'achievement') {
+					const width = chart.width;
+					const height = chart.height;
+					const ctx = chart.ctx;
 
-				ctx.restore();
-				const fontSize = (height / 114).toFixed(2);
-				ctx.font = `${fontSize}em 'D2Coding', sans-serif`;
-				ctx.textBaseline = 'middle';
+					ctx.restore();
+					const fontSize = (height / 114).toFixed(2);
+					ctx.font = `${fontSize}em 'D2Coding', sans-serif`;
+					ctx.textBaseline = 'middle';
 
-				const text = `${percent.value}%`;
-				const textX = Math.round((width - ctx.measureText(text).width) / 2);
-				const textY = height / 2;
+					const text = `${percent.value}%`;
+					const textX = Math.round((width - ctx.measureText(text).width) / 2);
+					const textY = height / 2;
 
-				ctx.fillStyle = '#BF1131';
-				ctx.fillText(text, textX, textY);
-				ctx.save();
-			}
-		},
-	});
-
-	// 도넛 차트에 플러그인 적용하여 생성
-	new Chart(goalChartCtx, {
-		type: 'doughnut',
-		data: {
-			datasets: [
-				{
-					data: goal,
-					backgroundColor: [
-						'#BF1131',
-						'#eeeeee',
-					],
+					ctx.fillStyle = '#BF1131';
+					ctx.fillText(text, textX, textY);
+					ctx.save();
 				}
-			]
-		},
-		options: {
-			cutout: '50%',
-			aspectRatio: 1 / 1,
-			plugins: {
-				doughnutlabel: {}, // 플러그인 적용
 			},
-		}
-	});
+		});
 
+		// 도넛 차트에 플러그인 적용하여 생성
+		new Chart(goalChartCtx, {
+			type: 'doughnut',
+			data: {
+				datasets: [
+					{
+						data: goal,
+						backgroundColor: [
+							'#BF1131',
+							'#eeeeee',
+						],
+					}
+				]
+			},
+			options: {
+				cutout: '50%',
+				aspectRatio: 1 / 1,
+				plugins: {
+					doughnutlabel: {}, // 플러그인 적용
+				},
+			}
+		});
+	}
 	// -----------------------------------
 	// 월간 차트
 	// -----------------------------------
+
 	new Chart(monthChartCtx,
 		{
 			type: 'bar',
@@ -191,6 +193,8 @@ onMounted(async () => {
 			}
 		}
 	);
+
+
 });
 </script>
 
