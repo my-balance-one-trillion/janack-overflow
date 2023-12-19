@@ -92,14 +92,14 @@
                 </div>
                 <div class="mt-2">
                     <div class="flex justify-between">
-                        <a class="text-2xl font-bold text-black hover:text-gray-800"
+                        <a class="h-8 text-2xl font-bold text-black line-clamp-1 hover:text-gray-800"
                             :href='`/community/detail/${issue.id}`'>{{ issue.title }}</a>
-                        <div class="my-auto mr-2">
+                        <div class="flex items-center my-auto mr-2 w-fit">
                             <i class="fa-regular fa-thumbs-up fa-xl"></i>
-                            <span class="ml-2">{{ issue.likes }}</span>
+                            <span class="pt-2 ml-2 text-md">{{ issue.likes }}</span>
                         </div>
                     </div>
-                    <p class="mt-2 text-gray-600">{{ issue.content }}</p>
+                    <p class="mt-2 text-gray-600 line-clamp-2">{{ issue.content }}</p>
                 </div>
                 <div class="flex items-center justify-between mt-4">
                     <div>

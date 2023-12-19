@@ -223,6 +223,10 @@ public class CommunityService {
             obj = (JSONObject) parser.parse(response.body());
             JSONArray articlesObj = (JSONArray) obj.get("articles");
 
+            if(articlesObj == null) {
+                return null;
+            }
+
             int articleSize = Math.min(articlesObj.size(), 3);
             for (int i = 0; i < articleSize; i++) {
                 if (articlesObj.get(i) != null) {
