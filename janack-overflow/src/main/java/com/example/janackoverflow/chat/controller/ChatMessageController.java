@@ -18,11 +18,11 @@ public class ChatMessageController {
     private ChatMessageService chatMessageService;
 
     //방 채팅 불러오기
-    @GetMapping("/{roomId}")
-    public ResponseEntity<?> chatList(@PathVariable(value = "roomId") Long roomId){
-        List<ChatMessageDTO.ResponseDTO> chatRoomList = chatMessageService.readAll(roomId);
-        return ResponseEntity.ok(chatRoomList);
-    }
+//    @GetMapping("/{roomId}")
+//    public ResponseEntity<?> chatList(@PathVariable(value = "roomId") Long roomId){
+//        List<ChatMessageDTO.ResponseDTO> chatRoomList = chatMessageService.readAll(roomId);
+//        return ResponseEntity.ok(chatRoomList);
+//    }
 //    @PostMapping
 //    public ResponseEntity<?> createRoom(){
 //

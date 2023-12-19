@@ -89,7 +89,7 @@ public class UsersController {
                         "        <tbody>\n" +
                         "        <tr style=\"line-height:normal\">\n" +
                         "        <td>\n" +
-                        "        <a style=\"font-family:'Google Sans',Roboto,RobotoDraft,Helvetica,Arial,sans-serif;color:rgba(0,0,0,0.87);font-size:20px;line-height:20px\">\n" +
+                        "        <a style=\"font-family:'Google Sans',Roboto,RobotoDraft,Helvetica,Arial,sans-serif;color:rgba(0,0,0,0.87);font-size:23px;line-height:20px\">\n" +
                         "        " + usersRequestDTO.getEmail() + "\n" +
                         "        </a>\n" +
                         "        </td>\n" +
@@ -99,8 +99,8 @@ public class UsersController {
                         "      </div>\n" +
                         "       <div style=\"color:rgba(0,0,0,0.87);line-height:20px;padding-top:20px;\">\n" +
                         "\n" +
-                        "       <div style=\"font-family:Roboto-Regular,Helvetica,Arial,sans-serif;font-size:14px;color:black;\">\n" +
-                        "       janackoverflow에 임시 비밀번호를 발급하지 않았다면 다른 사람이 계정을 사용하는 것일 수 있습니다.<br>\n" +
+                        "       <div style=\"font-family:Roboto-Regular,Helvetica,Arial,sans-serif;font-size:18px;color:black;\">\n" +
+                        "       <span style=\"color:rgba(239, 68, 68);\">J</span>ANACK-OVER<span style=\"color:rgba(4, 120, 87);\">F</span>LOW에 임시 비밀번호를 발급하지 않았다면 다른 사람이 계정을 사용하는 것일 수 있습니다.<br>\n" +
                         "       지금 계정을 점검하고 비밀번호를 변경하세요!\n" +
                         "       </div>\n" +
                         "\n" +
@@ -109,9 +109,9 @@ public class UsersController {
                         "        </div>\n" +
                         "\n" +
                         "        <div style=\"padding-top:5%;text-align:center\">\n" +
-                        "          <a href=\"http://localhost:5173/mypage\" \n" +
+                        "          <a href=\"http://localhost:5173/login\" \n" +
                         "          style=\"font-family:'Google Sans',Roboto,RobotoDraft,Helvetica,Arial,sans-serif;line-height:16px;color:#ffffff;font-weight:400;text-decoration:none;font-size:14px;display:inline-block;padding:10px 24px;background-color: rgba(185, 28, 28);border-radius:5px;min-width:90px\" target=\"_blank\">\n" +
-                        "          회원정보 수정하기\n" +
+                        "          로그인\n" +
                         "          </a>\n" +
                         "        </div>\n" +
                         "      </div>\n" +

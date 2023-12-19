@@ -175,6 +175,7 @@ onMounted(async () => {
   console.log("실행");
 
   messageReq.value.userId = userInfo.value.id;
+  //방 정보 + 채팅 전체 불러오기
   await axios
     .get("/chatrooms/" + chatId, {
       headers: {
@@ -207,9 +208,6 @@ onMounted(async () => {
   }
   connect();
   
-  
-
-
   await axios
     .get("/chatrooms/enter/" + chatId, {
       headers: {
@@ -219,6 +217,7 @@ onMounted(async () => {
     .then((response) => {
       console.log("입장", response);
     });
+
   if (chatDiv.value) {
     chatDiv.value.scrollTop = chatDiv.value.scrollHeight;
   }

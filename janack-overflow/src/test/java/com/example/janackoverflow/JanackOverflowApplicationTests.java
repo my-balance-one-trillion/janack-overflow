@@ -6,6 +6,7 @@ import com.example.janackoverflow.chat.domain.ChatMessageDTO;
 import com.example.janackoverflow.chat.entity.ChatMessage;
 import com.example.janackoverflow.chat.entity.ChatRoom;
 import com.example.janackoverflow.chat.entity.ChatRoomUsers;
+import com.example.janackoverflow.chat.repository.ChatMessageRepository;
 import com.example.janackoverflow.chat.repository.ChatRoomRepository;
 import com.example.janackoverflow.chat.repository.ChatRoomUsersRepository;
 import com.example.janackoverflow.chat.service.ChatMessageService;
@@ -44,10 +45,15 @@ class JanackOverflowApplicationTests {
 	ChatRoomUsersRepository chatRoomUsersRepository;
 	@Autowired
 	BankingService bankingService;
+	@Autowired
+	private ChatMessageRepository chatMessageRepository;
+
 	@Test
 	void contextLoads() throws JsonProcessingException {
-
-		bankingService.transfer(3000, "3020000009671");
+//		System.out.println(chatMessageRepository.findTop1ByChatRoomIdAndUsersIdAndTypeOrderByCreatedAtDesc(43L, 31L, ChatMessageDTO.MessageType.ENTER)
+//				.get().getId());
+		chatMessageService.readChatSinceJoin(43L, 31L)
+				.forEach(System.out::println);
 	}
 
 

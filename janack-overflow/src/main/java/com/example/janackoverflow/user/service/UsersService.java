@@ -70,6 +70,7 @@ public class UsersService {
                 .holder(users.getHolder())
                 .bankName(users.getBankName())
                 .outputAcntNum(users.getOutputAcntNum())
+                .role(users.getRole())
                 .build();
     }
 

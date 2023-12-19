@@ -1,14 +1,13 @@
 <template>
-  <div class="container mx-auto max-w-custom overflow-hidden">
-    <Header />
+  <div class="container mx-auto max-w-custom min-h-screen overflow-hidden">
+    <Header :role="accountRole" />
     <Router-View />
-    <Footer />
   </div>
+  <Footer />
 </template>
 
 <script setup>
-import axios from "axios";
-import { onBeforeMount } from "vue";
+import { onBeforeMount, ref } from "vue";
 import Header from "@/components/Header.vue";
 import Footer from "@/components/Footer.vue";
 import { useAuthStore } from "@/stores/auth";
@@ -16,7 +15,7 @@ import { useRouter } from "vue-router";
 
 const authStore = useAuthStore();
 const router = useRouter();
-
+const accountRole = ref([]);
 
 // --------------------
 // 유저정보 우선실행 로직
@@ -38,6 +37,7 @@ async function handleRouteLogic() {
   try {
     if (authStore.token) {
       await authStore.getUserInfo();
+      accountRole.value = authStore.userInfo.role;
     }
   } catch (error) {
     console.error("getUserInfo 오류:", error);
