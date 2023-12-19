@@ -17,7 +17,7 @@ const stackoverflow = ref({});
 const createdAt = ref();
 const overTime = ref();
 const isLoading = ref(true);
-const extensions = [java(), nord]
+const extensions = ref([java(), nord]);
 
 async function getIssue() {
   await axios

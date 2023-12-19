@@ -37,7 +37,7 @@ public class SavingController {
     private final IssueService issueService;
     private final SolutionService solutionService;
 
-    public SavingController(InputAccountService inputAccountService, RuleService ruleService, IssueService issueService, SolutionService solutionService){
+    public SavingController(InputAccountService inputAccountService, RuleService ruleService, IssueService issueService, SolutionService solutionService) {
         this.inputAccountService = inputAccountService;
         this.ruleService = ruleService;
         this.issueService = issueService;
@@ -46,7 +46,7 @@ public class SavingController {
 
     // 적금 개설
     @PostMapping
-    public ResponseEntity<?> createAccount(@Validated @RequestBody SavingRequestDTO savingRequestDTO, @AuthenticationPrincipal NowUserDetails userDetails){
+    public ResponseEntity<?> createAccount(@Validated @RequestBody SavingRequestDTO savingRequestDTO, @AuthenticationPrincipal NowUserDetails userDetails) {
         Users users = userDetails.getUser();
         try {
             InputAccount inputAccount = inputAccountService.createInputAccount(savingRequestDTO.getInputAccountRequestDTO(), users);
@@ -61,14 +61,14 @@ public class SavingController {
             } else {
                 return new ResponseEntity<>("적금 개설에 실패했습니다.", HttpStatus.INTERNAL_SERVER_ERROR);
             }
-        } catch (IllegalArgumentException e){
+        } catch (IllegalArgumentException e) {
             return new ResponseEntity<>("입력 안됨: " + e.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
 
     // 적금 내역 (진행 중인 적금 정보)
     @GetMapping("/progress")
-    public ResponseEntity<?> getUserAccountInProgress(@AuthenticationPrincipal NowUserDetails userDetails){
+    public ResponseEntity<?> getUserAccountInProgress(@AuthenticationPrincipal NowUserDetails userDetails) {
         Users users = userDetails.getUser();
         Optional<InputAccountResponseDTO> inProgressAccount = inputAccountService.getInProgressAccountByUser(users);
         Optional<RuleResponseDTO> inProgressRule = ruleService.getInProgressRuleByUser(users, inProgressAccount);
@@ -83,7 +83,7 @@ public class SavingController {
     // 월별 내역 조회 (해결된 에러 내역 월별 조회)
     @GetMapping("/monthly-issues")
     public ResponseEntity<?> getMonthlyIssuesByUserAndDate(@AuthenticationPrincipal NowUserDetails userDetails,
-                                                           @RequestParam int year, @RequestParam int month) {
+                                                           @RequestParam(name = "year") int year, @RequestParam(name = "month") int month) {
         Users users = userDetails.getUser();
 
         List<IssueResponseDTO> solvedIssues = issueService.getSolvedIssuesByUserId(users);  // 해결한 에러 조회
@@ -100,7 +100,7 @@ public class SavingController {
 
     // 월별 적금 횟수 (에러 해결 횟수)
     @GetMapping("/monthly-count")
-    public ResponseEntity<?> getMonthlyIssueCount(@AuthenticationPrincipal NowUserDetails userDetails){
+    public ResponseEntity<?> getMonthlyIssueCount(@AuthenticationPrincipal NowUserDetails userDetails) {
         Users users = userDetails.getUser();
         List<IssueResponseDTO> solvedIssues = issueService.getSolvedIssuesByUserId(users);  // 해결한 에러 조회
         List<MonthlyCountIssueDTO> solvedIssueCount = solutionService.getMonthlySolutionsCount(solvedIssues);
@@ -109,15 +109,16 @@ public class SavingController {
 
     // 월별 누적 적금
     @GetMapping("/monthly-amount")
-    public ResponseEntity<?> getMonthlyAmount(@AuthenticationPrincipal NowUserDetails userDetails){
+    public ResponseEntity<?> getMonthlyAmount(@AuthenticationPrincipal NowUserDetails userDetails) {
         Users users = userDetails.getUser();
         List<MonthlyAmountDTO> accumulatedAmount = issueService.getMonthlyAmount(users);
 
         return new ResponseEntity<>(accumulatedAmount, HttpStatus.OK);
     }
+
     // 적금 기록 (사용자 적금 전부 조회)
     @GetMapping
-    public ResponseEntity<?> getUserAccounts(@AuthenticationPrincipal NowUserDetails userDetails){
+    public ResponseEntity<?> getUserAccounts(@AuthenticationPrincipal NowUserDetails userDetails) {
         Users users = userDetails.getUser();
         List<InputAccountResponseDTO> userAccounts = inputAccountService.getAccountsByUser(users);
         return new ResponseEntity<>(userAccounts, HttpStatus.OK);
@@ -125,10 +126,10 @@ public class SavingController {
 
     // 진행 중인 적금 정보 수정
     @PutMapping
-    public ResponseEntity<?> updateAccountInfo(@RequestBody SavingRequestDTO savingRequestDTO, @AuthenticationPrincipal NowUserDetails userDetails){
+    public ResponseEntity<?> updateAccountInfo(@RequestBody SavingRequestDTO savingRequestDTO, @AuthenticationPrincipal NowUserDetails userDetails) {
         Users users = userDetails.getUser();
         InputAccount updateAccount = inputAccountService.updateInputAccount(savingRequestDTO.getInputAccountRequestDTO(), users);
-        Rule updateRule = ruleService.updateRule(savingRequestDTO.getRuleRequestDTO(),users, updateAccount.getId());
+        Rule updateRule = ruleService.updateRule(savingRequestDTO.getRuleRequestDTO(), users, updateAccount.getId());
 
         Map<String, Object> response = new HashMap<>();
         response.put("updateAccount", updateAccount);
@@ -139,7 +140,7 @@ public class SavingController {
 
     // 적금 삭제 (적금 포기 상태로 변경 status=02)
     @PutMapping("/giveup")
-    public ResponseEntity<?> updateAccountStatusGiveup(@AuthenticationPrincipal NowUserDetails userDetails){
+    public ResponseEntity<?> updateAccountStatusGiveup(@AuthenticationPrincipal NowUserDetails userDetails) {
         Long userId = userDetails.getUser().getId();
         InputAccount deleteAccount = inputAccountService.deleteInputAccount(userId);
         return new ResponseEntity<>(deleteAccount, HttpStatus.OK);

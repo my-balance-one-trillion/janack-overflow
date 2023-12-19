@@ -60,12 +60,17 @@ const getData = async () => {
       indexAxis: 'x',
       responsive: true,
       scales: {
+
         y1: {
           type: 'linear',
           display: true,
           position: 'left',
           beginAtZero: true,
           suggestedMin: 0,
+          ticks: { // y축 단위 설정
+            stepSize: 1,
+            fontSize: 18,
+          },
         },
         y2: {
           type: 'linear',
@@ -74,10 +79,11 @@ const getData = async () => {
           beginAtZero: true,
           suggestedMin: 0,
           ticks: { // y축 단위 설정
+            fontSize: 18,
             callback: function(value, index, values) {
               return value + '원';
             }
-          }
+          },
         },
       },
       plugins: {
