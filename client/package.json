@@ -7,7 +7,6 @@
     "build": "vite build",
     "preview": "vite preview"
   },
-  
   "dependencies": {
     "@codemirror/lang-css": "^6.2.1",
     "@codemirror/lang-html": "^6.4.7",
@@ -27,6 +26,7 @@
     "@uiw/codemirror-theme-github": "^4.21.21",
     "@uiw/codemirror-theme-nord": "^4.21.21",
     "@yaireo/tagify": "^4.17.9",
+    "ace-builds": "^1.32.2",
     "apexcharts": "^3.44.2",
     "axios": "^1.6.2",
     "babel-helper-vue-jsx-merge-props": "^2.0.3",
@@ -48,6 +48,7 @@
     "vue-chartjs": "^5.2.0",
     "vue-codemirror": "^6.1.1",
     "vue-router": "^4.2.5",
+    "vue3-ace-editor": "^2.2.4",
     "vue3-circle-progress": "^1.0.7",
     "vue3-datepicker": "^0.4.0",
     "vue3-highlightjs": "^1.0.5",

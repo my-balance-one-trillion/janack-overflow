@@ -45,16 +45,13 @@ const stepAndTabChanged = (newStep, newTab) => {
   step.value = newStep;
   activeTab.value = newTab;
 }
-const loadCanged = (loadState) => {
-  isLoading.value = loadState;
-};
 const showModal = (modalState, id) => {
   modal.value = modalState;
   solutionId.value = id;
 }
 </script>
 <template>
-  <div class="flex flex-col w-10/12 mx-auto min-h-screen">
+  <div class="flex flex-col w-10/12 mx-auto min-h-full">
     <!-- 에러 / 해결 제목박스 -->
     <div v-if="step !== 3"
          class="flex items-center justify-center w-full p-2 mt-10 text-3xl text-center rounded-xl bg-bg-grey">
@@ -76,7 +73,7 @@ const showModal = (modalState, id) => {
     </div>
 
     <div v-if="isLoading">
-      <div v-show="activeTab === 0" class="w-full">
+      <div v-show="activeTab === 0" class="w-full mb-10">
         <submit-issue v-if="step === 1" @step-changed="stepChanged"></submit-issue>
         <about-issue v-else-if="step === 2 || step === 3"></about-issue>
         <solving v-if="step===2" @step-changed="stepAndTabChanged"></solving>
