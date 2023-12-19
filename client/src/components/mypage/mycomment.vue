@@ -120,7 +120,7 @@ async function deleteMyComment(commentid) {
 }
 
 function pageForward(i) {
-  let warpForward = i - 5;
+  let warpForward = i - 6;
   if (warpForward <= 0) {
     getCommentList(0);
   } else {
