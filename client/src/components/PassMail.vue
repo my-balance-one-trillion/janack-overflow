@@ -18,7 +18,6 @@
                   <input autocomplete="off" id="email" name="email" type="text"
                     class="focus:ouline-none focus:ring-0 focus:border-main-red peer placeholder-transparent bg-gray-50 h-10 w-full border-t-0 border-l-0 border-r-0 border-b-2 border-red-700 text-gray-900 focus:outline-none focus:borer-rose-600"
                     v-model="state.input.email" 
-                    @blur="mailCheck"
                     placeholder="Email" />
                   <label for="email"
                     class="absolute left-0 -top-3.5 text-gray-600 text-sm peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-440 peer-placeholder-shown:top-2 transition-all peer-focus:-top-3.5 peer-focus:text-gray-600 peer-focus:text-sm">Email</label>
@@ -60,13 +59,6 @@ const state = reactive({
 });
 
 const exMail = /^[A-Za-z0-9_\.\-]+@[A-Za-z0-9\-]+\.[A-Za-z0-9\-]+/;
-
-const mailCheck = () => { //이메일 input 포커스 나가면 체크
-      if(exMail.test(state.input.email) === false) {
-        alert('이메일 형식이 올바르지 않습니다.');
-        return false;
-      }
-    }
 
 const login = async () => {
   try {

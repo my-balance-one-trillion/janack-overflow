@@ -16,24 +16,25 @@
             <div class="py-8 text-base leading-6 space-y-4 text-gray-700 sm:text-lg sm:leading-7">
               <div class="relative">
                 <form>
+                  <!-- <p class="flexed ml-20 mt-0 text-red-700 text-sm" :class="{ 'hidden': emailCheck }">
+                    패스워드가 일치하지 않습니다.
+                  </p> -->
                 <div class="relative">
                   <input autocomplete="off" id="email" name="email" type="text" v-model="state.input.email"
                   class="focus:border-main-red focus:ouline-none focus:ring-0 peer placeholder-transparent bg-gray-50 h-10 w-full border-t-0 border-l-0 border-r-0 border-b-2
                   border-red-700 text-gray-900
                   focus:outline-none focus:borer-rose-600" 
-                  @blur="mailCheck"
                   placeholder="Email" required/>
                   <label for="email" 
                   class="absolute left-0 -top-3.5 text-gray-600 text-sm peer-placeholder-shown:text-base 
                   peer-placeholder-shown:text-gray-440 peer-placeholder-shown:top-2 
-                  transition-all peer-focus:-top-3.5 peer-focus:text-gray-600 peer-focus:text-sm">Email</label>
+                  transition-all peer-focus:-top-3.5 peer-focus:text-gray-600 peer-focus:text-sm">이메일</label>
                 </div>
 
                 <br>
                 
                 <div class="relative">
-                  <input 
-                  @blur="passCheck"
+                  <input
                   autocomplete="off" id="password" name="password" type="password" v-model="state.input.password"
                   class="focus:border-main-red focus:ouline-none focus:ring-0 peer placeholder-transparent bg-gray-50 h-10 w-full border-t-0 border-l-0 border-r-0 border-b-2 
                   border-red-700 text-gray-900 focus:outline-none focus:borer-rose-600" placeholder="Password" required/>
@@ -71,7 +72,6 @@
                     <div class="relative">
                       <input
                       @input="formatPhone"
-                      @blur="phoneCheck"
                       autocomplete="off" id="digit" name="digit" type="text" v-model="state.input.digit"
                       class="focus:border-main-red focus:ouline-none focus:ring-0 peer placeholder-transparent bg-gray-50 h-10 w-full border-t-0 border-l-0 border-r-0 border-b-2 
                       border-red-700 text-gray-900 focus:outline-none focus:borer-rose-600" placeholder="Digit" required/>
@@ -212,31 +212,15 @@ export default {
     const exPhone = /^[0-9]{3}\-([0-9]{3}|[0-9]{4})\-([0-9]{3}|[0-9]{4})/;
     const exPass = /^[A-Za-z0-9_\.\-`~!@#\$%^&*\|\\?;:+=\[\]<>\(\),_'"-]{9,}/;
 
-    const mailCheck = () => { //이메일 input 포커스 나가면 체크
-      if(exMail.test(state.input.email) === false) {
-        alert('이메일 형식이 올바르지 않습니다.');
-        return false;
-      }
-    }
-
-    const passCheck = () => {
-      if(exPass.test(state.input.password) === false) {
-        alert('보안을 위해 패스워드는 최소 9자 이상 작성해주세요');
-        return false;
-      }
-    }
-
-    const phoneCheck = () => {
-      if(exPhone.test(state.input.digit) === false) {
-        alert('전화번호 형식이 올바르지 않습니다.\n하이픈(-) 포함');
-        return false;
-      }
-    }
-
     const signup = async () => {     
       //axios 실행하기 전에 체크
       if(exMail.test(state.input.email) === false) {
         alert('이메일 형식이 올바르지 않습니다.');
+        return false;
+      }
+      
+      if(exPass.test(state.input.password) === false) {
+        alert('보안을 위해 패스워드는 최소 9자 이상 작성해주세요');
         return false;
       }
       
@@ -255,7 +239,6 @@ export default {
           console.log(res);
           console.log(res.headers);
           
-          window.alert(res.data);
           window.alert(`회원가입이 수행되었습니다`);
           router.push('/login')
 
@@ -271,11 +254,8 @@ export default {
       month,
       day,
       locale,
-      state, 
-      mailCheck,
-      passCheck,
+      state,
       formatPhone,
-      phoneCheck,
       signup
     }
   }
