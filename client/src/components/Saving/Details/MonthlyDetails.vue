@@ -48,31 +48,31 @@ const nextMonth = () => {
 </script>
 
 <template>
-  <div class="my-10 flex justify-center gap-7 items-center">
-    <button class="px-4 py-2 bg-main-red text-white rounded" @click="prevMonth">&lt</button>
-    <div class="text-2xl w-40 text-center">{{ current.split('-')[0] + "년 " + current.split('-')[1] + "월" }}</div>
-    <button v-show="current!==now" class="px-4 py-2 bg-main-red text-white rounded" @click="nextMonth">&gt</button>
-    <button v-show="current===now" class="px-4 py-2 bg-btn-grey text-white rounded" disabled>&gt</button>
+  <div class="flex items-center justify-center my-10 gap-7">
+    <button class="px-4 py-2 text-white rounded bg-main-red" @click="prevMonth">&lt</button>
+    <div class="w-40 text-2xl text-center">{{ current.split('-')[0] + "년 " + current.split('-')[1] + "월" }}</div>
+    <button v-show="current!==now" class="px-4 py-2 text-white rounded bg-main-red" @click="nextMonth">&gt</button>
+    <button v-show="current===now" class="px-4 py-2 text-white rounded bg-btn-grey" disabled>&gt</button>
   </div>
-  <table class="w-full border-gray-300 border-t-4 border-b-4">
-    <thead class="bg-gray-100 text-2xl flex w-full border-b-4">
+  <table class="w-full border-t-4 border-b-4 border-gray-300">
+    <thead class="flex w-full text-2xl bg-gray-100 border-b-4">
     <tr class="flex w-full text-center">
-      <td class="px-5 py-3 w-1/4">날짜</td>
-      <td class="px-5 py-3 w-2/4">에러</td>
-      <td class="px-5 py-3 w-1/4">금액</td>
+      <td class="w-1/4 px-5 py-3">날짜</td>
+      <td class="w-2/4 px-5 py-3">에러</td>
+      <td class="w-1/4 px-5 py-3">금액</td>
     </tr>
     </thead>
     <tbody v-if="monthlyList.solution.length === 0"
-           class="bg-grey-light flex items-center justify-center overflow-y-scroll w-full text-center h-60">
+           class="flex items-center justify-center w-full overflow-y-scroll text-center bg-grey-light h-60">
       <tr class="text-center">
         <td class="p-3 text-xl text-center">내역이 없습니다.</td>
       </tr>
     </tbody>
-    <tbody v-else class="bg-grey-light flex flex-col items-center overflow-y-scroll w-full text-center h-60">
+    <tbody v-else class="flex flex-col items-center w-full overflow-y-scroll text-center bg-grey-light h-60">
       <tr v-for="(item, index) in monthlyList.solution" :key="index" class="flex w-full border-b-2">
-        <td class="px-5 py-3 w-1/4 text-left">{{ dayjs(item.createdAt).format('YYYY. MM. DD HH:mm') }}</td>
-        <td class="px-5 py-3 w-2/4">{{ monthlyList.issue[index].title }}</td>
-        <td class="px-5 py-3 w-1/4 text-main-red font-medium text-xl">
+        <td class="w-1/4 px-5 py-3 text-left">{{ dayjs(item.createdAt).format('YYYY. MM. DD HH:mm') }}</td>
+        <td class="w-2/4 px-5 py-3">{{ monthlyList.issue[index].title }}</td>
+        <td class="w-1/4 px-5 py-3 text-xl font-medium text-main-red">
           {{ Number(monthlyList.issue[index].amount).toLocaleString() }}
         </td>
       </tr>

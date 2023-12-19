@@ -66,7 +66,7 @@
             <!--item 1-->
             <div v-for="article in articleList" class="w-full mb-6 select-none">
                 <div class="relative pb-64">
-                    <a :href="article.url" class="cursor-pointer">
+                    <a :href="article.url" target='_blank' class="cursor-pointer">
                         <img v-if="!article.imgUrl"
                             class="absolute object-cover w-full h-full border-b-4 rounded-lg shadow-md cursor-pointer border-main-grn"
                             src="../../public/images/errorImg.jpeg" alt="medium thumnail" />
@@ -89,7 +89,7 @@
                             </div>
 
                             <a class="block mt-2 text-lg font-medium text-gray-800 truncate hover:underline"
-                                :href="article.url">
+                                :href="article.url" target='_blank'>
                                 {{ article.title }}
                             </a>
                         </div>
