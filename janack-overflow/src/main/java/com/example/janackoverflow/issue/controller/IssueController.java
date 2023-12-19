@@ -13,6 +13,7 @@ import com.example.janackoverflow.issue.entity.Issue;
 import com.example.janackoverflow.issue.entity.Solution;
 import com.example.janackoverflow.issue.service.IssueService;
 import com.example.janackoverflow.issue.service.SolutionService;
+import com.example.janackoverflow.main.service.BankingService;
 import com.example.janackoverflow.user.entity.Users;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import org.springframework.http.HttpStatus;
@@ -30,6 +31,7 @@ public class IssueController {
 
     private final IssueService issueService;
     private final SolutionService solutionService;
+
 
     public IssueController(IssueService issueService, SolutionService solutionService) {
         this.issueService = issueService;
@@ -89,6 +91,8 @@ public class IssueController {
         }
 
         Solution solution = solutionService.createSolution(solutionRequestDTO, issue.getId());
+
+
         return new ResponseEntity<>(solution, HttpStatus.CREATED);
     }
 

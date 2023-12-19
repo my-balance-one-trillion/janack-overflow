@@ -10,10 +10,14 @@ import com.example.janackoverflow.issue.entity.Issue;
 import com.example.janackoverflow.issue.entity.Solution;
 import com.example.janackoverflow.issue.repository.IssueRepository;
 import com.example.janackoverflow.issue.repository.SolutionRepository;
+import com.example.janackoverflow.saving.domain.response.MonthlyCountIssueDTO;
+import com.example.janackoverflow.main.service.BankingService;
 import com.example.janackoverflow.saving.entity.InputAccount;
 import com.example.janackoverflow.saving.entity.Rule;
 import com.example.janackoverflow.saving.repository.InputAccountRepository;
 import com.example.janackoverflow.saving.repository.RuleRepository;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,6 +26,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class SolutionService {
@@ -31,16 +36,19 @@ public class SolutionService {
     private final RuleRepository ruleRepository;
     private final InputAccountRepository inputAccountRepository;
 
-    public SolutionService(SolutionRepository solutionRepository, IssueRepository issueRepository, RuleRepository ruleRepository, InputAccountRepository inputAccountRepository) {
+    private final BankingService bankingService;
+
+    public SolutionService(SolutionRepository solutionRepository, IssueRepository issueRepository, RuleRepository ruleRepository, InputAccountRepository inputAccountRepository, BankingService bankingService) {
         this.solutionRepository = solutionRepository;
         this.issueRepository = issueRepository;
         this.ruleRepository = ruleRepository;
         this.inputAccountRepository = inputAccountRepository;
+        this.bankingService = bankingService;
     }
 
     // 에러 해결 등록
     @Transactional
-    public Solution createSolution(CreateSolutionRequestDTO solutionRequestDTO, Long issueId){
+    public Solution createSolution(CreateSolutionRequestDTO solutionRequestDTO, Long issueId) {
         Issue issue = issueRepository.findById(issueId)
                 .orElseThrow(() -> new BusinessLogicException(ExceptionCode.ERROR_NOT_FOUND));
 
@@ -55,6 +63,13 @@ public class SolutionService {
                 .orElseThrow(() -> new BusinessLogicException(ExceptionCode.ACCOUNT_NOT_FOUND));
         inputAccount.updateAcntAmount(inputAccount.getAcntAmount() + amount);
 
+        //입금
+        try {
+            bankingService.transfer(issue.getAmount(), inputAccount.getAcntNum());
+        } catch (JsonProcessingException e){
+            e.printStackTrace();
+            throw new RuntimeException();
+        }
         // 적금 만료 (계좌 금액 >= 목표 금액)일 경우, status(03)와 completed_at 변경
         if (inputAccount.getAcntAmount() >= inputAccount.getGoalAmount()) {
             inputAccount.updateStatus("03");  // 완료 상태로 변경
@@ -79,7 +94,7 @@ public class SolutionService {
                 .orElseThrow(() -> new BusinessLogicException(ExceptionCode.ACCOUNT_NOT_FOUND))
                 .getId());
 
-        if(timeDiff < 30){
+        if (timeDiff < 30) {
             return rule.getUnderThirty();
         } else if (timeDiff < 60) {
             return rule.getUnderHour();
@@ -109,7 +124,7 @@ public class SolutionService {
         List<SolutionResponseDTO> monthlySolutions = new ArrayList<>();
 
         for (IssueResponseDTO issue : monthlyIssues) {
-            List<Solution> solutions = solutionRepository.findAllByIssueIdOrderByCreatedAtDesc(issue.getId());
+            List<Solution> solutions = solutionRepository.findByIssueId(issue.getId());
 
             for (Solution solution : solutions) {
                 LocalDateTime createdAt = solution.getCreatedAt();
@@ -121,4 +136,38 @@ public class SolutionService {
 
         return monthlySolutions;
     }
+
+    // 최근 5개월 간의 월별 적금 횟수 계산
+    @Transactional(readOnly = true)
+    public List<MonthlyCountIssueDTO> getMonthlySolutionsCount(List<IssueResponseDTO> solvedIssues) {
+        List<MonthlyCountIssueDTO> monthlyCounts = new ArrayList<>();
+        LocalDateTime currentDate = LocalDateTime.now();  // 현재 날짜
+
+        for (int i = 0; i < 5; i++) {  // 최근 5개월
+            LocalDateTime currentMonth = currentDate.minusMonths(i);
+            int count = 0;  // 적금 횟수
+
+            for (IssueResponseDTO issue : solvedIssues) {
+                List<Solution> solutions = solutionRepository.findByIssueId(issue.getId());
+
+                for (Solution solution : solutions) {
+                    LocalDateTime solutionDate = solution.getCreatedAt().toLocalDate().atStartOfDay();
+                    if (solutionDate.getYear() == currentMonth.getYear() && solutionDate.getMonth() == currentMonth.getMonth()) {
+                        count++;
+                    }
+                }
+            }
+
+            MonthlyCountIssueDTO monthlyCount = MonthlyCountIssueDTO.builder()
+                    .year(currentMonth.getYear())
+                    .month(currentMonth.getMonthValue())
+                    .count(count)
+                    .build();
+
+            monthlyCounts.add(monthlyCount);
+        }
+
+        return monthlyCounts;
+    }
+
 }

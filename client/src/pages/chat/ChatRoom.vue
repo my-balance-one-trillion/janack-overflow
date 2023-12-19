@@ -6,17 +6,17 @@
         {{ roomInfo.roomName }}
       </span>
       <span v-if="userInfo">
-      <button
-        v-if="roomInfo.usersId == userInfo.id"
-        class="rounded-[15px] bg-main-red text-white w-fit h-fit px-5"
-        @click="deleteChatRoom"
-      >
-        삭제
-      </button>
-    </span>
+        <button
+          v-if="roomInfo.usersId == userInfo.id"
+          class="rounded-[15px] bg-main-red text-white w-fit h-fit px-5"
+          @click="deleteChatRoom"
+        >
+          삭제
+        </button>
+      </span>
     </div>
     <div
-      class="flex flex-col flex-auto flex-shrink-0 rounded-2xl justify-end max-h-[800px] min-h-[600px] bg-gray-100 p-4"
+      class="flex flex-col flex-auto flex-shrink-0 rounded-2xl justify-end max-h-[800px] min-h-[800px] bg-gray-100 p-4"
     >
       <div class="flex flex-col h-full mb-4 overflow-x-auto">
         <div class="flex flex-col h-full overflow-y-scroll" ref="chatDiv">
@@ -62,6 +62,7 @@
               <!-- 타인 메세지 -->
               <div v-else class="col-start-1 col-end-8 p-3 rounded-lg">
                 <div class="flex">
+                  <span v-if="item.usersDTO.id == roomInfo.usersId">👑</span>
                   {{ item.usersDTO.nickname }}
                 </div>
                 <div class="flex flex-row items-center">
@@ -95,24 +96,6 @@
               v-model="messageReq.content"
               @keyup.enter="sendMessage"
             />
-            <button
-              class="absolute top-0 right-0 flex items-center justify-center w-12 h-full text-gray-400 hover:text-gray-600"
-            >
-              <!-- <svg
-                class="w-6 h-6"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M14.828 14.828a4 4 0 01-5.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-                ></path>
-              </svg> -->
-            </button>
           </div>
         </div>
         <div class="ml-2">
@@ -141,14 +124,14 @@
         </div>
       </div>
     </div>
-    <div class="flex justify-end">
-    <button
-      class="rounded-[10px] bg-main-red text-white w-fit h-fit px-2 py-1"
-      @click="quit"
-    >
-      나가기
-    </button>
-  </div>
+    <div v-if="roomInfo.usersId != userInfo.id" class="flex justify-end">
+      <button
+        class="rounded-[10px] bg-main-red text-white w-fit h-fit px-2 py-1 my-2"
+        @click="quit"
+      >
+        나가기
+      </button>
+    </div>
   </div>
 </template>
 <!-- 필요한 메서드: 채팅내용 불러오기,  -->
@@ -182,30 +165,20 @@ const messageReq = ref({
 });
 
 const isNewUser = ref(true);
-// const authStore = useAuthStore();
-// const userInfo = authStore.userInfo;
+const isFull = ref(false);
+const authStore = useAuthStore();
+userInfo.value = authStore.userInfo;
 
 var connected;
 var stompClient;
 onMounted(async () => {
-  // userInfo = await authStore.userInfo;
   console.log("실행");
-  await axios
-    .get("http://localhost:8081/mypage/myinfo", {
-      headers: {
-        authorization: useAuthStore().token,
-      },
-    })
-    .then((response) => {
-      userInfo.value = response.data;
-      console.log("유저 정보 받기", userInfo.value.id);
-      messageReq.value.userId = userInfo.value.id;
-    });
 
+  messageReq.value.userId = userInfo.value.id;
   await axios
     .get("/chatrooms/" + chatId, {
       headers: {
-        authorization: useAuthStore().token,
+        authorization: authStore.token,
       },
     })
     .then((response) => {
@@ -215,12 +188,32 @@ onMounted(async () => {
       console.log("리시브", recvList.value, "방정보", roomInfo.value);
     });
 
+  //인원수, 원래 사람 체크
+  if (roomInfo.value.usersList.length >= roomInfo.value.max) {
+    isFull.value = true;
+  }
+  for (const [id, value] of Object.entries(roomInfo.value.usersList)) {
+    console.log("키", id, "벨류", value.id, userInfo.value.id);
+    if (value.id == userInfo.value.id) {
+      console.log("이미 존재함");
+      isNewUser.value = false;
+      break;
+    }
+  }
+  if (isNewUser.value && isFull.value) {
+    //
+    alert("인원수 다참");
+    router.go(-1);
+  }
   connect();
+  
+  
+
 
   await axios
     .get("/chatrooms/enter/" + chatId, {
       headers: {
-        authorization: useAuthStore().token,
+        authorization: authStore.token,
       },
     })
     .then((response) => {
@@ -254,20 +247,9 @@ function connect() {
         console.log("구독으로 받은 메시지 입니다.", res.body);
         recvList.value.push(JSON.parse(res.body));
       });
-      //입장
-      for (const [id, value] of Object.entries(roomInfo.value.usersList)) {
-        console.log("키", id, "벨류", value.id, userInfo.value.id);
-        if (value.id == userInfo.value.id) {
-          console.log("이미 존재함");
-          isNewUser.value = false;
-          break;
-        }
-      }
-      //새로운 유저
-      if (isNewUser.value) {
+      if (isNewUser.value){
         enter();
       }
-      messageReq.value.type = "TALK";
     },
     (error) => {
       // 소켓 연결 실패
@@ -280,6 +262,7 @@ function connect() {
 function enter() {
   messageReq.value.content = "입장하셨습니다.";
   send();
+  console.log("입장메시지", messageReq.value);
   messageReq.value.content = "";
   messageReq.value.type = "TALK";
 }
@@ -297,7 +280,7 @@ function quit() {
     axios
       .delete("/chatrooms/quit/" + chatId, {
         headers: {
-          authorization: useAuthStore().token,
+          authorization: authStore.token,
         },
       })
       .then((response) => {
@@ -329,7 +312,7 @@ function deleteChatRoom() {
     axios
       .delete("/chatrooms/" + chatId, {
         headers: {
-          authorization: useAuthStore().token,
+          authorization: authStore.token,
         },
       })
       .then((response) => {

@@ -8,28 +8,36 @@ import com.example.janackoverflow.issue.domain.response.SolutionResponseDTO;
 import com.example.janackoverflow.issue.domain.response.StackOverflowResponse;
 import com.example.janackoverflow.issue.entity.Issue;
 import com.example.janackoverflow.issue.repository.IssueRepository;
+import com.example.janackoverflow.saving.domain.response.MonthlyAmountDTO;
 import com.example.janackoverflow.saving.entity.InputAccount;
 import com.example.janackoverflow.saving.repository.InputAccountRepository;
 import com.example.janackoverflow.user.entity.Users;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.querydsl.core.Tuple;
+import com.querydsl.core.types.Projections;
+import com.querydsl.jpa.impl.JPAQueryFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.reactive.function.client.WebClient;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
+import static com.example.janackoverflow.issue.entity.QIssue.issue;
 
 @Service
 public class IssueService {
     private final IssueRepository issueRepository;
     private final InputAccountRepository inputAccountRepository;
+    private final JPAQueryFactory jpaQueryFactory;
 
-    public IssueService(IssueRepository issueRepository, InputAccountRepository inputAccountRepository) {
+    public IssueService(IssueRepository issueRepository, InputAccountRepository inputAccountRepository, JPAQueryFactory jpaQueryFactory) {
         this.issueRepository = issueRepository;
         this.inputAccountRepository = inputAccountRepository;
+        this.jpaQueryFactory = jpaQueryFactory;
     }
 
     // 에러 등록
@@ -161,5 +169,22 @@ public class IssueService {
         return issueRepository.findAllById(issueIds)
                 .stream().map(IssueResponseDTO::toDto)
                 .toList();
+    }
+
+    // 누적 금액 계산
+    public List<MonthlyAmountDTO> getMonthlyAmount(Users users) {
+        LocalDateTime currentDate = LocalDateTime.now();
+        LocalDateTime fiveMonthsAgo = currentDate.minusMonths(5);
+
+        return jpaQueryFactory
+                .select(Projections.fields(MonthlyAmountDTO.class,
+                        issue.createdAt.year().as("year"),
+                        issue.createdAt.month().as("month"),
+                        issue.amount.sum().coalesce(0).as("amount")))
+                .from(issue)
+                .where(issue.users.eq(users).and(issue.status.eq("03")))
+                .where(issue.createdAt.between(fiveMonthsAgo, currentDate))
+                .groupBy(issue.createdAt.year(), issue.createdAt.month())
+                .fetch();
     }
 }

@@ -14,6 +14,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 public class MypageController {
     private final MypageService mypageService;
@@ -87,5 +89,12 @@ public class MypageController {
         Long usersId = nowUserDetails.getId();
         mypageService.deleteMyComment(commentId, usersId);
         return new ResponseEntity(HttpStatus.RESET_CONTENT);
+    }
+//    내가 쓴 기록
+    @GetMapping("/mypage/mycount")
+    public ResponseEntity readMyCount(@AuthenticationPrincipal NowUserDetails nowUserDetails){
+        Long usersId = nowUserDetails.getId();
+        List<Integer> myCountList =  mypageService.readMyCount(usersId);
+        return new ResponseEntity(myCountList,HttpStatus.OK);
     }
 }

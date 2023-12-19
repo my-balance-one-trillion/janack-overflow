@@ -17,11 +17,13 @@ import java.util.Optional;
 public interface IssueRepository extends JpaRepository<Issue, Long> {
     Optional<Issue> findByUsersIdAndStatus(Long userId, String status);
     Page<Issue> findByOrderByCreatedAtDesc(Pageable pageble);
+    Integer countByUsers_id(Long usersId);
     Page<Issue> findAllByUsers_idOrderByCreatedAtDesc(Long id, Pageable pageble);
     Page<Issue> findByPublicStatusAndStatusOrderByCreatedAtDesc(Boolean publicStatus, String status, Pageable pageable);
     List<Issue> findByUsersIdAndCreatedAtAfterOrderByCreatedAtDesc(Long userId, LocalDateTime aWeekAgo);
-    Long countByUsersIdAndCreatedAtAfter(Long userId, LocalDateTime createAt);
+    Long countByUsersIdAndInputAccountIdAndStatus(Long userId, Long InputAccountId, String status);
     List<Issue> findTop10ByPublicStatusOrderByCreatedAtDesc(boolean publicStatus);
     List<Issue> findByUsersId(Long userId);
     List<Issue> findByUsers_IdAndStatus(Long userId, String status);
+    List<Issue> findByUsersIdAndStatusAndCreatedAtAfter(Long usersId, String status, LocalDateTime fiveMonthsAgo);
 }

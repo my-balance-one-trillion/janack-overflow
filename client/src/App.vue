@@ -45,15 +45,6 @@ async function handleRouteLogic() {
 
 }
 
-async function getUserInfo() {
-  const response = await axios.get("/mypage/myinfo", {
-    headers: {
-      authorization: authStore.token,
-    },
-  });
-  authStore.setUserInfo(response.data);  
-
-}
 </script>
 
 <style scoped>
