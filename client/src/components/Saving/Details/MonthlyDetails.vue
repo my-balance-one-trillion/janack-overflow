@@ -2,7 +2,7 @@
 import {onMounted, ref} from 'vue';
 import axios from "axios";
 import dayjs from "dayjs";
-import {useAuthStore} from "../../../stores/auth";
+import {useAuthStore} from "@/stores/auth";
 
 const monthlyList = ref({issue: [], solution: []});
 const current = ref(dayjs().format("YYYY-MM"));
