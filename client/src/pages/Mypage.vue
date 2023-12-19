@@ -105,9 +105,9 @@ const currentComponent = ref("Dashboard");
 
 const props = defineProps(['component']);
 
-onMounted(()=>{
+onMounted(() => {
   console.log("fromMain", props.component);
-  if(props.component === 'myissue'){
+  if (props.component === 'myissue') {
     changeComponent("myissue");
   }
 })
