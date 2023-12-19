@@ -56,11 +56,11 @@ const nextMonth = () => {
   </div>
   <table class="w-full border-t-4 border-b-4 border-gray-300">
     <thead class="flex w-full text-2xl bg-gray-100 border-b-4">
-    <tr class="flex w-full text-center">
-      <td class="w-1/4 px-5 py-3">날짜</td>
-      <td class="w-2/4 px-5 py-3">에러</td>
-      <td class="w-1/4 px-5 py-3">금액</td>
-    </tr>
+      <tr class="flex w-full text-center">
+        <td class="w-1/4 px-5 py-3">날짜</td>
+        <td class="w-2/4 px-5 py-3">에러</td>
+        <td class="w-1/4 px-5 py-3">금액</td>
+      </tr>
     </thead>
     <tbody v-if="monthlyList.solution.length === 0"
            class="flex items-center justify-center w-full overflow-y-scroll text-center bg-grey-light h-60">
@@ -71,7 +71,7 @@ const nextMonth = () => {
     <tbody v-else class="flex flex-col items-center w-full overflow-y-scroll text-center bg-grey-light h-60">
       <tr v-for="(item, index) in monthlyList.solution" :key="index" class="flex w-full border-b-2">
         <td class="w-1/4 px-5 py-3 text-left">{{ dayjs(item.createdAt).format('YYYY. MM. DD HH:mm') }}</td>
-        <td class="w-2/4 px-5 py-3">{{ monthlyList.issue[index].title }}</td>
+        <td class="w-2/4 px-5 py-3 h-8 line-clamp-1">{{ monthlyList.issue[index].title }}</td>
         <td class="w-1/4 px-5 py-3 text-xl font-medium text-main-red">
           {{ Number(monthlyList.issue[index].amount).toLocaleString() }}
         </td>

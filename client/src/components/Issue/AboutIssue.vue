@@ -31,6 +31,7 @@ async function getIssue() {
         keywords.value = response.data.issue.keyword.split(",");
         createdAt.value = response.data.issue.createdAt;
         stackoverflow.value = response.data.stackOverflowResults;
+        console.log(stackoverflow.value.length);
         issue.value.content = issue.value.content.split('\n').join('<br>');
         isLoading.value = true;
       })
@@ -58,7 +59,7 @@ onMounted(async () => {
     <div class="flex items-center justify-center mt-2 w-12/12 font-sub">
       <div class="w-full px-8 py-5 mx-auto my-4 bg-white rounded-lg shadow-md">
         <div class="w-full ">
-          <h1 class="py-4 text-3xl font-bold">{{ issue.title }}</h1>
+          <div class="py-4 text-3xl font-bold break-words">{{ issue.title }}</div>
           <div class="flex justify-between mb-4">
             <div class="flex">
               <fwb-badge v-for="keyword in keywords" :key="keyword"
@@ -116,14 +117,14 @@ onMounted(async () => {
     </div>
 
     <!--  stackoverflow  -->
-    <div v-if="stackoverflow !== 0" class="my-14 mb-10">
+    <div class="my-14 mb-10">
       <div class="">
         <div class="text-2xl font-bold">이런 방법은 어떠세요?</div>
         <div class="text-gray-500">키워드와 관련된 <span class="text-orange-500">StackOverflow</span> 질문과 답변이 여기에 표시됩니다.</div>
         <div class="text-gray-500">유용한 정보를 찾아서 에러를 빠르게 해결하세요.</div>
       </div>
       <div class="flex justify-evenly p-5 gap-5 mt-5 border-t-4 border-orange-500 bg-bg-grey">
-        <div v-for="(result, index) in stackoverflow" :key="index" class="w-2/6 p-4 bg-white rounded-lg shadow-md">
+        <div v-if="stackoverflow.length!==0" v-for="(result, index) in stackoverflow" :key="index" class="w-2/6 p-4 bg-white rounded-lg shadow-md">
           <a :href="result.link" target="_blank">
             <div class="h-20 font-sub font-bold text-lg text-orange-700 line-clamp-3">{{ result.title }}</div>
             <div class="flex flex-wrap content-start gap-2 my-2">
@@ -145,6 +146,7 @@ onMounted(async () => {
             </div>
           </a>
         </div>
+        <div v-else class="p-10 text-gray-600">StackOverflow 연관글이 없습니다.</div>
       </div>
     </div>
 

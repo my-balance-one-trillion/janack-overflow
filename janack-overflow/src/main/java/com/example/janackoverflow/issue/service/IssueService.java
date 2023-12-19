@@ -51,13 +51,13 @@ public class IssueService {
         return issueRepository.save(issueRequestDTO.toEntity(users, inprogressAccount));
     }
 
-    // 사용자별 에러 전체 조회
+/*    // 사용자별 에러 전체 조회
     @Transactional(readOnly = true)
     public List<IssueResponseDTO> getAllIssuesByUserId(Users users) {
         return issueRepository.findByUsersId(users.getId()).stream()
                 .map(IssueResponseDTO::toDto)
                 .collect(Collectors.toList());
-    }
+    }*/
     // 현재 진행 중인 에러 조회
     @Transactional(readOnly = true)
     public IssueResponseDTO getIssueByUserId(Users users){
