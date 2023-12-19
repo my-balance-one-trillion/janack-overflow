@@ -84,12 +84,12 @@ const login = async () => {
     );
     
     authStore.setToken(res.headers.authorization);
-
     console.log(res.data);
-    window.alert("로그인이 수행되었습니다");
+
     // router.push("/");
     const previousRoute = sessionStorage.getItem('previousRoute');
     console.log(previousRoute);
+
     if (previousRoute) {
       // 이전 페이지로 이동
       sessionStorage.removeItem('previousRoute');
