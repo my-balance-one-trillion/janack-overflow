@@ -39,6 +39,10 @@ public class MypageController {
 
         if (!usersRequestDTO.getNickname().equals(nowUserDetails.getUser().getNickname()) //본인의 닉네임과 같으면 검사 제외
         && usersService.isDuplicatedNick(usersRequestDTO)) { //닉네임 중복확인
+
+            System.out.println(!usersRequestDTO.getNickname().equals(nowUserDetails.getUser().getNickname()));
+            System.out.println(usersService.isDuplicatedNick(usersRequestDTO));
+
             return new ResponseEntity<>("중복되는 닉네임입니다", HttpStatus.FORBIDDEN);
         } else {
             Long usersId = nowUserDetails.getId();

@@ -24,14 +24,12 @@ public class UsersService {
     public boolean isDuplicatedNick(UsersRequestDTO usersRequestDTO) { //닉네임 중복 확인
         Users users = usersRequestDTO.toEntity();
 
-        Optional<Users> optionalUsers = null;
+        Optional<Users> optionalUsers = usersRepository.findByNickname(users.getNickname()); //조회했는데, 있으면
 
-        try {
-            optionalUsers = usersRepository.findByNickname(users.getNickname()); //조회했는데, 있으면
-            return true;
-        } catch (Exception e) {
-            //입력한 걸 조회했는데, 결과가 없으면
+        if(optionalUsers.isEmpty()){
             return false;
+        } else {
+            return true;
         }
 
     }
@@ -39,14 +37,12 @@ public class UsersService {
     public boolean isDuplicatedEmail(UsersRequestDTO usersRequestDTO){ //이메일 중복 확인
         Users users = usersRequestDTO.toEntity();
 
-        Optional<Users> optionalUsers = null;
+        Optional<Users> optionalUsers = usersRepository.findByEmail(users.getEmail()); //조회했는데, 있으면
 
-        try {
-            optionalUsers = usersRepository.findByEmail(users.getEmail()); //조회했는데, 있으면
-            return true;
-        } catch (Exception e) {
-            //입력한 걸 조회했는데, 결과가 없으면
+        if(optionalUsers.isEmpty()){
             return false;
+        } else {
+            return true;
         }
 
     }
