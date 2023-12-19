@@ -109,6 +109,7 @@ public class CommunityController {
         return ResponseEntity.ok().build();
     }
 
+
     @GetMapping(value = "/solvedissue/{issueId}/articles")
     public ResponseEntity<List<MediumArticle>> getArticles(@PathVariable("issueId")long issueId){
         try {
@@ -118,6 +119,7 @@ public class CommunityController {
         }
 
     }
+
 
     @GetMapping(value = "/solvedissue")
     public ResponseEntity<Page<IssueDTO.ResponseDTO>> getCommunity(@RequestParam(name = "order", required = false) String order,
@@ -140,7 +142,15 @@ public class CommunityController {
         }
         return ResponseEntity.ok(issueDto);
     }
+    //포기한 이슈
+    @GetMapping(value = "/giveup/{issueId}")
+    public ResponseEntity<IssueDTO.ResponseDTO> getGivenUpIssue(@PathVariable(value = "issueId") long issueId,
+                                                                @AuthenticationPrincipal NowUserDetails nowUserDetails){
+        Long usersId = nowUserDetails.getUser().getId();
+        log.info("포기 유저 아이디 {}", usersId);
+        return ResponseEntity.ok(communityService.detailGivenUpIssue(issueId, usersId));
 
+    }
     @Transactional
     @DeleteMapping(value = "likes/{issueId}/{usersId}")
     public ResponseEntity<String> deleteLike(@PathVariable(value = "issueId") long issueId,

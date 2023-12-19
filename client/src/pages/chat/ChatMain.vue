@@ -33,8 +33,8 @@ import { useRoute, useRouter } from "vue-router";
 import { onMounted, ref } from "vue";
 import axios from "axios";
 import ChatList from "@/components/chat/ChatList.vue";
-import ChatCreateModal from '../../components/chat/ChatCreateModal.vue';
-import { useAuthStore } from '../../stores/auth';
+import ChatCreateModal from '@/components/chat/ChatCreateModal.vue';
+import { useAuthStore } from '@/stores/auth';
 
 
 const classList = ["text-white p-4 rounded bg-main-red shadow-md", "p-4 rounded bg-white text-main-red shadow-md"];
@@ -49,7 +49,7 @@ function toggle(index){
     isSelected.value[index] = !isSelected.value[index];
 }
 function getMyList(){
-    axios.get("http://localhost:8081/chatrooms/my", {
+    axios.get("/chatrooms/my", {
     headers: {
       'authorization': useAuthStore().token,
     }
@@ -60,9 +60,13 @@ function getMyList(){
   });
 }
 function getAllList() {
-  axios.get("http://localhost:8081/chatrooms").then((response) => {
+  axios.get("/chatrooms")
+  .then((response) => {
     chatRoomList.value = response.data;
     console.log("chatRoomList", chatRoomList.value);
+  })
+  .catch((error) => {
+    console.log("에러 발생", error);
   });
 }
 
@@ -78,14 +82,15 @@ function closeModal(data){
 
 function createChatRoom(data){
   console.log("createChatRoom", data);
-  axios.post("http://localhost:8081/chatrooms", data, {
+  axios.post("/chatrooms", data, {
       headers: {
         authorization: useAuthStore().token,
       },
     })
     .then((response) => {
       console.log("post 성공", response.data);
-      router.go(0)
+      alert("성공적으로 생성되었습니다.");
+      router.push("/chat/"+response.data.id);
     })
 }
 onMounted(() => {

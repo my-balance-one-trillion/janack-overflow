@@ -3,10 +3,11 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "dev": "vite",
+    "dev": "vite --host 0.0.0.0 --port 5173",
     "build": "vite build",
     "preview": "vite preview"
   },
+  
   "dependencies": {
     "@codemirror/lang-css": "^6.2.1",
     "@codemirror/lang-html": "^6.4.7",
@@ -23,6 +24,8 @@
     "@fortawesome/free-solid-svg-icons": "^6.5.1",
     "@fortawesome/vue-fontawesome": "^3.0.5",
     "@mui/x-date-pickers": "^6.18.5",
+    "@uiw/codemirror-theme-github": "^4.21.21",
+    "@uiw/codemirror-theme-nord": "^4.21.21",
     "@yaireo/tagify": "^4.17.9",
     "apexcharts": "^3.44.2",
     "axios": "^1.6.2",

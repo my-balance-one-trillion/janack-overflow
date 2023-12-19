@@ -14,6 +14,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 public class MypageController {
     private final MypageService mypageService;
@@ -36,10 +38,21 @@ public class MypageController {
     @PutMapping("/mypage/myinfo")
     public ResponseEntity<String> updateUser(@RequestBody UsersRequestDTO usersRequestDTO,
                                      @AuthenticationPrincipal NowUserDetails nowUserDetails){
-        Long usersId = nowUserDetails.getId();
-        String updateStatus = mypageService.updateUser(usersRequestDTO, usersId);
-        System.out.println(updateStatus);
-        return ResponseEntity.accepted().body(updateStatus);
+
+        if (!usersRequestDTO.getNickname().equals(nowUserDetails.getUser().getNickname()) //본인의 닉네임과 같으면 검사 제외
+        && usersService.isDuplicatedNick(usersRequestDTO)) { //닉네임 중복확인
+
+            System.out.println(!usersRequestDTO.getNickname().equals(nowUserDetails.getUser().getNickname()));
+            System.out.println(usersService.isDuplicatedNick(usersRequestDTO));
+
+            return new ResponseEntity<>("중복되는 닉네임입니다", HttpStatus.FORBIDDEN);
+        } else {
+            Long usersId = nowUserDetails.getId();
+            String updateStatus = mypageService.updateUser(usersRequestDTO, usersId);
+            System.out.println(updateStatus);
+            return ResponseEntity.accepted().body(updateStatus);
+        }
+
     }
 
     //    마이페이지에서 프로필 이미지 변경
@@ -76,5 +89,12 @@ public class MypageController {
         Long usersId = nowUserDetails.getId();
         mypageService.deleteMyComment(commentId, usersId);
         return new ResponseEntity(HttpStatus.RESET_CONTENT);
+    }
+//    내가 쓴 기록
+    @GetMapping("/mypage/mycount")
+    public ResponseEntity readMyCount(@AuthenticationPrincipal NowUserDetails nowUserDetails){
+        Long usersId = nowUserDetails.getId();
+        List<Integer> myCountList =  mypageService.readMyCount(usersId);
+        return new ResponseEntity(myCountList,HttpStatus.OK);
     }
 }

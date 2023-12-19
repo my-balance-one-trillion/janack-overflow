@@ -18,6 +18,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import lombok.extern.slf4j.Slf4j;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -40,6 +41,13 @@ public class MypageService {
         this.issueRepository =  issueRepository;
         this.passwordEncoder =  passwordEncoder;
         this.paginationService = paginationService;
+    }
+//    회원 추가 정보
+    public List<Integer> readMyCount(Long usersId){
+        List<Integer> myCountList = new ArrayList<>();
+        myCountList.add(issueRepository.countByUsers_id(usersId));
+        myCountList.add(commentRepository.countByUsers_id(usersId));
+        return myCountList;
     }
 
 //    회원 정보 수정
