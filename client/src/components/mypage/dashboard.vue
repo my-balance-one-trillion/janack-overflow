@@ -4,48 +4,44 @@
 		<div class="border-b-4 border-main-red"></div>
 		<p class="text-xl my-4">대시보드</p>
 		<p class="text-[#919090]">활동을 한눈에 확인할 수 있습니다</p>
-		<article class="flex flex-col justify-center items-center">
-			<div class="dash-wrap flex justify-between gap-10 my-11">
-				<div class="signInfo w-60">
-					<h4>가입정보</h4>
-					<div class="flex flex-col justify-between gap-10 p-5 border border-gray-400 rounded-xl">
-						<div class="dayinfo">
-							<p class="text-3xl text-sub-red">가입일시</p>
-							<p class="text-sm">{{ authStore.userInfo.createdAt }} <span class="">( {{ daysDiff }}일차 )</span></p>
-						</div>
-						<div class="issuecnt">
-							<p class="text-3xl text-sub-red">작성글 수</p>
-							<p class="text-sm">총 <span>{{ myCount[0] }}</span>개 </p>
-						</div>
-						<div class="issuecnt">
-							<p class="text-3xl text-sub-red">작성댓글 수</p>
-							<p class="text-sm">총 <span>{{ myCount[1] }}</span>개 </p>
-						</div>
+		<article class="flex justify-center gap-10 my-10">
+			<div class="signInfo w-60 h-60">
+				<h4 class="text-lg mb-5">가입정보</h4>
+				<div class="flex flex-col justify-between gap-10 p-7 border border-gray-400 rounded-xl h-80">
+					<div class="dayinfo">
+						<p class="text-3xl text-main-red">가입일시</p>
+						<p class="text-sm">{{ authStore.userInfo.createdAt }} <span class="">( {{ daysDiff }}일차 )</span>
+						</p>
+					</div>
+					<div class="issuecnt">
+						<p class="text-3xl text-main-red">작성글 수</p>
+						<p class="text-sm">총 <span>{{ myCount[0] }}</span>개 </p>
+					</div>
+					<div class="issuecnt">
+						<p class="text-3xl text-main-red">작성댓글 수</p>
+						<p class="text-sm">총 <span>{{ myCount[1] }}</span>개 </p>
 					</div>
 				</div>
-				<div class="achievement w-60">
-					<h4>목표 달성률</h4>
-					<div class="p-5 border border-gray-400 rounded-xl">
-						<div class="achive-header mb-5">
-							<h4 class="text-lg text-main-red">{{ achive.goalName }}</h4>
-							<p class="text-sm">{{ achive.acntAmount }} <span> / </span> {{ achive.goalAmount }}</p>
-						</div>
-						<canvas id="acquisitions"></canvas>
+			</div>
+			<div class="achievement w-60">
+				<h4 class="text-lg mb-5">목표 달성률</h4>
+				<div class="p-5 border border-gray-400 rounded-xl h-80">
+					<div class="achive-header mb-5">
+						<h4 class="text-lg text-main-red">{{ achive.goalName }}</h4>
+						<p class="text-sm">{{ achive.acntAmount }} <span> / </span> {{ achive.goalAmount }}</p>
 					</div>
+					<canvas id="achievement"></canvas>
 				</div>
-				<div class="average w-60">
-					<h4>월간 글쓴 기록</h4>
-					<div class="p-5 border border-gray-400 rounded-xl">
-						<div class="achive-header mb-5">
-							<h4 class="text-lg text-main-red"> {{ currentMonth.month }}월 작성건</h4>
-							<p class="text-sm"> {{ currentMonth.count }} 건</p>
-						</div>
-						<canvas id="acquisitions2"></canvas>
+			</div>
+			<div class="average w-60">
+				<h4 class="text-lg mb-5">월간 글쓴 기록</h4>
+				<div class="p-5 border border-gray-400 rounded-xl h-80">
+					<div class="achive-header mb-5">
+						<h4 class="text-lg text-main-red"> {{ currentMonth.month }}월 작성건</h4>
+						<p class="text-sm"> {{ currentMonth.count }} 건</p>
 					</div>
+					<canvas id="average"></canvas>
 				</div>
-
-
-
 			</div>
 
 		</article>
@@ -100,7 +96,8 @@ onMounted(async () => {
 
 	const goal = [percent.value, 100 - percent.value];
 
-	const ctx = document.getElementById('acquisitions').getContext('2d');
+	const goalChartCtx = document.getElementById('achievement').getContext('2d');
+	const monthChartCtx = document.getElementById('average');
 
 	// -----------------------------------
 	// 목표 차트
@@ -109,27 +106,29 @@ onMounted(async () => {
 	Chart.register({
 		id: 'doughnutlabel',
 		beforeDraw: function (chart) {
-			const width = chart.width;
-			const height = chart.height;
-			const ctx = chart.ctx;
+			if (chart.canvas.id === 'achievement') {
+				const width = chart.width;
+				const height = chart.height;
+				const ctx = chart.ctx;
 
-			ctx.restore();
-			const fontSize = (height / 114).toFixed(2);
-			ctx.font = `${fontSize}em 'D2Coding', sans-serif`;
-			ctx.textBaseline = 'middle';
+				ctx.restore();
+				const fontSize = (height / 114).toFixed(2);
+				ctx.font = `${fontSize}em 'D2Coding', sans-serif`;
+				ctx.textBaseline = 'middle';
 
-			const text = `${percent.value}%`;
-			const textX = Math.round((width - ctx.measureText(text).width) / 2);
-			const textY = height / 2;
+				const text = `${percent.value}%`;
+				const textX = Math.round((width - ctx.measureText(text).width) / 2);
+				const textY = height / 2;
 
-			ctx.fillStyle = '#BF1131';
-			ctx.fillText(text, textX, textY);
-			ctx.save();
+				ctx.fillStyle = '#BF1131';
+				ctx.fillText(text, textX, textY);
+				ctx.save();
+			}
 		},
 	});
 
 	// 도넛 차트에 플러그인 적용하여 생성
-	const goalChart = new Chart(ctx, {
+	new Chart(goalChartCtx, {
 		type: 'doughnut',
 		data: {
 			datasets: [
@@ -154,8 +153,7 @@ onMounted(async () => {
 	// -----------------------------------
 	// 월간 차트
 	// -----------------------------------
-	const monthChart = new Chart(
-		document.getElementById('acquisitions2'),
+	new Chart(monthChartCtx,
 		{
 			type: 'bar',
 			options: {
@@ -176,7 +174,8 @@ onMounted(async () => {
 							display: false // y 축의 배경 그리드를 숨김
 						}
 					}
-				}
+				},
+				plugins: {} // 플러그인 비활성화
 			},
 			data: {
 				labels: month.value.map(row => row.month),

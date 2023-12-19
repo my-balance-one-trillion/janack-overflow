@@ -64,7 +64,7 @@
             <router-link to="/saving"
               class="flex flex-row items-center h-12 transform hover:translate-x-2 transition-transform ease-in duration-200 text-lg hover:text-gray-800 cursor-pointer">
               <span class="inline-flex items-center justify-center h-12 w-9 text-lg"><i class="bx bx-chat"></i></span>
-              <span class="text-lg font-medium text-sub-red">내 적금
+              <span class="text-lg font-medium text-main-red">내 적금
                 <i class="fa-solid fa-arrow-up-right-from-square text-gray-500 text-sm cursor-pointer"></i></span>
             </router-link>
           </li>
