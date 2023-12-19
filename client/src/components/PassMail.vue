@@ -35,7 +35,8 @@
           </div>
         </div>
         <div class="flex justify-center">
-          <router-link to="/login" class="text-sm text-red-700">로그인</router-link>
+          <p class="text-sm">비밀번호가 떠오르셨나요?</p>
+          <router-link to="/login" class="pl-2 text-sm text-red-700">로그인</router-link>
         </div>
       </div>
     </div>
