@@ -32,6 +32,7 @@
   </div>
 </template>
 <script setup>
+import { FwbBadge } from 'flowbite-vue';
     const props = defineProps({
         issue:{
             type: Object

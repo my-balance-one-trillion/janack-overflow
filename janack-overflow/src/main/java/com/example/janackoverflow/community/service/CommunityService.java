@@ -155,7 +155,7 @@ public class CommunityService {
     }
 
     @Transactional
-    public IssueDTO.ResponseDTO detailSolvedIssue(long issueId, long usersId) {
+    public IssueDTO.ResponseDTO detailSolvedIssue(long issueId, Long usersId) {
         // 이슈, 좋아요, 댓글
 
         // TODO 비공개 게시물 안들어오게
