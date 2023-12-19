@@ -1,35 +1,27 @@
 <script setup>
-import { ref, defineEmits, onMounted } from "vue";
+import {ref, defineEmits, onMounted} from "vue";
 import axios from "axios";
-import { useAuthStore } from "@/stores/auth";
-import hljs from 'highlight.js/lib/core';
-import 'highlight.js/styles/default.css';
-import CodeEditor from 'simple-code-editor';
-import Monaco from "@/components/Monaco.vue";
+import {useAuthStore} from "@/stores/auth";
 import Tagify from '@yaireo/tagify'
 import '@yaireo/tagify/src/tagify.scss';
+import {Codemirror} from "vue-codemirror";
+import {java} from '@codemirror/lang-java'
+import {html} from '@codemirror/lang-html'
+import {nord, nordInit} from '@uiw/codemirror-theme-nord';
 
 const issueInfo = ref({
   title: '',
   content: '',
   category: '',
-  code: '// 코드를 입력해주세요',
+  code: '',
   keyword: '',
 });
 
 const emit = defineEmits(['step-changed']);
 const step = ref(1);
-const code = ref('');
-
-import CodeEditor from 'simple-code-editor';
-
-
-import Tagify from '@yaireo/tagify'
-import '@yaireo/tagify/src/tagify.scss';
-// import 'highlight.js/scss/isbl-editor-dark.scss';
-
 
 const tagInput = ref(null);
+const extensions = [java(), nord]
 
 onMounted(() => {
   const tagify = new Tagify(tagInput.value, {
@@ -43,28 +35,25 @@ onMounted(() => {
     // }
     issueInfo.value.keyword = tagify.value.map(tag => tag.value).join(',');
   });
-  /*  document.querySelectorAll('code').forEach((block) => {
-      hljs.highlightBlock(block);
-    });*/
 });
 
 
 async function submitIssue() {
-    await axios
-        .post('/issues', issueInfo.value,
-            {
-                headers: {
-                    Authorization: useAuthStore().token,
-                }
+  await axios
+      .post('/issues', issueInfo.value,
+          {
+            headers: {
+              Authorization: useAuthStore().token,
             }
-        )
-        .then(() => {
-            step.value = 2;
-            emit('step-changed', step.value);
-        })
-        .catch((error) => {
-            console.log(error);
-        })
+          }
+      )
+      .then(() => {
+        step.value = 2;
+        emit('step-changed', step.value);
+      })
+      .catch((error) => {
+        console.log(error);
+      })
 }
 
 </script>
@@ -108,9 +97,9 @@ async function submitIssue() {
       />
       <!--에러 코드-->
       <div>
-        <CodeEditor v-model="issueInfo.code"
-                    :languages="[['java', 'Java'],['python', 'Python'],['javascript', 'Javascript']]" :line-nums="true"
-                    theme="isbl-editor-dark" width="100%"></CodeEditor>
+        <!--        <code-editor v-model="issueInfo.code" class="text-lg" @update:modelValue="updateCode"></code-editor>-->
+        <codemirror v-model="issueInfo.code" :autofocus="true" :extensions="extensions"
+                    :font-size="20" :indent-with-tab="true" :style="{ height: '200px' }" :tab-size="4" class="text-lg" placeholder="// 코드를 입력하세요"/>
       </div>
     </div>
   </div>
@@ -120,6 +109,12 @@ async function submitIssue() {
       <div>에러를 등록하면 자동으로 시간이 측정되어 적금할 수 있는 금액이 달라집니다.</div>
       <div>성공적인 에러 해결로 목표에 한 발짝 더 가까워지세요!</div>
     </div>
+    <div>
+      <button class="bg-main-red hover:bg-hover-red m-2 px-10 py-5 rounded-xl shadow" @click="submitIssue()">
+        <div class="text-white text-3xl font-bold font-main">에러 등록</div>
+      </button>
+    </div>
+  </div>
 </template>
 
 <style scoped></style>

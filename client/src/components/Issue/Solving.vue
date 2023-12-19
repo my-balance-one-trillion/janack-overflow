@@ -1,19 +1,14 @@
 <script setup>
-import {FwbBadge} from "flowbite-vue";
-import ClipboardJS from 'clipboard';
-import javascript from 'highlight.js/lib/languages/javascript';
 import 'highlight.js/styles/default.css';
 import HighlightJS from 'highlight.js';
 import {defineEmits, onMounted, ref} from "vue";
 import axios from "axios";
 import {useAuthStore} from "../../stores/auth";
-import dayjs from "dayjs";
 import router from "../../router";
 
 const issueCodeBlock = ref(null);
 const solutionCodeBlock = ref(null);
 const createdAt = ref();
-const overTime = ref();
 const step = ref();
 const activeTab = ref();
 const emit = defineEmits(['step-changed']);

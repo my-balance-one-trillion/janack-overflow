@@ -209,7 +209,7 @@
         </div>
     </div>
     <div>
-        <Monaco></Monaco>
+        <Monaco ></Monaco>
     </div>
 </template>
 

@@ -1,23 +1,23 @@
 <script setup>
 import {FwbBadge} from "flowbite-vue";
 import 'highlight.js/styles/default.css';
-import HighlightJS from 'highlight.js';
 import {onMounted, ref} from "vue";
 import axios from "axios";
 import {useAuthStore} from "../../stores/auth";
 import dayjs from "dayjs";
-import router from "../../router";
+import {Codemirror} from "vue-codemirror";
+import {java} from '@codemirror/lang-java'
+import {nord} from "@uiw/codemirror-theme-nord";
 
 const issueCodeBlock = ref(null);
 const solutionCodeBlock = ref(null);
-const hovered = ref(false);
 const issue = ref({});
 const keywords = ref([]);
 const stackoverflow = ref({});
 const createdAt = ref();
 const overTime = ref();
 const isLoading = ref(true);
-import CodeEditor from 'simple-code-editor';
+const extensions = [java(), nord]
 
 async function getIssue() {
   await axios
@@ -31,6 +31,7 @@ async function getIssue() {
         keywords.value = response.data.issue.keyword.split(",");
         createdAt.value = response.data.issue.createdAt;
         stackoverflow.value = response.data.stackOverflowResults;
+        issue.value.content = issue.value.content.split('\n').join('<br>');
         isLoading.value = true;
       })
       .catch((error) => {
@@ -69,12 +70,10 @@ onMounted(async () => {
               </fwb-badge>
             </div>
           </div>
-          <p class="">{{ issue.content }}</p>
-          <div>
-            <CodeEditor v-model="issue.code" :languages="[['java', 'Java'],['python', 'Python'],['javascript', 'Javascript']]"
-                        :line-nums="true"
-                        :read-only="true"
-                        theme="isbl-editor-dark" width="100%"></CodeEditor>
+          <p class="" v-html="issue.content"></p>
+          <div class="my-5">
+            <codemirror v-model="issue.code" :autofocus="true" :extensions="extensions" disabled
+                        :font-size="20" :indent-with-tab="true" :tab-size="4" class="text-lg" placeholder="// 코드를 입력하세요"/>
           </div>
         </div>
       </div>

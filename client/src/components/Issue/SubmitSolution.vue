@@ -1,9 +1,10 @@
 <script setup>
-const keywords = ref([]);
-
+import {Codemirror} from "vue-codemirror";
 import {ref, defineEmits} from "vue";
 import axios from "axios";
 import {useAuthStore} from "@/stores/auth";
+import {java} from "@codemirror/lang-java";
+import {nord} from "@uiw/codemirror-theme-nord";
 
 const solution = ref({
   code: '',
@@ -11,6 +12,7 @@ const solution = ref({
   publicStatus: true
 });
 const emit = defineEmits(['show-modal']);
+const extensions = [java(), nord];
 
 async function submitSolution() {
   await axios
@@ -42,9 +44,8 @@ async function submitSolution() {
       />
       <!--에러 코드-->
       <div>
-        <input v-model="solution.code" class="border-b-4"
-               placeholder="코드"
-        >
+        <codemirror v-model="solution.code" :autofocus="true" :dark="true" :extensions="extensions"
+                    :font-size="20" :indent-with-tab="true" :style="{ height: '200px' }" :tab-size="4" class="text-lg" placeholder="// 코드를 입력하세요"/>
       </div>
 
     </div>

@@ -21,8 +21,8 @@ import Chart from "./Details/Chart.vue";
     <!--  대시보드 -->
     <div>
       <div class="w-full p-7 bg-gray-100 rounded-3xl shadow">
-        <div class="p-4 border bg-white rounded-xl">
-            <chart/>
+        <div class="p-6 border bg-white rounded-xl">
+            <chart style="font-weight: bold;"/>
         </div>
       </div>
     </div>
