@@ -21,16 +21,30 @@ public class UsersService {
         this.usersRepository = usersRepository;
     }
 
-    public boolean isDuplicatedNick(UsersRequestDTO usersRequestDTO){ //닉네임 중복 확인
+    public boolean isDuplicatedNick(UsersRequestDTO usersRequestDTO) { //닉네임 중복 확인
         Users users = usersRequestDTO.toEntity();
-        Optional<Users> optionalUsers = usersRepository.findByNickname(users.getNickname());
-        return optionalUsers.isPresent() && !(optionalUsers.get().getId() == users.getId());
+
+        Optional<Users> optionalUsers = usersRepository.findByNickname(users.getNickname()); //조회했는데, 있으면
+
+        if(optionalUsers.isEmpty()){
+            return false;
+        } else {
+            return true;
+        }
+
     }
 
     public boolean isDuplicatedEmail(UsersRequestDTO usersRequestDTO){ //이메일 중복 확인
         Users users = usersRequestDTO.toEntity();
-        Optional<Users> optionalUsers = usersRepository.findByEmail(users.getEmail());
-        return optionalUsers.isPresent() && !(optionalUsers.get().getId() == users.getId());
+
+        Optional<Users> optionalUsers = usersRepository.findByEmail(users.getEmail()); //조회했는데, 있으면
+
+        if(optionalUsers.isEmpty()){
+            return false;
+        } else {
+            return true;
+        }
+
     }
 
     public Users createUser(UsersRequestDTO usersRequestDTO){ //회원 생성
@@ -69,7 +83,12 @@ public class UsersService {
 
     public Users findByEmail(String email) { //UserDetails loadUserByUsername() 전용 서비스
         System.out.println("findByEmail start! email : " + email);
-        return usersRepository.findByEmail(email).get();
+        try {
+            return usersRepository.findByEmail(email).get();
+        } catch (Exception e){
+            System.out.println("조회된 사용자가 없습니다");
+            return null;
+        }
     }
 
 }

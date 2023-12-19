@@ -16,7 +16,7 @@
               <div class="relative pl-14" @keyup.enter="login">
                 <div class="relative">
                   <input autocomplete="off" id="email" name="email" type="text"
-                    class="peer placeholder-transparent bg-gray-50 h-10 w-10/12 border-t-0 border-l-0 border-r-0 border-b-2 border-red-700 text-gray-900 focus:outline-none focus:borer-rose-600"
+                    class="focus:ouline-none focus:ring-0 focus:border-main-red peer placeholder-transparent bg-gray-50 h-10 w-10/12 border-t-0 border-l-0 border-r-0 border-b-2 border-red-700 text-gray-900 focus:outline-none focus:borer-rose-600"
                     v-model="state.input.email" placeholder="Email" />
                   <label for="email"
                     class="absolute left-0 -top-3.5 text-gray-600 text-sm peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-440 peer-placeholder-shown:top-2 transition-all peer-focus:-top-3.5 peer-focus:text-gray-600 peer-focus:text-sm">Email</label>
@@ -26,7 +26,7 @@
 
                 <div class="relative">
                   <input autocomplete="off" id="password" name="password" type="password"
-                    class="peer placeholder-transparent bg-gray-50 h-10 w-10/12 border-t-0 border-l-0 border-r-0 border-b-2 border-red-700 text-gray-900 focus:outline-none focus:borer-rose-600"
+                    class="focus:ouline-none focus:ring-0 focus:border-main-red peer placeholder-transparent bg-gray-50 h-10 w-10/12 border-t-0 border-l-0 border-r-0 border-b-2 border-red-700 text-gray-900 focus:outline-none focus:borer-rose-600"
                     v-model="state.input.password" placeholder="Password" />
                   <label for="password"
                     class="absolute left-0 -top-3.5 text-gray-600 text-sm peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-440 peer-placeholder-shown:top-2 transition-all peer-focus:-top-3.5 peer-focus:text-gray-600 peer-focus:text-sm">Password</label>
