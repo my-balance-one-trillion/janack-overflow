@@ -54,7 +54,7 @@
 <script setup>
 import { ref, defineProps } from "vue";
 import { useAuthStore } from "@/stores/auth";
-import { useRouter } from "vue-router";
+import { useRouter, useRoute } from "vue-router";
 
 const menuBar = ref(null);
 const nav = ref(null);
@@ -62,6 +62,7 @@ const menuBg = ref(null);
 
 const authStore = useAuthStore();
 const router = useRouter();
+const currentRoute = useRoute();
 
 const role = ref([]);
 const props = defineProps(['role']);
@@ -69,10 +70,13 @@ role.value = props;
 console.log(role.value.role)
 
 function removeToken() {
-  location.reload();
   localStorage.removeItem("token");
   authStore.clearToken();
   alert("로그아웃되었습니다.");
+  console.log("현재 주소", currentRoute.path);
+  if(currentRoute.path == "/"){
+    location.reload();
+  }
   router.push('/');
 }
 

@@ -1,9 +1,9 @@
 <template>
   <!-- component -->
   <div class="antialiased font-main">
-    <div class="mx-auto px-4 sm:px-8">
+    <div class="px-4 mx-auto sm:px-8">
       <div class="py-8">
-        <div class="mx-4 sm:mx-8 px-4 sm:px-8 py-4">
+        <div class="px-4 py-4 mx-4 sm:mx-8 sm:px-8">
           <div
             class="flex justify-center mx-auto shadow rounded-lg overflow-y-scroll max-h-[500px]"
           >
@@ -19,7 +19,7 @@
                     <router-link :to="issue.status == '01' ? url[Number(issue.status.substr(1,2))-1] : url[Number(issue.status.substr(1,2))-1] +issue.id">
                     <tr>
                       <td
-                        class="py-5 border-b border-gray-200 bg-white text-sm"
+                        class="py-5 text-sm bg-white border-b border-gray-200"
                       >
                         <div class="flex items-center">
                           <div class="ml-3">
@@ -30,10 +30,10 @@
                         </div>
                       </td>
                       <td
-                        class="px-5 py-5 border-b border-gray-200 bg-white text-lg"
+                        class="px-5 text-lg bg-white border-b border-gray-200"
                       >
                         <p
-                          class="w-[300px] text-gray-900 whitespace-nowrap overflow-hidden"
+                          class="w-[300px] text-gray-900 line-clamp-1"
                         >
                           {{ issue.title }}
                         </p>
@@ -46,15 +46,15 @@
                         </p>
                       </td>
                       <td
-                        class="flex px-5 py-5 border-b border-gray-200 bg-white text-lg justify-end whitespace-nowrap"
+                        class="flex justify-end px-5 py-5 text-lg bg-white border-b border-gray-200 whitespace-nowrap"
                       >
                         <!-- 진행중: 01 -->
                         <template v-if="issue.status == '01'">
                           <span
-                            class="relative inline-block px-3 py-1 text-white leading-tight"
+                            class="relative inline-block px-3 py-1 leading-tight text-white"
                           >
                             <span
-                              class="absolute inset-0 bg-main-red rounded-full"
+                              class="absolute inset-0 rounded-full bg-main-red"
                             ></span>
                             <span class="relative">진행중</span>
                           </span>
@@ -62,11 +62,11 @@
                         <!-- 포기: 02 -->
                         <template v-else-if="issue.status == '02'">
                           <span
-                            class="relative inline-block px-3 py-1 text-white leading-tight"
+                            class="relative inline-block px-3 py-1 leading-tight text-white"
                           >
                             <span
                               aria-hidden
-                              class="absolute inset-0 bg-sub-red rounded-full"
+                              class="absolute inset-0 rounded-full bg-sub-red"
                             ></span>
                             <span class="relative px-3">포기</span>
                           </span>
@@ -74,11 +74,11 @@
                         <!-- 해결: 03 -->
                         <template v-else>
                           <span
-                            class="relative inline-block px-3 py-1 text-white leading-tight"
+                            class="relative inline-block px-3 py-1 leading-tight text-white"
                           >
                             <span
                               aria-hidden
-                              class="absolute inset-0 bg-main-grn rounded-full"
+                              class="absolute inset-0 rounded-full bg-main-grn"
                             ></span>
                             <span class="relative px-3">해결</span>
                           </span>
@@ -90,7 +90,7 @@
               </tbody>
             </table>
             <!-- <div
-              class="px-5 py-1 bg-white border-t flex flex-col xs:flex-row items-center xs:justify-between"
+              class="flex flex-col items-center px-5 py-1 bg-white border-t xs:flex-row xs:justify-between"
             ></div> -->
           </div>
         </div>
