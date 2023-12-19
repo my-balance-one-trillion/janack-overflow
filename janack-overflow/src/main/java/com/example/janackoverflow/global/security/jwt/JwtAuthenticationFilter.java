@@ -135,14 +135,36 @@ public class JwtAuthenticationFilter extends AbstractAuthenticationProcessingFil
 		// Tip: AuthenticationProvider의 디폴트 서비스는 UserDetailsService 타입
 		// Tip: AuthenticationProvider의 디폴트 암호화 방식은 BCryptPasswordEncoder 타입
 
-		Authentication authentication =
-				authenticationManager.authenticate(authenticationToken);
-		
-		NowUserDetails principalDetailis = (NowUserDetails) authentication.getPrincipal();
+		try{
+			Authentication authentication =
+					authenticationManager.authenticate(authenticationToken);
 
-		System.out.println("Authentication Id : " + principalDetailis.getId());
+			NowUserDetails principalDetailis = (NowUserDetails) authentication.getPrincipal();
 
-		return authentication;
+			System.out.println("Authentication Id : " + principalDetailis.getId());
+
+			return authentication;
+
+		} catch (AuthenticationException e){ //인증 실패 예외 - 여기선 패스워드 입력에 실패한 경우를 의미
+			
+			System.out.println("인가 실패");
+
+			response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+			response.setContentType("text/plain"); // MIME 타입 설정
+			response.setCharacterEncoding("UTF-8"); // 문자 인코딩 설정
+
+			PrintWriter writer = null;
+			try {
+				writer = response.getWriter();
+			} catch (IOException ex) {
+				throw new RuntimeException(ex);
+			}
+
+			writer.println("패스워드가 일치하지 않습니다");
+
+			return null;
+		}
+
 	}
 
 	// attemptAuthentication()의 호출 결과로 Authentication 객체 리턴시 successfulAuthentication() 의 호출 결과를 리턴함
