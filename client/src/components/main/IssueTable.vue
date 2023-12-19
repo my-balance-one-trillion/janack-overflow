@@ -10,7 +10,7 @@
             <table class="w-full leading-normal table-auto">
               <tbody v-if="issueList.length == 0" class="flex flex-col items-center w-full">
                 <tr class="text-center">
-                  <td class="p-3 text-xl text-center">내역이 없습니다.</td>
+                  <td class="p-3 text-sm text-center">내역이 없습니다.</td>
                 </tr>
               </tbody>
               <tbody v-else class="flex flex-col items-center w-full">
@@ -19,7 +19,7 @@
                     <router-link :to="issue.status == '01' ? url[Number(issue.status.substr(1,2))-1] : url[Number(issue.status.substr(1,2))-1] +issue.id">
                     <tr>
                       <td
-                        class="py-5 border-b border-gray-200 bg-white text-lg"
+                        class="py-5 border-b border-gray-200 bg-white text-sm"
                       >
                         <div class="flex items-center">
                           <div class="ml-3">
@@ -30,7 +30,7 @@
                         </div>
                       </td>
                       <td
-                        class="px-5 py-5 border-b border-gray-200 bg-white text-2xl"
+                        class="px-5 py-5 border-b border-gray-200 bg-white text-lg"
                       >
                         <p
                           class="w-[300px] text-gray-900 whitespace-nowrap overflow-hidden"
@@ -39,14 +39,14 @@
                         </p>
                       </td>
                       <td
-                        class="px-5 py-5 border-b border-gray-200 w-[140px] bg-white text-2xl"
+                        class="px-5 py-5 border-b border-gray-200 w-[140px] bg-white text-lg"
                       >
                         <p class="text-gray-900 whitespace-nowrap">
                           {{ issue.amount != 0 ? issue.amount : "" }}
                         </p>
                       </td>
                       <td
-                        class="flex px-5 py-5 border-b border-gray-200 bg-white text-2xl justify-end whitespace-nowrap"
+                        class="flex px-5 py-5 border-b border-gray-200 bg-white text-lg justify-end whitespace-nowrap"
                       >
                         <!-- 진행중: 01 -->
                         <template v-if="issue.status == '01'">
@@ -66,7 +66,7 @@
                           >
                             <span
                               aria-hidden
-                              class="absolute inset-0 bg-sub-grn rounded-full"
+                              class="absolute inset-0 bg-sub-red rounded-full"
                             ></span>
                             <span class="relative px-3">포기</span>
                           </span>

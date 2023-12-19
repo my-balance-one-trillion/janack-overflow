@@ -28,61 +28,18 @@
                                 issue.category }}</fwb-badge>
                         </div>
                     </div>
-                    <p class="w-full break-all">
-                        {{ issue.content }}
+                    <p class="w-full break-all" v-html="issue.content">
+
                     </p>
-                    <div>
-                        <div class="p-3 border-0 rounded-xl bg-bg-grey">
-                            <div class="flex items-center justify-end">
-                                <Dropdown @selectLang="handle"></Dropdown>
-                                <i :class="['p-2', 'fa-lg', 'fa-clipboard', 'issueCodeBlock', 'hover:cursor-pointer', hovered ? 'fa-solid' : 'fa-regular']"
-                                    @click="copyToClipboard" @mouseover="hovered = true" @mouseout="hovered = false"></i>
-                            </div>
-                            <pre class="w-auto" v-if="lang === 'plain'" ref="issueCodeBlock">
-                                                                <code class="flex justify-start">{{ issue.code }}</code>
-                                                            </pre>
-                            <pre v-if="lang === 'java'"
-                                v-highlightjs><code :class="lang" ref="issueCodeBlock" :style="codeStyle">{{ code }}</code></pre>
-                            <pre v-if="lang === 'javascript'"
-                                v-highlightjs><code :class="lang" ref="issueCodeBlock" :style="codeStyle">{{ code }}</code></pre>
-                            <pre v-if="lang === 'kotlin'"
-                                v-highlightjs><code :class="lang" ref="issueCodeBlock" :style="codeStyle">{{ code }}</code></pre>
-                            <pre v-if="lang === 'python'"
-                                v-highlightjs><code :class="lang" ref="issueCodeBlock" :style="codeStyle">{{ code }}</code></pre>
-                            <pre v-if="lang === 'sql'"
-                                v-highlightjs><code :class="lang" ref="issueCodeBlock" :style="codeStyle">{{ code }}</code></pre>
-                            <pre v-if="lang === 'html'"
-                                v-highlightjs><code :class="lang" ref="issueCodeBlock" :style="codeStyle">{{ code }}</code></pre>
-                        </div>
+                    <div class="flex flex-col">
+                        <Monaco :code="issue.code"></Monaco>
                     </div>
                 </div>
 
                 <div v-show="activeTab === 1" class="w-full">
-                    <p class="w-full break-all">{{ solution.content }}</p>
+                    <p class="w-full break-all" v-html="solution.content"></p>
                     <div>
-                        <div class="p-3 border-0 rounded-xl bg-bg-grey">
-                            <div class="flex justify-end">
-                                <Dropdown @selectLang="solutionCodehandle"></Dropdown>
-                                <i :class="['p-2', 'fa-lg', 'fa-clipboard', 'solutionCodeBlock', 'hover:cursor-pointer', hovered ? 'fa-solid' : 'fa-regular']"
-                                    @click="copyToClipboard" @mouseover="hovered = true" @mouseout="hovered = false"></i>
-                                <!-- <i class=" fa-solid fa-copy"></i> -->
-                            </div>
-                            <pre class="w-auto" v-if="lang === 'plain'" ref="solutionCodeBlock">
-                                                                <code class="flex justify-start">{{ solutionCode }}</code>
-                                                            </pre>
-                            <pre v-if="lang === 'java'"
-                                v-highlightjs><code :class="lang" ref="solutionCodeBlock" :style="codeStyle">{{ solutionCode }}</code></pre>
-                            <pre v-if="lang === 'javascript'"
-                                v-highlightjs><code :class="lang" ref="solutionCodeBlock" :style="codeStyle">{{ solutionCode }}</code></pre>
-                            <pre v-if="lang === 'kotlin'"
-                                v-highlightjs><code :class="lang" ref="solutionCodeBlock" :style="codeStyle">{{ solutionCode }}</code></pre>
-                            <pre v-if="lang === 'python'"
-                                v-highlightjs><code :class="lang" ref="solutionCodeBlock" :style="codeStyle">{{ solutionCode }}</code></pre>
-                            <pre v-if="lang === 'sql'"
-                                v-highlightjs><code :class="lang" ref="solutionCodeBlock" :style="codeStyle">{{ solutionCode }}</code></pre>
-                            <pre v-if="lang === 'html'"
-                                v-highlightjs><code :class="lang" ref="solutionCodeBlock" :style="codeStyle">{{ solutionCode }}</code></pre>
-                        </div>
+                        <Monaco :code="solutionCode"></Monaco>
                     </div>
                 </div>
             </div>
@@ -109,7 +66,7 @@
             <!--item 1-->
             <div v-for="article in articleList" class="w-full mb-6 select-none">
                 <div class="relative pb-64">
-                    <a :href="article.url" class="cursor-pointer">
+                    <a :href="article.url" target='_blank' class="cursor-pointer">
                         <img v-if="!article.imgUrl"
                             class="absolute object-cover w-full h-full border-b-4 rounded-lg shadow-md cursor-pointer border-main-grn"
                             src="../../public/images/errorImg.jpeg" alt="medium thumnail" />
@@ -132,7 +89,7 @@
                             </div>
 
                             <a class="block mt-2 text-lg font-medium text-gray-800 truncate hover:underline"
-                                :href="article.url">
+                                :href="article.url" target='_blank'>
                                 {{ article.title }}
                             </a>
                         </div>
@@ -159,12 +116,25 @@
         <div class="my-4">
             <h1 class="text-2xl">댓글</h1>
         </div>
-        <div v-if="commentListLength === 0" class="py-2 text-center text-main-red">아직 댓글이 없습니다. 댓글을 작성해주세요!</div>
-        <div v-if="!commentList" class="flex items-center justify-end text-center text-main-red">
+        <template v-if="useAuthStore().token != null">
+            <div v-if="commentListLength === 0" class="py-2 text-center text-main-red">아직 댓글이 없습니다. 댓글을 작성해주세요!</div>
+        </template>
+        <template v-if="useAuthStore().token === null">
+            <div class="flex flex-col items-center justify-center mx-auto">
+                <p class="pb-2 text-gray-400">로그인이 필요한 서비스입니다!</p>
+                <div class="flex items-center justify-center w-40 h-12 mx-auto b animate-pulse">
+                    <div
+                        class="absolute items-center h-10 overflow-hidden transition duration-300 ease-out transform shadow-2xl cursor-pointer w-36 bg-main-red i rounded-xl hover:scale-x-110 hover:scale-y-105">
+                    </div>
+                    <router-link to='/login' class="z-10 font-semibold text-center text-white">로그인 하러가기</router-link>
+                </div>
+            </div>
+        </template>
+        <div v-if="commentListLength != 0" class="flex items-center justify-end text-center text-main-red">
             <fwb-pagination v-model="currentPage" :layout="'table'" :per-page="5" :total-items="totalCommentElements"
                 class="mb-2" />
         </div>
-        <div class="flex justify-end">
+        <div class="flex justify-end pb-5">
             <div class="w-10/12 space-y-4">
                 <div class="flex" v-for="comment in commentList">
                     <div class="flex-shrink-0 mr-3">
@@ -174,12 +144,11 @@
                     <div class="flex-1 px-4 py-2 leading-relaxed border-b-4 rounded-lg border-sub-red sm:px-6 sm:py-4">
                         <strong>{{ comment.nickname }}</strong> <span class="text-xs text-gray-400">{{ comment.createdAt
                         }}</span>
-                        <p class="text-sm">
-                            {{ comment.comment }}
-                        </p>
+                        <p class="text-sm" v-html="comment.comment"></p>
                     </div>
-                    <template v-if="comment.nickname === userInfo.nickname">
-                        <div class="flex items-center">
+
+                    <template v-if="useAuthStore().token != null">
+                        <div class="flex items-center" v-if="comment.nickname === userInfo.nickname">
                             <button @click="deleteMyComment(comment.id)"
                                 class="inline-flex items-center px-2 py-1 ml-2 font-bold text-gray-800 bg-white border-b-2 rounded shadow-md border-x-sub-red hover:border-sub-red hover:bg-hover-red hover:text-white">
                                 <!-- <span class="mr-2">Delete</span> -->
@@ -194,22 +163,21 @@
             </div>
 
         </div>
-        <div class="flex justify-end mt-10">
-            <form class="w-7/12">
-                <fwb-textarea v-model="message" :rows="3" custom label="" placeholder="댓글을 작성해 주세요.">
-                    <template #footer>
-                        <div class="flex items-center justify-end">
-                            <fwb-button type="button" @click="commentAPI" color="red">
-                                댓글 작성
-                            </fwb-button>
-                        </div>
-                    </template>
-                </fwb-textarea>
-            </form>
-        </div>
-    </div>
-    <div>
-        <Monaco ></Monaco>
+        <template v-if="useAuthStore().token != null">
+            <div class="flex justify-end mt-10">
+                <form class="w-7/12">
+                    <fwb-textarea v-model="message" :rows="3" custom label="" placeholder="댓글을 작성해 주세요.">
+                        <template #footer>
+                            <div class="flex items-center justify-end">
+                                <fwb-button type="button" @click="commentAPI" color="red">
+                                    댓글 작성
+                                </fwb-button>
+                            </div>
+                        </template>
+                    </fwb-textarea>
+                </form>
+            </div>
+        </template>
     </div>
 </template>
 
@@ -217,24 +185,17 @@
 import { onMounted, ref, watch } from 'vue';
 import { FwbBadge } from 'flowbite-vue';
 import { FwbButton, FwbTextarea, FwbPagination } from 'flowbite-vue'
-import ClipboardJS from 'clipboard';
 import Spinner from "@/components/Spinner.vue";
-import Dropdown from "@/components/Dropdown.vue";
 import Monaco from "@/components/Monaco.vue";
 
-import 'highlight.js/styles/default.css';
-import hljs from 'highlight.js/lib/core';
-import VueHighlightJS from 'vue3-highlightjs'
-
 import axios from 'axios';
-import { useRoute, useRouter } from 'vue-router';
+import { useRoute, useRouter, createWebHistory } from 'vue-router';
 import { useAuthStore } from '@/stores/auth';
 import { storeToRefs } from 'pinia';
-import { func } from 'prop-types';
 
 const authStore = useAuthStore()
 const { userInfo } = storeToRefs(authStore);
-
+const router = useRouter();
 const activeTab = ref(0);
 const tabs = ref([
     "에러",
@@ -262,9 +223,10 @@ const message = ref(null);
 const lang = ref(null);
 const codeStyle = ref(null);
 const articleList = ref(null);
+const closedIssueFlag = ref(false);
 
-console.log(userInfo.value.id);
 
+// console.log(userInfo.value.id);
 watch(commentListLength, async (newValue, oldValue) => {
     console.log("newValue :" + newValue + "oldValue : " + oldValue);
     commentListLength.value = newValue;
@@ -276,6 +238,11 @@ watch(currentPage, async (newValue, oldValue) => {
     currentPage.value = newValue;
     await getCommentListAPI();
 });
+
+async function formatLineBreaks(text) {
+    console.log("!@!@@!@!@ : " + text);
+    return text.split('\n').join('<br>');
+}
 
 async function handle(e) {
     code.value = issue.value.code;
@@ -290,19 +257,42 @@ async function solutionCodehandle(e) {
 async function getIssueDetail() {
     await axios
         .get(
-            "/community/detail/" + route.params.id
+            "/community/detail/" + route.params.id,
+            {
+                headers: {
+                    Authorization: useAuthStore().token,
+                },
+            }
         )
-        .then((response) => {
+        .then(async (response) => {
             console.log(response.data);
             issue.value = response.data;
-            // articleLength.value = response.data.articleList.length;
+
+            issue.value.content = await formatLineBreaks(issue.value.content);
+
             solution.value = response.data.solutionDTO;
+            solution.value.content = await formatLineBreaks(solution.value.content);
             issueCodeBlock.value = response.data.code;
             code.value = response.data.code;
             solutionCodeBlock.value = response.data.solutionDTO.code;
             keywords.value = response.data.keyword.split(',').map(keyword => keyword.trim());
             solutionCode.value = response.data.solutionDTO.code;
+            closedIssueFlag.value = true;
+        })
+        .catch((error) => {
+            closedIssueFlag.value = false;
+            alert("잘못된 접근입니다.");
+            router.push('/community');
         });
+
+    if (closedIssueFlag.value === false) {
+        return;
+    } else {
+        getLikesCnt();
+        getLikesAPI();
+        getCommentListAPI();
+        getArticelList();
+    }
 }
 
 async function getArticelList() {
@@ -338,26 +328,35 @@ const getCommentListAPI = async () => {
     const url = `/community/comment/${route.params.id}?pageNo=` + pageNo;
     const resp = await axios.get(url);
     commentList.value = resp.data.content;
+
+    for (let i = 0; i < commentList.value.length; i++) {
+        commentList.value[i].comment = await formatLineBreaks(commentList.value[i].comment);
+    }
+
     totalCommentElements.value = resp.data.totalElements;
     commentListLength.value = commentList.value.length;
 }
 
 const commentAPI = async () => {
-    console.log(message);
+    if (message.value.trim() === '' || message.value == null) {
+        alert('댓글을 입력해주세요.');
+        return false;
+    }
+
     const url = `/community/comment/${route.params.id}/${userInfo.value.id}`;
-    console.log(url);
+
     let data = {
         content: message.value,
     };
-
     const resp = await axios.post(url, data, {
         headers: {
             authorization: useAuthStore().token,
         },
     });
-    console.log(resp);
+
     if (resp.status === 200) {
         getCommentListAPI();
+        message.value = null;
     } else {
         alert("댓글 작성에 실패하였습니다.");
     }
@@ -365,6 +364,7 @@ const commentAPI = async () => {
 
 async function deleteMyComment(commentid) {
     let deleteConfirm = window.confirm("댓글을 삭제하시겠습니까?");
+
     if (deleteConfirm) {
         await axios.delete(`/community/comment/${commentid}`, {
             headers: {
@@ -377,40 +377,10 @@ async function deleteMyComment(commentid) {
     }
 }
 
-let clipboardInstance = null; // ClipboardJS 인스턴스를 저장할 변수
-
-function copyToClipboard(event) {
-    const className = '.' + event.target.classList[3];
-    console.log(className);
-
-    let targetElement = null;
-    if (className === '.solutionCodeBlock') {
-        targetElement = solutionCodeBlock.value;
-    } else {
-        targetElement = issueCodeBlock.value;
-    }
-
-    if (clipboardInstance) {
-        clipboardInstance.destroy();
-    }
-
-    clipboardInstance = new ClipboardJS(className, {
-        text: function () {
-            return targetElement.innerText;
-        }
-    });
-
-    clipboardInstance.on('success', function (e) {
-        alert('코드가 클립보드에 복사되었습니다.');
-    });
-
-    clipboardInstance.on('error', function (e) {
-        console.error('코드복사 중 오류가 발생했습니다:', e);
-    });
-
-}
-
 const getLikesAPI = async () => {
+    if (authStore.token === null) {
+        return;
+    }
     const url = `/community/likes/${route.params.id}/${userInfo.value.id}`; //usersId
 
     try {
@@ -435,7 +405,12 @@ const getLikesAPI = async () => {
 }
 
 const likeAPI = async () => {
-    console.log(userInfo.value.id);
+    if (authStore.token == null) {
+        alert("로그인이 필요한 서비스입니다.");
+        router.push('/login');
+        return;
+    }
+    // console.log(userInfo.value.id);
     // console.log("123123" + useAuthStore().token);
     const url = `/community/likes/${route.params.id}/${userInfo.value.id}`;
     const resp = await axios.post(url, {}, {
@@ -476,12 +451,46 @@ const cancleLikeAPI = async () => {
 };
 
 onMounted(() => {
-    getLikesCnt();
-    getLikesAPI();
-    getCommentListAPI();
-    getIssueDetail();
-    getArticelList();
     initFlowbite();
+    getIssueDetail();
+
 });
 
 </script>
+<style scoped>
+.i::before {
+    content: "";
+    position: absolute;
+    width: 0px;
+    height: 0px;
+    opacity: 20%;
+    background: white;
+    /*   background: #3B82F6; */
+    /* Centering */
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    margin: auto;
+}
+
+.i:hover:before {
+    animation: anim-in 0.7s forwards ease-out;
+}
+
+@keyframes anim-in {
+    100% {
+        opacity: 0%;
+        border-radius: 0;
+        width: 600px;
+        height: 600px;
+    }
+
+    0% {
+        width: 0px;
+        height: 0px;
+        border-radius: 100%;
+        opacity: 20%;
+    }
+}
+</style>

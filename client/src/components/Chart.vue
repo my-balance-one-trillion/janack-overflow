@@ -24,27 +24,27 @@ const percent = ((p.acntAmount / p.goalAmount) * 100).toFixed(0);
 console.log("percent", percent);
 
 ChartJS.register(ArcElement, Legend);
-ChartJS.register({
-    id: 'doughnutlabel',
-    beforeDraw: function (chart) {
-      const width = chart.width;
-      const height = chart.height;
-      const ctx = chart.ctx;
+// ChartJS.register({
+//     id: 'doughnutlabel',
+//     beforeDraw: function (chart) {
+//       const width = chart.width;
+//       const height = chart.height;
+//       const ctx = chart.ctx;
 
-      ctx.restore();
-      const fontSize = (height / 114).toFixed(2);
-      ctx.font = `${fontSize}em 'D2Coding', sans-serif`;
-      ctx.textBaseline = 'middle';
+//       ctx.restore();
+//       const fontSize = (height / 114).toFixed(2);
+//       ctx.font = `${fontSize}em 'D2Coding', sans-serif`;
+//       ctx.textBaseline = 'middle';
 
-      const text = `${percent}%`;
-      const textX = Math.round((width - ctx.measureText(text).width) / 2);
-      const textY = height / 2;
+//       const text = `${percent}%`;
+//       const textX = Math.round((width - ctx.measureText(text).width) / 2);
+//       const textY = height / 2;
 
-      ctx.fillStyle = '#025939'; // Set the color of the text
-      ctx.fillText(text, textX, textY);
-      ctx.save();
-    },
-  });
+//       ctx.fillStyle = '#025939'; // Set the color of the text
+//       ctx.fillText(text, textX, textY);
+//       ctx.save();
+//     },
+//   });
 
 
 const data = {
@@ -52,7 +52,7 @@ const data = {
     {
       labels: ['목표'],
       backgroundColor: ['#025939', '#F0F2F2'],
-      data: [p.acntAmount, p.goalAmount]
+      data: [p.acntAmount, p.goalAmount - p.acntAmount]
     }
   ],
   

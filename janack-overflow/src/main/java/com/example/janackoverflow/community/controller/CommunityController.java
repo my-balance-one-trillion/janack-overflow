@@ -100,6 +100,7 @@ public class CommunityController {
                                                  @AuthenticationPrincipal NowUserDetails nowUserDetails,
                                                  @RequestBody CommentDTO.CommentRequestDto commentRequestDto){
         log.info(commentRequestDto.getContent());
+        System.out.println(commentRequestDto.getContent());
         Long tokenUserId = nowUserDetails.getUser().getId();
         if(!Objects.equals(usersId, tokenUserId)) {
             return ResponseEntity.badRequest().build();
@@ -131,8 +132,21 @@ public class CommunityController {
     }
 
     @GetMapping(value = "/detail/{issueId}")
-    public ResponseEntity<IssueDTO.ResponseDTO> getIssueDetail(@PathVariable(value = "issueId") long issueId) {
-        return ResponseEntity.ok(communityService.detailSolvedIssue(issueId));
+    public ResponseEntity<IssueDTO.ResponseDTO> getIssueDetail(@PathVariable(value = "issueId") long issueId,
+                                                               @AuthenticationPrincipal NowUserDetails nowUserDetails) {
+        log.info("@@@@@@@@@@@@@@ nowUserDetails.getUser().getId() :" + nowUserDetails);
+        IssueDTO.ResponseDTO issueDto = null;
+        if( nowUserDetails == null ) {
+            issueDto = communityService.detailSolvedIssue(issueId, null);
+        } else {
+            // 사용자가 url로 다른 비공개이거나 포기인 issue 가져올 경우
+            issueDto =  communityService.detailSolvedIssue(issueId, nowUserDetails.getUser().getId());
+            log.info(" is null ? : " + issueDto);
+            if (issueDto == null) {
+                return ResponseEntity.notFound().build();
+            }
+        }
+        return ResponseEntity.ok(issueDto);
     }
     //포기한 이슈
     @GetMapping(value = "/giveup/{issueId}")

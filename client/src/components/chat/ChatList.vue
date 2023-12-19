@@ -20,6 +20,7 @@
         생성
       </button>
     </div>
+    <div class="min-h-[600px] max-h-[800px] overflow-y-scroll">
     <ul class="my-4 space-y-3">
       <template v-for="(room, index) in p.chatRoomList">
         <li>
@@ -36,13 +37,15 @@
               >{{ room.category }}
             </span>
             <span
-              class="inline-flex items-center justify-center px-2 py-0.5 ms-3 text-xs font-medium text-gray-500 bg-gray-200 rounded dark:bg-gray-700 dark:text-gray-400"
+              class="inline-flex items-center justify-center
+              min-w-[50px] px-3 py-0.5 ms-3 text-xs font-medium text-gray-500 bg-gray-200 rounded dark:bg-gray-700 dark:text-gray-400"
               >{{ room.usersList.length }}/{{ room.max }}</span
             >
           </div>
         </li>
       </template>
     </ul>
+  </div>
   </div>
 </template>
 
