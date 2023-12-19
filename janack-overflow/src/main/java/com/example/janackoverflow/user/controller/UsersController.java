@@ -89,7 +89,7 @@ public class UsersController {
                         "        <tbody>\n" +
                         "        <tr style=\"line-height:normal\">\n" +
                         "        <td>\n" +
-                        "        <a style=\"font-family:'Google Sans',Roboto,RobotoDraft,Helvetica,Arial,sans-serif;color:rgba(0,0,0,0.87);font-size:20px;line-height:20px\">\n" +
+                        "        <a style=\"font-family:'Google Sans',Roboto,RobotoDraft,Helvetica,Arial,sans-serif;color:rgba(0,0,0,0.87);font-size:23px;line-height:20px\">\n" +
                         "        " + usersRequestDTO.getEmail() + "\n" +
                         "        </a>\n" +
                         "        </td>\n" +
@@ -99,8 +99,8 @@ public class UsersController {
                         "      </div>\n" +
                         "       <div style=\"color:rgba(0,0,0,0.87);line-height:20px;padding-top:20px;\">\n" +
                         "\n" +
-                        "       <div style=\"font-family:Roboto-Regular,Helvetica,Arial,sans-serif;font-size:14px;color:black;\">\n" +
-                        "       JANACK-OVERFLOW에 임시 비밀번호를 발급하지 않았다면 다른 사람이 계정을 사용하는 것일 수 있습니다.<br>\n" +
+                        "       <div style=\"font-family:Roboto-Regular,Helvetica,Arial,sans-serif;font-size:18px;color:black;\">\n" +
+                        "       <span style=\"color:rgba(239, 68, 68);\">J</span>ANACK-OVER<span style=\"color:rgba(4, 120, 87);\">F</span>LOW에 임시 비밀번호를 발급하지 않았다면 다른 사람이 계정을 사용하는 것일 수 있습니다.<br>\n" +
                         "       지금 계정을 점검하고 비밀번호를 변경하세요!\n" +
                         "       </div>\n" +
                         "\n" +
