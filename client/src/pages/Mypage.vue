@@ -124,9 +124,8 @@
   </main>
 </template>
 <script setup>
-import { ref } from "vue";
+import { onMounted, ref } from "vue";
 import { useAuthStore } from "@/stores/auth";
-
 import dashboard from "@/components/mypage/dashboard.vue";
 import profileimage from "@/components/mypage/profileimage.vue";
 import updateinfo from "@/components/mypage/updateinfo.vue";
@@ -136,8 +135,21 @@ import mycomment from "@/components/mypage/mycomment.vue";
 const authStore = useAuthStore();
 const currentComponent = ref("dashboard");
 
+
+
+const props = defineProps(['component']);
+
+onMounted(()=>{
+  console.log("fromMain", props.component);
+  if(props.component === 'myissue'){
+    changeComponent("myissue");
+  }
+})
+
+
 const changeComponent = (component) => {
   currentComponent.value = component;
 };
+
 </script>
 <style scoped></style>

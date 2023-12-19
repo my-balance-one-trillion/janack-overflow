@@ -73,7 +73,7 @@ const state = reactive({
 const login = async () => {
   try {
     const res = await axios.post(
-      "http://localhost:8081/login",
+      "/login",
       state.input,
       {
         headers: {

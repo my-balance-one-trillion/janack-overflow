@@ -20,6 +20,7 @@ import ChatMain from "@/pages/chat/ChatMain.vue";
 import MyChat from "@/pages/chat/MyChat.vue";
 import Issue from "@/pages/Issue.vue";
 import PassMail from "@/components/PassMail.vue";
+import AboutGivenUpIssue from "@/pages/AboutGivenUpIssue.vue";
 
 const routes = [
     {path: "/", component: Main},
@@ -35,6 +36,7 @@ const routes = [
         ]
     },
     {path:"/issue", component: Issue},
+    {path:"/issue/giveup/:issueId", component:AboutGivenUpIssue},
     {path:"/intro", component: Intro},
     {path: "/open", component: OpenAccount},
     {path: "/open/finish", component: OpenAccountFinish},
@@ -42,6 +44,9 @@ const routes = [
     {path: "/community", component: Community},
     {path: '/community/detail/:id', component: Detail },
     {path: "/mypage", component: Mypage},
+    {path: "/mypage/:component",
+     component: Mypage,
+    props: true,},
     {path: "/chat/:chatId", component: ChatRoom},
     {path: "/chat", component: ChatMain},
     {path: "/chat/my/:userId", component: MyChat},
