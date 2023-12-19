@@ -21,11 +21,11 @@ app.config.globalProperties.$axios = axios;
 app.use(pinia);
 app.use(router);
 
-router.beforeEach((to, from, next) => {
-    // 이전 페이지의 경로를 저장
-    sessionStorage.setItem('previousRoute', from.fullPath);
-    next();
-});
+// router.beforeEach((to, from, next) => {
+//     // 이전 페이지의 경로를 저장
+//     sessionStorage.setItem('previousRoute', from.fullPath);
+//     next();
+// });
 
 app.use(VueHighlightJS);
 app.mount("#app");

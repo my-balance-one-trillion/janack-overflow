@@ -27,8 +27,8 @@
             </thead>
             <tbody>
               <tr class="border-b" v-for="item in commentList">
-                <td class="text-m text-gray-900 font-light px-6 py-4 whitespace-nowrap">
-                  {{ item.comment }}
+                <td class="text-m text-gray-900 font-light px-6 py-4 line-clamp-1 w-64 h-9">
+                  {{ item.comment }}{{ item.id }}
                 </td>
                 <td class="text-m text-gray-900 font-light px-6 py-4 whitespace-nowrap">
                   {{ item.issue_title }}

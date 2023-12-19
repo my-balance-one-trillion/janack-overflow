@@ -10,19 +10,19 @@
           <table class="min-w-full">
             <thead class="bg-white border-b">
               <tr>
-                <th scope="col" class="text-m font-medium text-main-red px-4 py-4 text-left w-5/12">
+                <th scope="col" class="text-m font-medium text-main-red px-4 py-4 text-left ">
                   에러명
                 </th>
-                <th scope="col" class="text-m font-medium text-main-red px-4 py-4 text-left w-2/12">
+                <th scope="col" class="text-m font-medium text-main-red px-4 py-4 text-left">
                   등록일
                 </th>
-                <th scope="col" class="text-m font-medium text-main-red px-4 py-4 text-center w-2/12">
+                <th scope="col" class="text-m font-medium text-main-red px-4 py-4 text-center">
                   카테고리
                 </th>
-                <th scope="col" class="text-m font-medium text-main-red px-4 py-4 text-center w-1/12">
+                <th scope="col" class="text-m font-medium text-main-red px-4 py-4 text-center">
                   조회수
                 </th>
-                <th scope="col" class="text-m font-medium text-main-red px-4 py-4 text-center w-2/12">
+                <th scope="col" class="text-m font-medium text-main-red px-4 py-4 text-center">
                   해결여부
                 </th>
               </tr>
@@ -30,7 +30,7 @@
             <tbody>
               <tr class="bg-white border-b" v-for="item in issueList">
 
-                <td class="text-m text-gray-900 font-light px-6 py-4 whitespace-nowrap">
+                <td class="text-m text-gray-900 font-light px-6 py-4 line-clamp-1 w-64 h-9">
                   {{ item.title }}
                 </td>
                 <td class="text-m text-gray-900 font-light px-6 py-4 whitespace-nowrap">
