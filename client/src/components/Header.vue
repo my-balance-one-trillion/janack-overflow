@@ -5,19 +5,30 @@
         <img src="/images/logo.svg" alt="" class="object-contain" />
       </router-link>
     </div>
+    {{ role.role }}
     <div class="flex justify-between gap-4 h-auto">
-      <div class="mx-auto" @click="removeToken" v-if="authStore.token">
-        <router-link to="" class="text-gray-600 text-xl">LOGOUT</router-link>
+      <div class="login-wrap">
+        <div class="mx-auto" @click="removeToken" v-if="authStore.token">
+          <router-link to="" class="text-gray-600 text-xl">
+            LOGOUT
+          </router-link>
+        </div>
+        <div class="mx-auto" v-else>
+          <router-link to="/login" class="text-gray-600 text-xl">
+            LOGIN
+          </router-link>
+        </div>
       </div>
-      <div class="mx-auto" v-else>
-        <router-link to="/login" class="text-gray-600 text-xl">
-          LOGIN
-        </router-link>
-      </div>
-      <div class="mx-auto" v-if="authStore.token">
-        <router-link to="/mypage">
-          <i class="fa-regular fa-circle-user fa-2xl"></i>
-        </router-link>
+      <div class="contol-wrap" v-if="authStore.token">
+        <div class="mx-auto" v-if="role.role == 'USER'">
+          <router-link to="/mypage">
+            <i class="fa-solid fa-gear fa-2xl"></i> </router-link>
+        </div>
+        <div class="mx-auto" v-if="role.role == 'ADMIN'">
+          <router-link to="/admin">
+            <i class="fa-regular fa-circle-user fa-2xl"></i>
+          </router-link>
+        </div>
       </div>
       <div class="w-7"></div>
       <div class="mx-auto bars-wrap">
@@ -30,9 +41,9 @@
           <nav ref="nav" class="nav" id="nav">
             <ul>
               <li><router-link to="/">메인</router-link></li>
-              <li><router-link to="/saving">적금</router-link></li>
+              <li v-if="authStore.token"><router-link to="/saving">적금</router-link></li>
               <li><router-link to="/community">커뮤니티</router-link></li>
-              <li><router-link to="/chat">채팅</router-link></li>
+              <li v-if="authStore.token"><router-link to="/chat">채팅</router-link></li>
             </ul>
           </nav>
         </button>
@@ -42,7 +53,7 @@
   </header>
 </template>
 <script setup>
-import { ref } from "vue";
+import { ref, defineProps } from "vue";
 import { useAuthStore } from "@/stores/auth";
 import { useRouter } from "vue-router";
 
@@ -52,6 +63,11 @@ const menuBg = ref(null);
 
 const authStore = useAuthStore();
 const router = useRouter();
+
+const role = ref([]);
+const props = defineProps(['role']);
+role.value = props;
+console.log(role.value.role)
 
 function removeToken() {
   localStorage.removeItem("token");

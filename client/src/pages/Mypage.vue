@@ -46,7 +46,7 @@
           <li>
             <div
               class="flex flex-row items-center h-12 transform hover:translate-x-2 transition-transform ease-in duration-200 text-lg hover:text-gray-800 cursor-pointer"
-              @click="changeComponent('MyIssue')">
+              @click="changeComponent('myissue')">
               <span class="inline-flex items-center justify-center h-12 w-9 text-lg"><i class="bx bx-drink"></i></span>
               <span class="text-lg font-medium">내가 등록한 에러 목록</span>
             </div>
@@ -74,7 +74,7 @@
     <section class="ml-10 w-full">
       <Dashboard v-if="currentComponent === 'Dashboard'" />
       <UpdateInfo v-if="currentComponent === 'UpdateInfo'" />
-      <MyIssue v-if="currentComponent === 'MyIssue'" />
+      <MyIssue v-if="currentComponent === 'myissue'" />
       <MyComment v-if="currentComponent === 'MyComment'" />
       <ProfileImage v-if="currentComponent === 'ProfileImage'" />
     </section>
@@ -105,9 +105,9 @@ const currentComponent = ref("Dashboard");
 
 const props = defineProps(['component']);
 
-onMounted(()=>{
+onMounted(() => {
   console.log("fromMain", props.component);
-  if(props.component === 'myissue'){
+  if (props.component === 'myissue') {
     changeComponent("myissue");
   }
 })
