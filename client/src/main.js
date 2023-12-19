@@ -1,9 +1,13 @@
 import "./assets/css/common.css";
 import 'tailwindcss/tailwind.css';
-import { createApp } from "vue";
+import {
+    createApp
+} from "vue";
 import App from "./App.vue";
 import axios from "axios";
-import { createPinia } from 'pinia';
+import {
+    createPinia
+} from 'pinia';
 import router from "./router";
 import VueHighlightJS from 'vue3-highlightjs'
 // import 'highlight.js/styles/solarized-light.css'
@@ -16,5 +20,12 @@ const app = createApp(App);
 app.config.globalProperties.$axios = axios;
 app.use(pinia);
 app.use(router);
+
+router.beforeEach((to, from, next) => {
+    // 이전 페이지의 경로를 저장
+    sessionStorage.setItem('previousRoute', from.fullPath);
+    next();
+});
+
 app.use(VueHighlightJS);
 app.mount("#app");

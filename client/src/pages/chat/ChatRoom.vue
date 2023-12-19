@@ -134,6 +134,7 @@ onMounted(async () => {
   console.log("실행");
 
   messageReq.value.userId = userInfo.value.id;
+  //방 정보 + 채팅 전체 불러오기
   await axios
     .get("/chatrooms/" + chatId, {
       headers: {
@@ -166,9 +167,6 @@ onMounted(async () => {
   }
   connect();
 
-
-
-
   await axios
     .get("/chatrooms/enter/" + chatId, {
       headers: {
@@ -178,6 +176,7 @@ onMounted(async () => {
     .then((response) => {
       console.log("입장", response);
     });
+
   if (chatDiv.value) {
     chatDiv.value.scrollTop = chatDiv.value.scrollHeight;
   }
@@ -209,6 +208,7 @@ function connect() {
       if (isNewUser.value) {
         enter();
       }
+      messageReq.value.type = "TALK";
     },
     (error) => {
       // 소켓 연결 실패
@@ -222,8 +222,7 @@ function enter() {
   messageReq.value.content = "입장하셨습니다.";
   send();
   console.log("입장메시지", messageReq.value);
-  messageReq.value.content = "";
-  messageReq.value.type = "TALK";
+  messageReq.value.content = ""
 }
 
 //퇴장

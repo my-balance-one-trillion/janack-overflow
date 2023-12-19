@@ -83,7 +83,8 @@ public class SavingController {
     // 월별 내역 조회 (해결된 에러 내역 월별 조회)
     @GetMapping("/monthly-issues")
     public ResponseEntity<?> getMonthlyIssuesByUserAndDate(@AuthenticationPrincipal NowUserDetails userDetails,
-                                                           @RequestParam int year, @RequestParam int month) {
+                                                           @RequestParam(name = "year") int year, @RequestParam(name="month") int month) {
+
         Users users = userDetails.getUser();
 
         List<IssueResponseDTO> solvedIssues = issueService.getSolvedIssuesByUserId(users);  // 해결한 에러 조회
@@ -115,6 +116,7 @@ public class SavingController {
 
         return new ResponseEntity<>(accumulatedAmount, HttpStatus.OK);
     }
+
     // 적금 기록 (사용자 적금 전부 조회)
     @GetMapping
     public ResponseEntity<?> getUserAccounts(@AuthenticationPrincipal NowUserDetails userDetails){

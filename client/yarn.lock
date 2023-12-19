@@ -24,7 +24,7 @@
   dependencies:
     regenerator-runtime "^0.14.0"
 
-"@codemirror/autocomplete@^6.0.0":
+"@codemirror/autocomplete@^6.0.0", "@codemirror/autocomplete@^6.3.2":
   version "6.11.1"
   resolved "https://registry.npmjs.org/@codemirror/autocomplete/-/autocomplete-6.11.1.tgz"
   integrity sha512-L5UInv8Ffd6BPw0P3EF7JLYAMeEbclY7+6Q11REt8vhih8RuLreKtPy/xk8wPxs4EQgYqzI7cdgpiYwWlbS/ow==
@@ -44,7 +44,7 @@
     "@codemirror/view" "^6.0.0"
     "@lezer/common" "^1.1.0"
 
-"@codemirror/lang-css@^6.0.0":
+"@codemirror/lang-css@^6.0.0", "@codemirror/lang-css@^6.2.1":
   version "6.2.1"
   resolved "https://registry.npmjs.org/@codemirror/lang-css/-/lang-css-6.2.1.tgz"
   integrity sha512-/UNWDNV5Viwi/1lpr/dIXJNWiwDxpw13I4pTUAsNxZdg6E0mI2kTQb0P2iHczg1Tu+H4EBgJR+hYhKiHKko7qg==
@@ -55,7 +55,7 @@
     "@lezer/common" "^1.0.2"
     "@lezer/css" "^1.0.0"
 
-"@codemirror/lang-html@^6.4.7":
+"@codemirror/lang-html@^6.0.0", "@codemirror/lang-html@^6.4.7":
   version "6.4.7"
   resolved "https://registry.npmjs.org/@codemirror/lang-html/-/lang-html-6.4.7.tgz"
   integrity sha512-y9hWSSO41XlcL4uYwWyk0lEgTHcelWWfRuqmvcAmxfCs0HNWZdriWo/EU43S63SxEZpc1Hd50Itw7ktfQvfkUg==
@@ -99,7 +99,38 @@
     "@codemirror/language" "^6.0.0"
     "@lezer/json" "^1.0.0"
 
-"@codemirror/language@^6.0.0", "@codemirror/language@^6.4.0", "@codemirror/language@^6.6.0", "@codemirror/language@6.x":
+"@codemirror/lang-php@^6.0.1":
+  version "6.0.1"
+  resolved "https://registry.npmjs.org/@codemirror/lang-php/-/lang-php-6.0.1.tgz"
+  integrity sha512-ublojMdw/PNWa7qdN5TMsjmqkNuTBD3k6ndZ4Z0S25SBAiweFGyY68AS3xNcIOlb6DDFDvKlinLQ40vSLqf8xA==
+  dependencies:
+    "@codemirror/lang-html" "^6.0.0"
+    "@codemirror/language" "^6.0.0"
+    "@codemirror/state" "^6.0.0"
+    "@lezer/common" "^1.0.0"
+    "@lezer/php" "^1.0.0"
+
+"@codemirror/lang-python@^6.1.3":
+  version "6.1.3"
+  resolved "https://registry.npmjs.org/@codemirror/lang-python/-/lang-python-6.1.3.tgz"
+  integrity sha512-S9w2Jl74hFlD5nqtUMIaXAq9t5WlM0acCkyuQWUUSvZclk1sV+UfnpFiZzuZSG+hfEaOmxKR5UxY/Uxswn7EhQ==
+  dependencies:
+    "@codemirror/autocomplete" "^6.3.2"
+    "@codemirror/language" "^6.8.0"
+    "@lezer/python" "^1.1.4"
+
+"@codemirror/lang-sql@^6.5.4":
+  version "6.5.4"
+  resolved "https://registry.npmjs.org/@codemirror/lang-sql/-/lang-sql-6.5.4.tgz"
+  integrity sha512-5Gq7fYtT/5HbNyIG7a8vYaqOYQU3JbgtBe3+derkrFUXRVcjkf8WVgz++PIbMFAQsOFMDdDR+uiNM8ZRRuXH+w==
+  dependencies:
+    "@codemirror/autocomplete" "^6.0.0"
+    "@codemirror/language" "^6.0.0"
+    "@codemirror/state" "^6.0.0"
+    "@lezer/highlight" "^1.0.0"
+    "@lezer/lr" "^1.0.0"
+
+"@codemirror/language@^6.0.0", "@codemirror/language@^6.4.0", "@codemirror/language@^6.6.0", "@codemirror/language@^6.8.0", "@codemirror/language@6.x":
   version "6.9.3"
   resolved "https://registry.npmjs.org/@codemirror/language/-/language-6.9.3.tgz"
   integrity sha512-qq48pYzoi6ldYWV/52+Z9Ou6QouVI+8YwvxFbUypI33NbjG2UeRHKENRyhwljTTiOqjQ33FjyZj6EREQ9apAOQ==
@@ -184,10 +215,21 @@
   resolved "https://registry.npmjs.org/@emotion/weak-memoize/-/weak-memoize-0.3.1.tgz"
   integrity sha512-EsBwpc7hBUJWAsNPBmJy4hxWx12v6bshQsldrVmjxJoc3isbxhOrF2IcCpaXxfvq03NwkI7sbsOLXbYuqF/8Ww==
 
+
 "@esbuild/win32-x64@0.18.20":
   version "0.18.20"
   resolved "https://registry.npmjs.org/@esbuild/win32-x64/-/win32-x64-0.18.20.tgz"
   integrity sha512-kTdfRcSiDfQca/y9QIkng02avJ+NCaQvrMejlsB3RRv5sE9rRoeBPISaZpKxHELzRxZyLvNts1P27W3wV+8geQ==
+"@esbuild/darwin-arm64@0.19.10":
+  version "0.19.10"
+  resolved "https://registry.npmjs.org/@esbuild/darwin-arm64/-/darwin-arm64-0.19.10.tgz"
+  integrity sha512-YSRRs2zOpwypck+6GL3wGXx2gNP7DXzetmo5pHXLrY/VIMsS59yKfjPizQ4lLt5vEI80M41gjm2BxrGZ5U+VMA==
+
+
+"@esbuild/win32-x64@0.19.10":
+  version "0.19.10"
+  resolved "https://registry.npmjs.org/@esbuild/win32-x64/-/win32-x64-0.19.10.tgz"
+  integrity sha512-whqLG6Sc70AbU73fFYvuYzaE4MNMBIlR1Y/IrUeOXFrWHxBEjjbZaQ3IXIQS8wJdAzue2GwYZCjOrgrU1oUHoA==
 
 "@floating-ui/core@^1.1.0", "@floating-ui/core@^1.4.2":
   version "1.5.2"
@@ -344,12 +386,28 @@
     "@lezer/highlight" "^1.0.0"
     "@lezer/lr" "^1.0.0"
 
-"@lezer/lr@^1.0.0", "@lezer/lr@^1.3.0":
+"@lezer/lr@^1.0.0", "@lezer/lr@^1.1.0", "@lezer/lr@^1.3.0":
   version "1.3.14"
   resolved "https://registry.npmjs.org/@lezer/lr/-/lr-1.3.14.tgz"
   integrity sha512-z5mY4LStlA3yL7aHT/rqgG614cfcvklS+8oFRFBYrs4YaWLJyKKM4+nN6KopToX0o9Hj6zmH6M5kinOYuy06ug==
   dependencies:
     "@lezer/common" "^1.0.0"
+
+"@lezer/php@^1.0.0":
+  version "1.0.1"
+  resolved "https://registry.npmjs.org/@lezer/php/-/php-1.0.1.tgz"
+  integrity sha512-aqdCQJOXJ66De22vzdwnuC502hIaG9EnPK2rSi+ebXyUd+j7GAX1mRjWZOVOmf3GST1YUfUCu6WXDiEgDGOVwA==
+  dependencies:
+    "@lezer/highlight" "^1.0.0"
+    "@lezer/lr" "^1.1.0"
+
+"@lezer/python@^1.1.4":
+  version "1.1.9"
+  resolved "https://registry.npmjs.org/@lezer/python/-/python-1.1.9.tgz"
+  integrity sha512-8Ua3p8NdICXR6qWvRCnCx5CI1B0DklZGNtRLwOrIS/OHecHIugRHZyr0NsaaQO2H2Nn34EPlRtltXIirLsry5Q==
+  dependencies:
+    "@lezer/highlight" "^1.0.0"
+    "@lezer/lr" "^1.0.0"
 
 "@mui/base@^5.0.0-beta.22", "@mui/base@5.0.0-beta.27":
   version "5.0.0-beta.27"
@@ -842,6 +900,26 @@ clsx@^2.0.0:
   resolved "https://registry.npmjs.org/clsx/-/clsx-2.0.0.tgz"
   integrity sha512-rQ1+kcj+ttHG0MKVGBUXwayCCF1oh39BF5COIpRzuCEv8Mwjv0XucrI2ExNTOn9IlLifGClWQcU9BrZORvtw6Q==
 
+cm6-theme-basic-dark@^0.2.0:
+  version "0.2.0"
+  resolved "https://registry.npmjs.org/cm6-theme-basic-dark/-/cm6-theme-basic-dark-0.2.0.tgz"
+  integrity sha512-+mNNJecRtxS/KkloMDCQF0oTrT6aFGRZTjnBcdT5UG1pcDO4Brq8l1+0KR/8dZ7hub2gOGOzoi3rGFD8GzlH7Q==
+
+cm6-theme-basic-light@^0.2.0:
+  version "0.2.0"
+  resolved "https://registry.npmjs.org/cm6-theme-basic-light/-/cm6-theme-basic-light-0.2.0.tgz"
+  integrity sha512-1prg2gv44sYfpHscP26uLT/ePrh0mlmVwMSoSd3zYKQ92Ab3jPRLzyCnpyOCQLJbK+YdNs4HvMRqMNYdy4pMhA==
+
+cm6-theme-nord@^0.2.0:
+  version "0.2.0"
+  resolved "https://registry.npmjs.org/cm6-theme-nord/-/cm6-theme-nord-0.2.0.tgz"
+  integrity sha512-jTh+5nvl+N/5CtTK7UVcrxDCj2AOStvbNM8uP6tx6amq4QaaLDlapjMw+MNzEkvxcPnHY+YM91tbklS2KNlR2w==
+
+cm6-theme-solarized-dark@^0.2.0:
+  version "0.2.0"
+  resolved "https://registry.npmjs.org/cm6-theme-solarized-dark/-/cm6-theme-solarized-dark-0.2.0.tgz"
+  integrity sha512-FWtYHcX8NLzNSs21yGbkLF+q/5m2u80ug0JytKoI9nMZWPP5dcnsFYp1iZBEegLehiZnpv1qcmTsLTUG2KD39w==
+
 codemirror@^6.0.1, codemirror@6.x:
   version "6.0.1"
   resolved "https://registry.npmjs.org/codemirror/-/codemirror-6.0.1.tgz"
@@ -1001,6 +1079,35 @@ esbuild@^0.18.10:
     "@esbuild/win32-arm64" "0.18.20"
     "@esbuild/win32-ia32" "0.18.20"
     "@esbuild/win32-x64" "0.18.20"
+
+esbuild@^0.19.10:
+  version "0.19.10"
+  resolved "https://registry.npmjs.org/esbuild/-/esbuild-0.19.10.tgz"
+  integrity sha512-S1Y27QGt/snkNYrRcswgRFqZjaTG5a5xM3EQo97uNBnH505pdzSNe/HLBq1v0RO7iK/ngdbhJB6mDAp0OK+iUA==
+  optionalDependencies:
+    "@esbuild/aix-ppc64" "0.19.10"
+    "@esbuild/android-arm" "0.19.10"
+    "@esbuild/android-arm64" "0.19.10"
+    "@esbuild/android-x64" "0.19.10"
+    "@esbuild/darwin-arm64" "0.19.10"
+    "@esbuild/darwin-x64" "0.19.10"
+    "@esbuild/freebsd-arm64" "0.19.10"
+    "@esbuild/freebsd-x64" "0.19.10"
+    "@esbuild/linux-arm" "0.19.10"
+    "@esbuild/linux-arm64" "0.19.10"
+    "@esbuild/linux-ia32" "0.19.10"
+    "@esbuild/linux-loong64" "0.19.10"
+    "@esbuild/linux-mips64el" "0.19.10"
+    "@esbuild/linux-ppc64" "0.19.10"
+    "@esbuild/linux-riscv64" "0.19.10"
+    "@esbuild/linux-s390x" "0.19.10"
+    "@esbuild/linux-x64" "0.19.10"
+    "@esbuild/netbsd-x64" "0.19.10"
+    "@esbuild/openbsd-x64" "0.19.10"
+    "@esbuild/sunos-x64" "0.19.10"
+    "@esbuild/win32-arm64" "0.19.10"
+    "@esbuild/win32-ia32" "0.19.10"
+    "@esbuild/win32-x64" "0.19.10"
 
 escalade@^3.1.1:
   version "3.1.1"

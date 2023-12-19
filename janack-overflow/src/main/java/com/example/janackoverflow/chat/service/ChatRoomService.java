@@ -9,10 +9,12 @@ import com.example.janackoverflow.user.entity.Users;
 import com.example.janackoverflow.user.repository.UsersRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 
 @Service
@@ -84,7 +86,7 @@ public class ChatRoomService {
     }
     //전체 채팅방 조회
     public List<ChatRoomDTO.ResponseDTO> readAll(){
-        List<ChatRoomDTO.ResponseDTO> chatRoomList = chatRoomRepository.findAll()
+        List<ChatRoomDTO.ResponseDTO> chatRoomList = chatRoomRepository.findAll(Sort.by(Sort.Direction.DESC, "id"))
                 .stream().map(ChatRoomDTO.ResponseDTO::fromEntity)
                 .toList();
 
@@ -112,9 +114,7 @@ public class ChatRoomService {
         Users users = usersRepository.findById(usersId)
                 .orElseThrow(() -> new IllegalArgumentException("not found:"+usersId));
 
-
-
-        if( chatRoomUsersRepository.findByChatRoomAndUsers(chatRoom, users).isPresent()){
+        if( isJoined(chatRoomId, usersId)){
             System.out.println("이미 있는 유저거나 다참");
         } else {
             chatRoomUsersRepository.save(ChatRoomUsers.builder()
@@ -143,6 +143,17 @@ public class ChatRoomService {
         ChatRoom chatRoom = chatRoomRepository.findById(chatRoomId)
                 .orElseThrow(()-> new IllegalArgumentException("없음"));
         return chatRoom.getUsersList().size()>=chatRoom.getMax();
+    }
+    //들어와있는지 체크
+    public boolean isJoined(Long chatRoomId, Long usersId){
+        ChatRoom chatRoom = chatRoomRepository.findById(chatRoomId)
+                .orElseThrow(()-> new IllegalArgumentException("없음"));
+        Users users = usersRepository.findById(usersId)
+                .orElseThrow(() -> new IllegalArgumentException("not found:"+usersId));
+
+        //유저 유무
+        return chatRoomUsersRepository.findByChatRoomAndUsers(chatRoom, users).isPresent();
+
     }
 
 }

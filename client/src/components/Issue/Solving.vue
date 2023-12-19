@@ -21,6 +21,7 @@ async function giveupIssue() {
         }
       })
       .then(() => {
+        window.alert("에러를 해결하지 못했습니다.\n마이페이지에서 내역을 확인할 수 있어요.");
         router.push('/');
       })
 }
@@ -34,7 +35,7 @@ function submitSolution() {
 </script>
 
 <template>
-  <div class="my-20">
+  <div class="my-10">
     <!--  button  -->
     <div class="flex justify-between">
       <button class="bg-rose-950 hover:bg-rose-900 m-2 px-10 py-5 rounded-xl shadow" @click="giveupIssue()">

@@ -42,7 +42,11 @@ const getData = async () => {
           data: countData.map(item => item.count),
           borderColor: '#f53e52',
           backgroundColor: 'rgba(254,163,170,0.4)',
+          hoverBackgroundColor: 'rgba(254,163,170,0.8)',
+          borderWidth: 1,
           yAxisID: 'y1',
+          barThickness: 'flex',
+          maxBarThickness: 80,
         },
         {
           label: '월별 적금 금액',
@@ -50,7 +54,7 @@ const getData = async () => {
           data: countData.map(item => amountMap[item.month] || 0),
           borderColor: 'rgb(191, 17, 49)',
           yAxisID: 'y2',
-          tension: 0.2
+          tension: 0.1,
         },
       ],
     };
@@ -66,6 +70,10 @@ const getData = async () => {
           position: 'left',
           beginAtZero: true,
           suggestedMin: 0,
+          ticks: { // y축 단위 설정
+            // stepSize: 1,
+            fontSize: 18,
+          },
         },
         y2: {
           type: 'linear',
@@ -74,10 +82,15 @@ const getData = async () => {
           beginAtZero: true,
           suggestedMin: 0,
           ticks: { // y축 단위 설정
+            fontSize: 18,
             callback: function(value, index, values) {
+              Number(value).toLocaleString();
               return value + '원';
             }
-          }
+          },
+          grid: {
+            color: 'transparent',
+          },
         },
       },
       plugins: {
