@@ -25,9 +25,11 @@ var cnt=0;
 router.beforeEach((to, from, next) => {
     // 이전 페이지의 경로를 저장 to: 온곳 from: 가는곳
     console.log("to.fullPath", to.fullPath, "from.fullPath", from.fullPath);
+  
     sessionStorage.setItem('previousRoute', from.fullPath);
+
     if(to.fullPath === '/signup'){
-        alert('sad');
+        
         if(from.fullPath === '/signup') {
             router.push('/login');
             return;
@@ -40,6 +42,7 @@ router.beforeEach((to, from, next) => {
             router.push('/');
             return;
         }
+        
     }
     next();
 });

@@ -25,7 +25,7 @@ const extensions = [java(), nord]
 
 onMounted(() => {
   const tagify = new Tagify(tagInput.value, {
-    whitelist: ['java', 'spring', 'python','syntax','language','database','os'],
+    whitelist: ['java', 'spring', 'python','syntax','language','database','os', 'vue', 'jpa', 'error'],
     maxTags: 3,
   });
 

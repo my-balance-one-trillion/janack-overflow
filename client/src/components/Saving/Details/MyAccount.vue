@@ -21,7 +21,8 @@ const getAccountInProgress = async () => {
       .then((response) => {
         const data = response.data.inProgressAccount;
         accountInfo.value = data;
-        daydiff.value = Math.floor(dayjs(now).diff(data.createdAt, "day", true))+1;
+        daydiff.value = Math.ceil(dayjs(now).diff(data.createdAt, "day", true))+1;
+        console.log(daydiff.value);
       })
       .catch((error) => {
 
