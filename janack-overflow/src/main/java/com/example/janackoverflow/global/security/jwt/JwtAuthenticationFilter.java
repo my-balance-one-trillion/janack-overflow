@@ -208,8 +208,8 @@ public class JwtAuthenticationFilter extends AbstractAuthenticationProcessingFil
 //			System.out.println(headerName + ": " + headerValue);
 //		}
 
-		// 리다이렉트 <- /login 페이지 진입 하기 전의 페이지 정보가 들어오지 않아서 주석처리
-		//response.sendRedirect(String.valueOf());
+		 //리다이렉트 <- /login 페이지 진입 하기 전의 페이지 정보가 들어오지 않아서 주석처리
+		//response.sendRedirect();
 
 	}
 	

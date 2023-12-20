@@ -82,7 +82,7 @@ public class UsersService {
         usersRepository.save(updatePassUser);
     }
 
-    public Users findByEmail(String email) { //UserDetails loadUserByUsername() 전용 서비스
+    public Users findByEmail(String email) { //UserDetails loadUserByUsername() 에 중요한 리포지토리
         System.out.println("findByEmail start! email : " + email);
         return usersRepository.findByEmail(email).get();
     }

@@ -30,6 +30,7 @@
       </div>
       <div class="relative z-0 w-full mb-5 group">
         <input type="text" name="digit" id="floating_digit"
+          @input="formatPhone"
           class="block py-2.5 px-0 w-full text-m text-gray-900 bg-transparent border-0 border-b-2 border-sub-red appearance-none dark:text-white dark:border-gray-600 dark:focus:border-main-red focus:outline-none focus:ring-0 focus:border-main-red peer"
           placeholder=" " required v-model="userInfo.digit" />
         <label for="floating_digit"
@@ -128,13 +129,31 @@ const birthDate = ref(new Date(userInfo._rawValue.birth));
 
 function updateBirth(selectedDate) {
   birthDate.value = new Date(selectedDate);
-}
+};
+
+console.log(userInfo);
+
+const formatPhone = () => {
+    let input = userInfo.value.digit.replace(/[^0-9]/g, '');
+
+    if(input.length <= 3){
+      userInfo.value.digit = input;
+    }else if (input.length <= 7) {
+      userInfo.value.digit = `${input.slice(0, 3)}-${input.slice(3)}`;
+    } else {
+      userInfo.value.digit = `${input.slice(0, 3)}-${input.slice(3, 7)}-${input.slice(7)}`;
+    }
+};
 
 // ----------------------------
 // 회원정보 수정하기
 // ----------------------------
 
+const exPhone = /^[0-9]{3}\-([0-9]{3}|[0-9]{4})\-([0-9]{3}|[0-9]{4})/;
+const exPass = /^[A-Za-z0-9_\.\-`~!@#\$%^&*\|\\?;:+=\[\]<>\(\),_'"-]{9,}/;
+
 async function updateInfo() {
+
   try {
     let updateInfo = reactive({
       name: userInfo.value.name,
@@ -148,12 +167,25 @@ async function updateInfo() {
       newPassword: inputUpdatePassword.value,
       newPasswordConfirm: inputUpdatePasswordConfirm.value,
     });
+
+    //axios 실행하기 전에 체크
+    if(exPass.test(inputUpdatePassword.value) === false) {
+          alert('보안을 위해 패스워드는 최소 9자 이상 작성해주세요');
+          return;
+    }
+
+    if(exPhone.test(userInfo.value.digit) === false) {
+          alert('전화번호 형식이 올바르지 않습니다.\n하이픈(-) 포함');
+          return;
+    }
+
     const response = await axios.put("/mypage/myinfo", updateInfo, {
       headers: {
         "content-type": "application/json",
         authorization: authStore.token,
       },
     });
+
     authStore.getUserInfo();
     if (response.data == "ok") {
       alert("수정완료");
