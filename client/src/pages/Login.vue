@@ -84,7 +84,7 @@ const login = async () => {
 
   authStore.setToken(res.headers.authorization);
   await authStore.getUserInfo();
-  window.alert("로그인이 수행되었습니다");
+  
   if (authStore.userInfo.role === 'ADMIN') {
     router.push('/admin');
   } else {
