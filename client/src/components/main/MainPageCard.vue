@@ -9,7 +9,7 @@
       </div>
       <div class="mt-2">
         <div class="flex justify-between">
-          <a :href="'/community/detail/'+props.issue.id" class="text-xl font-bold text-gray-700 h-fit hover:text-gray-600 h-[56px] line-clamp-2">{{ props.issue.title }}</a>
+          <a :href="'/community/detail/'+props.issue.id" class="text-xl font-bold text-gray-700 hover:text-gray-600 h-[56px] line-clamp-2">{{ props.issue.title }}</a>
           <div class="my-auto mr-2 whitespace-nowrap">
             <i class="fa-regular fa-thumbs-up fa-xl"></i>
             <span class="ml-2 text-sm">{{ props.issue.likes }}</span>
