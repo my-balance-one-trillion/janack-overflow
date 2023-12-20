@@ -36,10 +36,10 @@ public class Issue extends AuditingFields {
     @Column(nullable = false)
     private String title;
 
-    @Column(nullable = false, length = 1500)
+    @Column(nullable = false, length = 10000)
     private String content;
 
-    @Column(nullable = false, length = 1500)
+    @Column(nullable = false, length = 10000)
     private String code;
 
     @Column(nullable = false)
