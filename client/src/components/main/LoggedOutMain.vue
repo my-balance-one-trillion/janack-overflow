@@ -2,7 +2,7 @@
   <div class="flex my-5 mt-20">
     <div class="flex flex-col h-full">
       <img src="/images/main-text.svg" width="700px" />
-      <div class="flex items-center content-center min-h-[300px]">
+      <div v-if="isLoggedin" class="flex items-center content-center min-h-[300px]">
         <router-link
           to="/intro"
           type="button"
@@ -118,7 +118,11 @@ import axios from "axios";
 import MainPageCard from "./MainPageCard.vue";
 
 const issueList = ref([]);
-
+defineProps({
+  isLoggedin:{
+    type: Boolean,
+  }
+})
 onMounted(() => {
   axios.get("http://localhost:8081/main/unlogin").then((response) => {
     issueList.value = response.data;
