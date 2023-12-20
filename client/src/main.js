@@ -22,6 +22,7 @@ app.use(pinia);
 app.use(router);
 
 var cnt=0;
+var cnt2=0;
 router.beforeEach((to, from, next) => {
     // 이전 페이지의 경로를 저장 to: 온곳 from: 가는곳
     console.log("to.fullPath", to.fullPath, "from.fullPath", from.fullPath);
@@ -29,11 +30,16 @@ router.beforeEach((to, from, next) => {
     sessionStorage.setItem('previousRoute', from.fullPath);
 
     if(to.fullPath === '/signup'){
-        
+        console.log("to:signup");
+        cnt2++;
         if(from.fullPath === '/signup') {
             router.push('/login');
             return;
-        } 
+        } else if( from.fullPath === '/login' && cnt2 === 2) {
+            // to be: 로그인-회원가입-로그인-메인
+            router.push('/');
+            return;
+        }
     } else if(to.fullPath === '/passMail'){
         cnt++;
         console.log("잡힘", cnt,  "to.fullPath", to.fullPath, "from.fullPath", from.fullPath);

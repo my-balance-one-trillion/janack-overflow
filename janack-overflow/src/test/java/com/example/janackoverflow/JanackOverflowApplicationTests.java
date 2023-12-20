@@ -20,8 +20,8 @@ class JanackOverflowApplicationTests {
 	ChatMessageService chatMessageService;
 	@Autowired
 	ChatRoomService chatRoomService;
-	@Autowired
-	ChatMessageController chatMessageController;
+//	@Autowired
+//	ChatMessageController chatMessageController;
 
 	@Autowired
 	ChatRoomRepository chatRoomRepository;
