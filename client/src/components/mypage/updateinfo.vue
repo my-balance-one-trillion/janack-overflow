@@ -169,7 +169,9 @@ async function updateInfo() {
     });
 
     //axios 실행하기 전에 체크
-    if(exPass.test(inputUpdatePassword.value) === false) {
+    if(inputUpdatePassword.value === ''){
+      
+    } else if(exPass.test(inputUpdatePassword.value) === false) {
           alert('보안을 위해 패스워드는 최소 9자 이상 작성해주세요');
           return;
     }
