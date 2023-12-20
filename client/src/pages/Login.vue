@@ -34,7 +34,8 @@
               </div>
 
               <div class="relative flex justify-center">
-                <button class="py-1 text-white bg-red-700 rounded-3xl px-28" @click="login">
+                <button class="py-1 text-white bg-red-700 rounded-3xl px-28" 
+                @click="login">
                   로그인
                 </button>
               </div>
@@ -71,34 +72,41 @@ const state = reactive({
 });
 
 const login = async () => {
-  const res = await axios.post(
-    "/login",
-    state.input,
-    {
-      headers: {
-        "Content-Type": "application/json",
-        "X-Requested-With": "XMLHttpRequest",
-      },
-    }
-  );
 
-  authStore.setToken(res.headers.authorization);
-  await authStore.getUserInfo();
+  try{
+
+    const res = await axios.post(
+      "/login",
+      state.input,
+      {
+        headers: {
+          "Content-Type": "application/json",
+          "X-Requested-With": "XMLHttpRequest",
+        },
+      }
+    )
   
-  if (authStore.userInfo.role === 'ADMIN') {
-    router.push('/admin');
-  } else {
-    const previousRoute = sessionStorage.getItem('previousRoute');
-    if (previousRoute) {
-      // 이전 페이지로 이동
-      sessionStorage.removeItem('previousRoute');
-      router.push(previousRoute);
-    } else {
-      // 이전 페이지가 없을 경우 기본 경로로 이동
-      router.push("/");
-    }
-  }
+    authStore.setToken(res.headers.authorization);
+      await authStore.getUserInfo();
+      
+      if (authStore.userInfo.role === 'ADMIN') {
+        router.push('/admin');
+      } else {
+        const previousRoute = sessionStorage.getItem('previousRoute');
+        if (previousRoute) {
+          // 이전 페이지로 이동
+          sessionStorage.removeItem('previousRoute');
+          router.push(previousRoute);
+        } else {
+          // 이전 페이지가 없을 경우 기본 경로로 이동
+          router.push("/");
+        }
+      }
 
+  } catch(error) {
+    console.error(error);
+    window.alert(error.response.data);
+  };
 
 };
 </script>
