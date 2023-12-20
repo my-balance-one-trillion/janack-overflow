@@ -29,8 +29,7 @@
           class="peer-focus:font-medium absolute text-lg text-gray-700 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 peer-focus:border-main-red peer-focus:dark:border-main-red peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">생년월일</label>
       </div>
       <div class="relative z-0 w-full mb-5 group">
-        <input type="text" name="digit" id="floating_digit"
-          @input="formatPhone"
+        <input type="text" name="digit" id="floating_digit" @input="formatPhone"
           class="block py-2.5 px-0 w-full text-m text-gray-900 bg-transparent border-0 border-b-2 border-sub-red appearance-none dark:text-white dark:border-gray-600 dark:focus:border-main-red focus:outline-none focus:ring-0 focus:border-main-red peer"
           placeholder=" " required v-model="userInfo.digit" />
         <label for="floating_digit"
@@ -41,7 +40,7 @@
           class="block py-2.5 px-0 w-full text-m text-gray-900 bg-transparent border-0 border-b-2 border-sub-red appearance-none dark:text-white dark:border-gray-600 dark:focus:border-main-red focus:outline-none focus:ring-0 focus:border-main-red peer"
           placeholder=" " required v-model="inputPassword" />
         <label for="floating_password"
-          class="peer-focus:font-medium absolute text-m text-gray-700 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 peer-focus:border-main-red peer-focus:dark:border-main-red peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">수정확인을
+          class="peer-focus:font-medium absolute text-m text-main-red dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 peer-focus:border-main-red peer-focus:dark:border-main-red peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">수정확인을
           위해 패스워드를 입력해주세요</label>
         <p class="text-red-700" :class="{ 'hidden': passwordOk }">
           패스워드가 일치하지 않습니다.
@@ -134,15 +133,15 @@ function updateBirth(selectedDate) {
 console.log(userInfo);
 
 const formatPhone = () => {
-    let input = userInfo.value.digit.replace(/[^0-9]/g, '');
+  let input = userInfo.value.digit.replace(/[^0-9]/g, '');
 
-    if(input.length <= 3){
-      userInfo.value.digit = input;
-    }else if (input.length <= 7) {
-      userInfo.value.digit = `${input.slice(0, 3)}-${input.slice(3)}`;
-    } else {
-      userInfo.value.digit = `${input.slice(0, 3)}-${input.slice(3, 7)}-${input.slice(7)}`;
-    }
+  if (input.length <= 3) {
+    userInfo.value.digit = input;
+  } else if (input.length <= 7) {
+    userInfo.value.digit = `${input.slice(0, 3)}-${input.slice(3)}`;
+  } else {
+    userInfo.value.digit = `${input.slice(0, 3)}-${input.slice(3, 7)}-${input.slice(7)}`;
+  }
 };
 
 // ----------------------------
@@ -169,14 +168,14 @@ async function updateInfo() {
     });
 
     //axios 실행하기 전에 체크
-    if(exPass.test(inputUpdatePassword.value) === false) {
-          alert('보안을 위해 패스워드는 최소 9자 이상 작성해주세요');
-          return;
+    if (exPass.test(inputUpdatePassword.value) === false) {
+      alert('보안을 위해 패스워드는 최소 9자 이상 작성해주세요');
+      return;
     }
 
-    if(exPhone.test(userInfo.value.digit) === false) {
-          alert('전화번호 형식이 올바르지 않습니다.\n하이픈(-) 포함');
-          return;
+    if (exPhone.test(userInfo.value.digit) === false) {
+      alert('전화번호 형식이 올바르지 않습니다.\n하이픈(-) 포함');
+      return;
     }
 
     const response = await axios.put("/mypage/myinfo", updateInfo, {
