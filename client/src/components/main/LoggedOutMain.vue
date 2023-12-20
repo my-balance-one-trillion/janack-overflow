@@ -52,9 +52,9 @@
       <div class="my-12 text-center">
         <div style="font-size: 35px">적금 서비스</div>
         <div style="font-size: 21px">
-          코딩하다가 만났던<br />에러를 해결하는<br />
-          동시에 적금을 하면서<br />
-          의미있게 적금하세요!
+          코딩하다가 만났던<br />에러를 해결하는 동시에<br />
+          의미있게 적금하세요!<br />
+          
         </div>
       </div>
     </div>
@@ -87,8 +87,8 @@
       <div class="my-12 text-center">
         <div style="font-size: 35px">에러노트</div>
         <div style="font-size: 21px">
-          에러를 설명과 <br />코드를 함께 <br />
-          기입하고 해결 방법을<br />
+          에러를 기록하고<br />
+          해결 방법을<br />
           추천받으면서 손쉽게<br />
           기록하세요!
         </div>

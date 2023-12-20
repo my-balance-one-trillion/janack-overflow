@@ -1,6 +1,6 @@
 <template>
   <div
-    class="mx-auto my-16 w-full max-w-4xl p-4 bg-white border border-gray-200 rounded-lg shadow sm:p-6 dark:bg-gray-800 dark:border-gray-700"
+    class="w-full max-w-4xl p-4 mx-auto my-16 bg-white border border-gray-200 rounded-lg shadow sm:p-6 dark:bg-gray-800 dark:border-gray-700"
   >
     <div class="flex justify-between">
       <div>
@@ -13,7 +13,7 @@
         </p>
       </div>
       <button
-        class="rounded-[15px] bg-main-red text-white w-fit h-fit px-5"
+        class="rounded-[15px] bg-main-red hover:bg-hover-red text-white w-fit h-fit px-5"
         style="font-size: 21px"
         @click="openModal"
       >
