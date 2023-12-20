@@ -23,14 +23,15 @@ app.use(router);
 
 router.beforeEach((to, from, next) => {
     // 이전 페이지의 경로를 저장
-    console.log(to.fullPath);
     sessionStorage.setItem('previousRoute', from.fullPath);
+
     if(to.fullPath === '/signup'){
-        alert('sad');
+        
         if(from.fullPath === '/signup') {
             router.push('/login');
             return;
         }
+        
     }
     next();
 });
