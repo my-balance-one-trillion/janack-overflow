@@ -1,5 +1,8 @@
 package com.example.janackoverflow.user.service;
 
+import com.example.janackoverflow.global.exception.BusinessLogicException;
+import com.example.janackoverflow.global.exception.ExceptionCode;
+import com.example.janackoverflow.saving.entity.InputAccount;
 import com.example.janackoverflow.user.domain.request.UsersRequestDTO;
 import com.example.janackoverflow.user.domain.response.UsersResponseDTO;
 import com.example.janackoverflow.user.entity.Users;
@@ -83,8 +86,11 @@ public class UsersService {
     }
 
     public Users findByEmail(String email) { //UserDetails loadUserByUsername() 에 중요한 리포지토리
+
         System.out.println("findByEmail start! email : " + email);
-        return usersRepository.findByEmail(email).get();
+
+        return usersRepository.findByEmail(email)
+                .orElseThrow(() -> new BusinessLogicException(ExceptionCode.USER_NOT_FOUND));
     }
 
 }
