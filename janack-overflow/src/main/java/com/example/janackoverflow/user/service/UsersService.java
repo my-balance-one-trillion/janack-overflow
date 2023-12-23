@@ -2,7 +2,6 @@ package com.example.janackoverflow.user.service;
 
 import com.example.janackoverflow.global.exception.BusinessLogicException;
 import com.example.janackoverflow.global.exception.ExceptionCode;
-import com.example.janackoverflow.saving.entity.InputAccount;
 import com.example.janackoverflow.user.domain.request.UsersRequestDTO;
 import com.example.janackoverflow.user.domain.response.UsersResponseDTO;
 import com.example.janackoverflow.user.entity.Users;
@@ -29,11 +28,7 @@ public class UsersService {
 
         Optional<Users> optionalUsers = usersRepository.findByNickname(users.getNickname()); //조회했는데, 있으면
 
-        if(optionalUsers.isEmpty()){
-            return false;
-        } else {
-            return true;
-        }
+        return optionalUsers.isPresent();
 
     }
 
@@ -42,25 +37,22 @@ public class UsersService {
 
         Optional<Users> optionalUsers = usersRepository.findByEmail(users.getEmail()); //조회했는데, 있으면
 
-        if(optionalUsers.isEmpty()){
-            return false;
-        } else {
-            return true;
-        }
+        return optionalUsers.isPresent();
 
     }
 
-    public Users createUser(UsersRequestDTO usersRequestDTO){ //회원 생성
+    public void createUser(UsersRequestDTO usersRequestDTO){ //회원 생성
         Users users = usersRequestDTO.toEntity();
 
         //패스워드 암호화
         users.updatePassword(passwordEncoder.encode(users.getPassword()));
 
-        return usersRepository.save(users);
+        usersRepository.save(users);
     }
 
     public UsersResponseDTO readUser(long id){ //회원 하나 읽기
-        Users users = usersRepository.findById(id).orElseThrow(RuntimeException::new);
+        Users users = usersRepository.findById(id).orElseThrow(()
+                -> new BusinessLogicException(ExceptionCode.USER_NOT_FOUND));
         return UsersResponseDTO.builder()
                 .id(id)
                 .email(users.getEmail())
@@ -78,10 +70,12 @@ public class UsersService {
     }
 
     public void updateRandomPass(UsersRequestDTO usersRequestDTO, String pass){ // 임시 패스워드로 업데이트
-        Users users = usersRepository.findByEmail(usersRequestDTO.getEmail()).orElseThrow(RuntimeException::new);
+        Users users = this.findByEmail(usersRequestDTO.getEmail());
+
         Users updatePassUser = users.toBuilder()
                 .password(passwordEncoder.encode(pass))
                 .build();
+
         usersRepository.save(updatePassUser);
     }
 

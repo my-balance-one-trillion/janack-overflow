@@ -2,6 +2,7 @@ package com.example.janackoverflow.global.security.jwt;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
+import com.example.janackoverflow.global.exception.BusinessLogicException;
 import com.example.janackoverflow.global.security.DTO.LoginRequestDTO;
 import com.example.janackoverflow.global.security.auth.NowUserDetails;
 import com.example.janackoverflow.user.service.UsersService;
@@ -68,9 +69,9 @@ public class JwtAuthenticationFilter extends AbstractAuthenticationProcessingFil
 
 		try{
 			usersService.findByEmail(loginRequestDTO.getEmail()); //입력받은 사용자와 DB일치 여부 확인
-		} catch (NoSuchElementException e){
+		} catch (BusinessLogicException e){
 
-			response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+			response.setStatus(e.getExceptionCode().getStatus());
 			response.setContentType("text/plain"); // MIME 타입 설정
 			response.setCharacterEncoding("UTF-8"); // 문자 인코딩 설정
 
@@ -81,7 +82,7 @@ public class JwtAuthenticationFilter extends AbstractAuthenticationProcessingFil
 				throw new RuntimeException(ex);
 			}
 
-			writer.println("입력하신 Email과 일치하는 사용자가 없습니다");
+			writer.println("입력하신 Email과 일치하는 " + e.getExceptionCode().getMessage());
 
 			return null;
 		}
