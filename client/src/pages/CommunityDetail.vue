@@ -309,6 +309,7 @@ async function getArticelList() {
         .catch((error) => {
             console.log(error);
             articleLength.value = 0;
+            router.push('/error');
         });
 }
 
@@ -362,6 +363,8 @@ const commentAPI = async () => {
         getCommentListAPI();
         message.value = null;
     } else {
+        // TODO : 404 페이지 roter.push('/error');
+        router.push('/error');
         alert("댓글 작성에 실패하였습니다.");
     }
 }
@@ -377,6 +380,8 @@ async function deleteMyComment(commentid) {
         });
         getCommentListAPI();
     } else {
+        // TODO : 404 페이지 roter.push('/error');
+        router.push('/error');
         return;
     }
 }
@@ -402,8 +407,10 @@ const getLikesAPI = async () => {
         }
     } catch (error) {
         // 에러 발생 시 처리
+        // TODO : 404 페이지 roter.push('/error');
         console.log('API 요청 중 에러가 발생하였습니다.');
         console.error(error);
+        router.push('/error');
     }
 
 }
@@ -431,7 +438,9 @@ const likeAPI = async () => {
         // store.commit('addLike', route.params.id); // 좋아요 상태를 추가하는 변이 호출
         getLikesCnt();
     } else {
+        // TODO : 404 페이지 roter.push('/error');
         alert('좋아요에 실패하였습니다.');
+        router.push('/error');
     }
 };
 
@@ -450,7 +459,10 @@ const cancleLikeAPI = async () => {
         // store.commit('removeLike', route.params.id);
         getLikesCnt();
     } else {
+        // TODO : 404 페이지 roter.push('/error');
+        console.log(resp);
         alert('댓글 작성에 실패하였습니다.');
+        router.push('/error');
     }
 };
 
