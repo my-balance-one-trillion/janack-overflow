@@ -8,9 +8,7 @@ import java.util.Optional;
 
 @Repository
 public interface RuleRepository extends JpaRepository<Rule, Long> {
-
     Rule findByInputAccountId(Long accountId);
     Optional<Rule> findByInputAccountIdAndUsersId(Long accountId, Long usersId);
-
     Optional<Rule> findByUsersIdAndInputAccountId(Long userId, Long inputAccountId);
 }

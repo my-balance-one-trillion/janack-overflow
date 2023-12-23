@@ -126,13 +126,13 @@ public class SavingController {
         response.put("updateAccount", updateAccount);
         response.put("updateRule", updateRule);
 
-        return new ResponseEntity<>(response, HttpStatus.NO_CONTENT);
+        return new ResponseEntity<>(response, HttpStatus.RESET_CONTENT);
     }
 
     // 적금 삭제 (적금 포기 상태로 변경 status=02)
     @PutMapping("/giveup")
     public ResponseEntity<?> updateAccountStatusGiveup(@AuthenticationPrincipal NowUserDetails userDetails) {
         Long userId = userDetails.getUser().getId();
-        return new ResponseEntity<>(inputAccountService.deleteInputAccount(userId), HttpStatus.NO_CONTENT);
+        return new ResponseEntity<>(inputAccountService.deleteInputAccount(userId), HttpStatus.RESET_CONTENT);
     }
 }

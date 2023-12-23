@@ -7,6 +7,7 @@ import AboutIssue from "@/components/Issue/AboutIssue.vue";
 import Solving from "@/components/Issue/Solving.vue";
 import SubmitSolution from "@/components/Issue/SubmitSolution.vue";
 import IssueModal from "@/components/Issue/IssueModal.vue";
+import router from "../router";
 
 const activeTab = ref(0);
 const step = ref(1);
@@ -28,7 +29,6 @@ async function getIssue() {
       })
       .then((response) => {
         isLoading.value = true;
-        console.log(response.status);
         if (response.status === 204) {  // 진행 중인 에러 없을 경우 (No content)
           step.value = 1;
         } else {
@@ -36,8 +36,10 @@ async function getIssue() {
         }
       })
       .catch((error) => {
-        console.log(error);
-
+        console.log(error.response.status);
+        if(error.response.status===404){
+          router.push('/error');
+        }
       })
 }
 

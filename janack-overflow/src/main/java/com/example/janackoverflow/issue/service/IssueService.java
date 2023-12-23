@@ -54,6 +54,9 @@ public class IssueService {
     // 현재 진행 중인 에러 조회
     @Transactional(readOnly = true)
     public IssueResponseDTO getIssueByUserId(Users users){
+        inputAccountRepository.findByUsersIdAndStatus(users.getId(),"01")  // 현재 진행 중인 계좌 조회
+                .orElseThrow(() -> new BusinessLogicException(ExceptionCode.ACCOUNT_NOT_FOUND));
+
         Issue inprogressIssue = issueRepository.findByUsersIdAndStatus(users.getId(),"01")
                 .orElse(null);
 
