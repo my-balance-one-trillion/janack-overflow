@@ -1,6 +1,6 @@
 <template>
   <div class="flex flex-col w-5/12 mx-1">
-    <div class="max-w-5xl px-10 py-6 my-4 bg-white rounded-lg shadow-md">
+    <div class="max-w-5xl px-10 py-6 my-4 bg-white rounded-lg shadow-md h-60 min-h-min">
       <div class="flex items-center justify-between">
         <span class="text-sm font-light text-gray-600">{{ props.issue.createdAt }}</span>
         <div class="flex">
