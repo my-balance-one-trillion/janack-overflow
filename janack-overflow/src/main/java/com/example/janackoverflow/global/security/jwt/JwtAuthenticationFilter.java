@@ -70,7 +70,7 @@ public class JwtAuthenticationFilter extends AbstractAuthenticationProcessingFil
 			usersService.findByEmail(loginRequestDTO.getEmail()); //입력받은 사용자와 DB일치 여부 확인
 		} catch (NoSuchElementException e){
 
-			response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+			response.setStatus(HttpServletResponse.SC_NOT_FOUND);
 			response.setContentType("text/plain"); // MIME 타입 설정
 			response.setCharacterEncoding("UTF-8"); // 문자 인코딩 설정
 

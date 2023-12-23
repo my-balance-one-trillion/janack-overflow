@@ -37,9 +37,9 @@ public class UsersController {
         }
 
         if (usersService.isDuplicatedNick(usersRequestDTO)) { //닉네임 중복확인
-            return new ResponseEntity<>("중복되는 닉네임입니다", HttpStatus.FORBIDDEN);
+            return new ResponseEntity<>("중복되는 닉네임입니다", HttpStatus.NOT_FOUND);
         } else if(usersService.isDuplicatedEmail(usersRequestDTO)) { //이메일 중복확인
-            return new ResponseEntity<>("중복되는 이메일입니다", HttpStatus.FORBIDDEN);
+            return new ResponseEntity<>("중복되는 이메일입니다", HttpStatus.NOT_FOUND);
         } else {
             usersRequestDTO.setRole("USER"); //역활
             usersRequestDTO.setStatus("01"); //상태
@@ -60,7 +60,7 @@ public class UsersController {
         try {
             usersService.findByEmail(usersRequestDTO.getEmail());
         } catch (Exception e){
-            return new ResponseEntity<>("입력하신 메일과 일치하는 회원이 없습니다.", HttpStatus.FORBIDDEN);
+            return new ResponseEntity<>("입력하신 메일과 일치하는 회원이 없습니다.", HttpStatus.NOT_FOUND);
         }
 
         //입력한 메일이 유효하면, 임시 번호를 생성하고
