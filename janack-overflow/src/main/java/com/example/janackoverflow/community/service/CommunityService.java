@@ -4,6 +4,8 @@ import com.example.janackoverflow.community.domain.MediumArticle;
 import com.example.janackoverflow.community.entity.Comment;
 import com.example.janackoverflow.community.repository.CommentRepository;
 import com.example.janackoverflow.community.repository.CommunityRepositoryImpl;
+import com.example.janackoverflow.global.exception.BusinessLogicException;
+import com.example.janackoverflow.global.exception.ExceptionCode;
 import com.example.janackoverflow.issue.domain.IssueDTO;
 import com.example.janackoverflow.issue.entity.Issue;
 import com.example.janackoverflow.issue.repository.IssueRepository;
@@ -48,7 +50,7 @@ public class CommunityService {
     private final SolutionService solutionService;
     private final CommunityRepositoryImpl communityRepositoryImpl;
     Map<Long, List<MediumArticle>> articleMap = new HashMap<>();
-    List<MediumArticle> mediumArticleList = new ArrayList<>();
+
     @Value("${external.medium.medium-key}")
     private String apikey;
 
@@ -75,11 +77,10 @@ public class CommunityService {
         // 페이져블 객체와 errorId로 모든 comment를 들고온다.
         Page<Issue> issueList = issueRepository.findByPublicStatusAndStatusOrderByCreatedAtDesc(true, "03", pageable);
         // 댓글DtoList
-        List<IssueDTO.ResponseDTO> issueResponseDtoList = issueList.stream().map(issue -> issue.toDto(likesService.getIssueLikes(issue.getId()), usersRepository.findById(issue.getUsers().getId()).get().toIssueDto())).toList();
+        List<IssueDTO.ResponseDTO> issueResponseDtoList = issueList.stream().map(issue -> issue.toDto(likesService.getIssueLikes(issue.getId()), usersRepository.findById(issue.getUsers().getId()).orElseThrow(() -> new BusinessLogicException(ExceptionCode.USER_NOT_FOUND)).toIssueDto())).toList();
 
         Page<IssueDTO.ResponseDTO> issuePage = new PageImpl<>(issueResponseDtoList, pageable, issueList.getTotalElements());
 
-//        log.info("get Content : " + issuePage.getContent().get(0));
         log.info("page : " + issuePage.getTotalPages());
         log.info("total : " + issuePage.getTotalElements());
 
@@ -93,7 +94,7 @@ public class CommunityService {
         List<IssueDTO.ResponseDTO> issuePageList = issueList.map(issue ->
                 issue.toDto(likesService.getIssueLikes(issue.getId()),
                         usersRepository.findById(issue.getUsers().getId()).orElseThrow(() ->
-                                new IllegalArgumentException("해당 유저를 찾을 수 없습니다.")).toIssueDto())).toList();
+                                new BusinessLogicException(ExceptionCode.USER_NOT_FOUND)).toIssueDto())).toList();
 
         // TODO pageImpl 하나만 사용해서 구현하기 현재 repo안에서도 사용중
         return new PageImpl<>(issuePageList, pageable, issueList.getTotalElements());
@@ -104,15 +105,15 @@ public class CommunityService {
         return communityRepositoryImpl.findAllByTitle(title, pageable).map(issue ->
                 issue.toDto(likesService.getIssueLikes(issue.getId()),
                         usersRepository.findById(issue.getUsers().getId()).orElseThrow(() ->
-                                new IllegalArgumentException("해당 유저를 찾을 수 없습니다.")).toIssueDto()));
+                                new BusinessLogicException(ExceptionCode.USER_NOT_FOUND)).toIssueDto()));
     }
 
     public Page<IssueDTO.ResponseDTO> search(String title, String category, int pageNo) {
         log.info("!!!!!!!title : " + title + "category : " + category + " pageNo : " + pageNo);
         log.info("title isEmpty : " + title.isEmpty());
         log.info("category : " + category + (category == null));
+
         if (title.isEmpty() && category.isEmpty()) {
-            log.info("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
             return getSolvedIssueList(null, pageNo);
         }
         List<String> categories = new ArrayList<>();
@@ -124,7 +125,7 @@ public class CommunityService {
         List<IssueDTO.ResponseDTO> issuePageList = issueList.map(issue ->
                 issue.toDto(likesService.getIssueLikes(issue.getId()),
                         usersRepository.findById(issue.getUsers().getId()).orElseThrow(() ->
-                                new IllegalArgumentException("해당 유저를 찾을 수 없습니다.")).toIssueDto())).toList();
+                                new BusinessLogicException(ExceptionCode.USER_NOT_FOUND)).toIssueDto())).toList();
 
         log.info("issuePageList.size() :" + issuePageList.size());
         // TODO pageImpl 하나만 사용해서 구현하기 현재 repo안에서도 사용중
@@ -135,17 +136,17 @@ public class CommunityService {
     public IssueDTO.ResponseDTO detailGivenUpIssue(long issueId, long usersId){
         Optional<Issue> optIssue = issueRepository.findById(issueId);
         Users users = usersRepository.findById(usersId)
-                .orElseThrow(() -> new IllegalArgumentException("없는 유저입니다."));
+                .orElseThrow(() -> new BusinessLogicException(ExceptionCode.USER_NOT_FOUND));
 
         IssueDTO.ResponseDTO responseDTO = optIssue.map(issue -> issue.
                         toDetailDto(
                                 likesService.getIssueLikes(issue.getId()),
                                 usersRepository.findById(issue.getUsers().getId()).orElseThrow(() ->
-                                        new IllegalArgumentException("해당 유저를 찾을 수 없습니다.")).toIssueDto(),
+                                        new BusinessLogicException(ExceptionCode.USER_NOT_FOUND)).toIssueDto(),
                                 null,
                                 null
                         )
-                ).orElseThrow(() -> new IllegalArgumentException("없는 이슈번호입니다."));
+                ).orElseThrow(() -> new BusinessLogicException(ExceptionCode.ERROR_NOT_FOUND));
         //작성자 체크, 포기 상태 체크
         if(users.getId() != usersId && optIssue.get().getStatus().equals("02")){
             return null;
@@ -163,11 +164,11 @@ public class CommunityService {
 //        Issue issueView = issueRepository.findById(issueId).orElseThrow(() -> new IllegalArgumentException("해당 이슈가 없습니다."));
         Pageable pageable = PageRequest.of(0, 5, Sort.by(Sort.Direction.DESC, "id"));
         Optional<Issue> optIssue = issueRepository.findById(issueId);
-        log.info("optIssue.get().isPublicStatus() : "+ optIssue.get().isPublicStatus());
+        optIssue.orElseThrow(() -> new BusinessLogicException(ExceptionCode.ERROR_NOT_FOUND));
+
         if(!optIssue.get().isPublicStatus()) {
             if(optIssue.get().getUsers().getId() != usersId) {
-//                log.info("!!!!!!!!!!!!! "+ usersId + optIssue.get().getUsers().getId() );
-                return null;
+                throw new BusinessLogicException(ExceptionCode.ERROR_NOT_FOUND);
             }
         }
         optIssue.get().updateViews(); // 조회수 +1
@@ -178,11 +179,11 @@ public class CommunityService {
                         toDetailDto(
                                 likesService.getIssueLikes(issue.getId()),
                                 usersRepository.findById(issue.getUsers().getId()).orElseThrow(() ->
-                                        new IllegalArgumentException("해당 유저를 찾을 수 없습니다.")).toIssueDto(),
+                                        new  BusinessLogicException(ExceptionCode.USER_NOT_FOUND)).toIssueDto(),
                                 commentRepository.findAllByIssue_IdOrderByCreatedAtDesc(issueId, pageable).stream().map(Comment::toDto).toList(),
                                 solutionService.getSolution(issueId)
                         )
-                ).orElseThrow(() -> new IllegalArgumentException("없는 이슈번호입니다."));
+                ).orElseThrow(() -> new BusinessLogicException(ExceptionCode.ERROR_NOT_FOUND));
 
         return responseDTO;
     }
@@ -198,7 +199,7 @@ public class CommunityService {
     public List<MediumArticle> getMediumApi(long issueId) throws IOException, InterruptedException {
 
         Optional<Issue> optIssue = issueRepository.findById(issueId);
-        Issue issue = optIssue.orElseThrow(() -> new IllegalArgumentException("해당 이슈를 찾을 수 없습니다."));
+        Issue issue = optIssue.orElseThrow(() -> new BusinessLogicException(ExceptionCode.ERROR_NOT_FOUND));
         String keywords = issue.getKeyword();
 
         if (articleMap.containsKey(issueId)) {
