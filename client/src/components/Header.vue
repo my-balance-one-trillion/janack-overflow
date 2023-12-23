@@ -29,8 +29,8 @@
           </router-link>
         </div>
       </div>
-      <div class="w-7" v-if="role.role !== 'ADMIN'"></div>
-      <div class="mx-auto bars-wrap" v-if="role.role !== 'ADMIN'">
+      <div class="w-7" v-if="role.role !== 'ADMIN' || !authStore.token"></div>
+      <div class="mx-auto bars-wrap" v-if="role.role !== 'ADMIN' || !authStore.token">
         <button id="menu">
           <div ref="menuBar" id="menu-bar" @click="menuOnClick">
             <div id="bar1" class="bar"></div>
@@ -75,7 +75,7 @@ function removeToken() {
   authStore.clearToken();
   alert("로그아웃되었습니다.");
   console.log("현재 주소", currentRoute.path);
-  if(currentRoute.path == "/"){
+  if (currentRoute.path == "/") {
     location.reload();
   }
   router.push('/');

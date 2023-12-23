@@ -105,7 +105,7 @@
                     <div>
                         <div class="flex items-center">
                             <img class="hidden object-cover w-10 h-10 mr-3 rounded-full sm:block"
-                                src="https://cdn.pixabay.com/photo/2018/03/26/20/49/tiger-3264048_1280.jpg" alt="avatar">
+                                :src="'/images/' + issue.communityUsersDTO.profileImage" alt="avatar">
                             <h1 class="font-bold text-gray-700">{{ issue.communityUsersDTO.nickname }}</h1>
                         </div>
                     </div>
@@ -114,7 +114,8 @@
                 </div>
             </div>
             <div class="flex justify-center w-full">
-                <fwb-pagination @click="handleClick" class="py-10" v-model="currentPage" :total-items=totalItems></fwb-pagination>
+                <fwb-pagination @click="handleClick" class="py-10" v-model="currentPage"
+                    :total-items=totalItems></fwb-pagination>
             </div>
         </div>
     </div>

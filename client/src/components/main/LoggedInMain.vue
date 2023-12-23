@@ -6,7 +6,7 @@
   >
     <div class="flex-col py-3 text-sm min-w-fit">
       <div
-        class="flex rounded-[20px] w-fit px-8 h-10 bg-sub-red text-white  justify-center items-center my-1"
+        class="flex rounded-[20px] w-fit px-8 h-10 bg-sub-red text-white justify-center items-center my-1"
       >
         DAY {{ nowAccount.dayCnt }}
       </div>
@@ -21,7 +21,9 @@
       class="flex flex-col justify-evenly h-1/2 min-w-fit w-7/12 mx-0 rounded-b-[25px]"
     >
       <div class="text-white font-sub" style="font-size: 38px">잔액</div>
-      <div class="text-white" style="font-size: 41px">{{ nowAccount.acntAmount.toLocaleString() }}원</div>
+      <div class="text-white" style="font-size: 41px">
+        {{ nowAccount.acntAmount.toLocaleString() }}원
+      </div>
       <div class="text-white font-sub" style="font-size: 38px">
         농협 {{ nowAccount.acntNum }}
       </div>
@@ -41,17 +43,19 @@
         :goalAmount="nowAccount.goalAmount"
         :acntAmount="nowAccount.acntAmount"
       />
-      <div class="text-center" style="font-size: 21px">{{ nowAccount.goalAmount.toLocaleString() }}원</div>
+      <div class="text-center" style="font-size: 21px">
+        {{ nowAccount.goalAmount.toLocaleString() }}원
+      </div>
       <div
         class="absolute pt-2 top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-0.5 text-3xl text-main-grn font-bold"
       >
-        {{ (nowAccount.acntAmount/nowAccount.goalAmount * 100).toFixed(0) }}
+        {{ ((nowAccount.acntAmount / nowAccount.goalAmount) * 100).toFixed(0) }}
         <span class="text-xs text-black">%</span>
       </div>
     </div>
   </div>
   <!-- 적금 없을시 -->
-  <!-- <div
+  <div
     v-if="nowAccount.status == '03' || Object.keys(nowAccount).length == 0"
     class="flex flex-col justify-center content-center boerder border-black border-solid rounded-[25px] w-9/12 mx-auto"
   >
@@ -60,19 +64,18 @@
       생성하러 가실까요?
     </div>
     <router-link
-      to="/open"
+      to="/intro"
       type="button"
       class="px-10 py-5 m-2 mx-auto shadow bg-main-red hover:bg-hover-red rounded-xl w-fit"
     >
       <div class="text-4xl font-bold text-white">적금 생성하기</div>
     </router-link>
-  </div> -->
-  <div v-else class="flex justify-end w-9/12 mx-auto">
-    <button
-      class="rounded-[25px] bg-main-red text-white w-fit h-fit px-5 py-3"
-      style="font-size: 21px"
-    >
+  </div>
+  <div class="flex justify-end w-9/12 mx-auto">
+    <button class="rounded-[25px] bg-main-red hover:bg-hover-red text-white w-fit h-fit px-5 py-3"
+      style="font-size: 21px">
       <router-link to="/issue">이슈 등록</router-link>
+
     </button>
   </div>
   <div class="border rounded-[25px] w-9/12 mx-auto my-10 p-4">
@@ -101,18 +104,16 @@ import Chart from "@/components/Chart.vue";
 import { useAuthStore } from "../../stores/auth";
 import { useRouter } from "vue-router";
 
-
 const router = useRouter();
 //const nowAccount = ref({});
 //const weeklyIssues = ref([]);
 defineProps({
-  nowAccount:{
+  nowAccount: {
     type: Object,
   },
-  weeklyIssues:{
-    type: Array
-  }
-})
-
+  weeklyIssues: {
+    type: Array,
+  },
+});
 </script>
 <style></style>

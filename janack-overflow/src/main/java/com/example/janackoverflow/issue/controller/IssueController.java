@@ -32,7 +32,6 @@ public class IssueController {
     private final IssueService issueService;
     private final SolutionService solutionService;
 
-
     public IssueController(IssueService issueService, SolutionService solutionService) {
         this.issueService = issueService;
         this.solutionService = solutionService;
@@ -50,13 +49,6 @@ public class IssueController {
         Issue issue =  issueService.createIssue(issueRequestDTO, users);
         return new ResponseEntity<>(issue, HttpStatus.CREATED);
     }
-    
-    /*// 에러 등록 시간
-    @GetMapping("/{issueId}/created-at")
-    public ResponseEntity<LocalDateTime> getIssueCreatedAt(@PathVariable Long issueId){
-        LocalDateTime createdAt = issueService.getIssueCreatedAt(issueId);
-        return new ResponseEntity<>(createdAt, HttpStatus.OK);
-    }*/
 
     // 에러 조회
     @GetMapping
@@ -89,9 +81,7 @@ public class IssueController {
         if(issue == null){
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
-
         Solution solution = solutionService.createSolution(solutionRequestDTO, issue.getId());
-
 
         return new ResponseEntity<>(solution, HttpStatus.CREATED);
     }
@@ -106,7 +96,7 @@ public class IssueController {
         }
 
         Issue giveupIssue = issueService.updateIssueStatus(issue.getId());
-        return new ResponseEntity<>(giveupIssue, HttpStatus.OK);
+        return new ResponseEntity<>(giveupIssue, HttpStatus.RESET_CONTENT);
     }
 
     // 에러 해결 결과 조회

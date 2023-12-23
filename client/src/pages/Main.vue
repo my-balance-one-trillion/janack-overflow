@@ -4,7 +4,8 @@
     :nowAccount="nowAccount"
     :weeklyIssues="weeklyIssues"
     />
-  <LoggedOutMain v-else />
+  <LoggedOutMain v-else 
+  :isLoggedin="isLoggedin"/>
 </template>
 
 <script setup>

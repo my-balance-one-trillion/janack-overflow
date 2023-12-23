@@ -19,6 +19,7 @@ import ChatRoom from "@/pages/chat/ChatRoom.vue";
 import ChatMain from "@/pages/chat/ChatMain.vue";
 import MyChat from "@/pages/chat/MyChat.vue";
 import Issue from "@/pages/Issue.vue";
+import Error from "@/pages/Error.vue";
 import PassMail from "@/components/PassMail.vue";
 import AboutGivenUpIssue from "@/pages/AboutGivenUpIssue.vue";
 
@@ -51,6 +52,7 @@ const routes = [
     {path: "/chat", component: ChatMain},
     {path: "/chat/my/:userId", component: MyChat},
     {path: "/passMail", component: PassMail},
+    {path: "/error", component: Error},
 ];
 
 const router = createRouter({

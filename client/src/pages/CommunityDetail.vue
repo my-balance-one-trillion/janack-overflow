@@ -138,8 +138,8 @@
             <div class="w-10/12 space-y-4">
                 <div class="flex" v-for="comment in commentList">
                     <div class="flex-shrink-0 mr-3">
-                        <img class="w-8 h-8 mt-2 rounded-full sm:w-10 sm:h-10"
-                            src="https://cdn.pixabay.com/photo/2018/04/13/21/24/lion-3317670_1280.jpg" alt="">
+                        <img class="w-8 h-8 mt-2 rounded-full sm:w-10 sm:h-10" :src="'/images/' + comment.profileImage"
+                            alt="">
                     </div>
                     <div class="flex-1 px-4 py-2 leading-relaxed border-b-4 rounded-lg border-sub-red sm:px-6 sm:py-4">
                         <strong>{{ comment.nickname }}</strong> <span class="text-xs text-gray-400">{{ comment.createdAt
@@ -333,7 +333,7 @@ const getCommentListAPI = async () => {
     const url = `/community/comment/${route.params.id}?pageNo=` + pageNo;
     const resp = await axios.get(url);
     commentList.value = resp.data.content;
-
+    console.log("샷 확인", resp.data)
     for (let i = 0; i < commentList.value.length; i++) {
         commentList.value[i].comment = await formatLineBreaks(commentList.value[i].comment);
     }
@@ -360,6 +360,7 @@ const commentAPI = async () => {
     });
 
     if (resp.status === 200) {
+
         getCommentListAPI();
         message.value = null;
     } else {

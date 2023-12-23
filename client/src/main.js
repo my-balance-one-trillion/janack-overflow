@@ -21,16 +21,34 @@ app.config.globalProperties.$axios = axios;
 app.use(pinia);
 app.use(router);
 
+var cnt=0;
+var cnt2=0;
 router.beforeEach((to, from, next) => {
-    // 이전 페이지의 경로를 저장
-    console.log(to.fullPath);
+    // 이전 페이지의 경로를 저장 to: 온곳 from: 가는곳
+    console.log("to.fullPath", to.fullPath, "from.fullPath", from.fullPath);
+  
     sessionStorage.setItem('previousRoute', from.fullPath);
+
     if(to.fullPath === '/signup'){
-        alert('sad');
+        console.log("to:signup");
+        cnt2++;
         if(from.fullPath === '/signup') {
             router.push('/login');
             return;
+        } else if( from.fullPath === '/login' && cnt2 === 2) {
+            // to be: 로그인-회원가입-로그인-메인
+            router.push('/');
+            return;
         }
+    } else if(to.fullPath === '/passMail'){
+        cnt++;
+        console.log("잡힘", cnt,  "to.fullPath", to.fullPath, "from.fullPath", from.fullPath);
+        
+        if(from.fullPath === '/login' && cnt === 2){
+            router.push('/');
+            return;
+        }
+        
     }
     next();
 });

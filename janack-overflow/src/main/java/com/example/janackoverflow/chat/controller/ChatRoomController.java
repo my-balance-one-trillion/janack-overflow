@@ -71,6 +71,7 @@ public class ChatRoomController {
             return ResponseEntity.ok(responseMap);
         } catch (Exception e){
             String error = e.getMessage();
+            log.error(error);
             return ResponseEntity.badRequest().body(error);
         }
     }
@@ -84,7 +85,7 @@ public class ChatRoomController {
             chatRoomService.enterChatRoom(roomId, userId);
             return ResponseEntity.ok("입장");
         } else {
-            return ResponseEntity.badRequest().body("인원이 다 찼습니다.");
+            return ResponseEntity.ok("인원이 다 찼습니다.");
         }
 
 
