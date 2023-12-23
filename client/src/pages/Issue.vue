@@ -28,6 +28,7 @@ async function getIssue() {
       })
       .then((response) => {
         isLoading.value = true;
+        console.log(response.status);
         if (response.status === 204) {  // 진행 중인 에러 없을 경우 (No content)
           step.value = 1;
         } else {
@@ -35,6 +36,8 @@ async function getIssue() {
         }
       })
       .catch((error) => {
+        console.log(error);
+
       })
 }
 

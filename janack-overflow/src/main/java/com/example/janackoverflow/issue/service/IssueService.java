@@ -43,21 +43,14 @@ public class IssueService {
     // 에러 등록
     @Transactional
     public Issue createIssue(CreateIssueRequestDTO issueRequestDTO, Users users) {
-        InputAccount inprogressAccount = inputAccountRepository.findByUsersIdAndStatus(users.getId(),"01")
+        InputAccount inprogressAccount = inputAccountRepository.findByUsersIdAndStatus(users.getId(),"01")  // 현재 진행 중인 계좌 조회
                 .orElseThrow(() -> new BusinessLogicException(ExceptionCode.ACCOUNT_NOT_FOUND));
-        if(issueRepository.findByUsersIdAndStatus(users.getId(),"01").isPresent()){
+        if(issueRepository.findByUsersIdAndStatus(users.getId(),"01").isPresent()){  // 현재 진행 중인 에러가 있을 경우
             throw new BusinessLogicException(ExceptionCode.ERROR_EXIST);
         }
         return issueRepository.save(issueRequestDTO.toEntity(users, inprogressAccount));
     }
 
-/*    // 사용자별 에러 전체 조회
-    @Transactional(readOnly = true)
-    public List<IssueResponseDTO> getAllIssuesByUserId(Users users) {
-        return issueRepository.findByUsersId(users.getId()).stream()
-                .map(IssueResponseDTO::toDto)
-                .collect(Collectors.toList());
-    }*/
     // 현재 진행 중인 에러 조회
     @Transactional(readOnly = true)
     public IssueResponseDTO getIssueByUserId(Users users){
@@ -69,14 +62,6 @@ public class IssueService {
         }
        return IssueResponseDTO.toDto(inprogressIssue);
     }
-
-
-    /*// 에러 등록 시간 조회
-    @Transactional(readOnly = true)
-    public LocalDateTime getIssueCreatedAt(Long issueId) {
-        return issueRepository.findById(issueId).map(Issue::getCreatedAt)
-                .orElseThrow(() -> new BusinessLogicException(ExceptionCode.ERROR_NOT_FOUND));
-    }*/
 
     // 에러 키워드로 검색
     @Transactional(readOnly = true)
