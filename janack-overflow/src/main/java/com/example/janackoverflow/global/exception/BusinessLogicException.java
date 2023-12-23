@@ -2,13 +2,15 @@ package com.example.janackoverflow.global.exception;
 
 import lombok.Builder;
 import lombok.Getter;
+import lombok.extern.slf4j.Slf4j;
 
 @Getter
+@Slf4j
 public class BusinessLogicException extends RuntimeException {
     private final ExceptionCode exceptionCode;
 
     @Builder
-    public BusinessLogicException(String message, ExceptionCode exceptionCode) {
+    public BusinessLogicException(ExceptionCode exceptionCode, String message) {
         super(message);
         this.exceptionCode = exceptionCode;
     }
