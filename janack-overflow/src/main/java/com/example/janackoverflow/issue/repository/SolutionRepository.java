@@ -13,11 +13,8 @@ import java.util.List;
 
 @Repository
 public interface SolutionRepository extends JpaRepository<Solution, Long> {
-    List<Solution> findAllByIssueIdOrderByCreatedAtDesc(Long issue_id);
     Optional<Solution> findByIssue_Id(long issueId);
-
     List<Solution> findByIssueId(Long id);
-
     @Query("select month(s.createdAt) as month, count(s) as count from Solution s where s.createdAt between :startDate and :endDate group by month(s.createdAt) order by month(s.createdAt) desc")
     List<Object[]> countSolutionByMonthLast6Months(@Param("startDate") LocalDateTime startDate, @Param("endDate") LocalDateTime endDate);
 }
