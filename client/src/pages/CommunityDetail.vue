@@ -353,11 +353,14 @@ const commentAPI = async () => {
     let data = {
         content: message.value,
     };
+
+    // TODO : 애초에 post resp 에서 오류남 해결바람
     const resp = await axios.post(url, data, {
         headers: {
             authorization: useAuthStore().token,
         },
     });
+    console.log(resp.status);
 
     if (resp.status === 200) {
 
