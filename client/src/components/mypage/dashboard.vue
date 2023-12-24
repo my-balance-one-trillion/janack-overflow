@@ -71,27 +71,32 @@ const timeDiff = Math.abs(currentDate.getTime() - targetDate.getTime());
 const daysDiff = Math.ceil(timeDiff / (1000 * 3600 * 24));
 
 onMounted(async () => {
-	const [myCountResponse, achiveResponse, monthResponse] = await Promise.all([
-		axios.get('/mypage/mycount', {
-			headers: {
-				authorization: authStore.token,
-			}
-		}),
-		axios.get('/main/login', {
-			headers: {
-				authorization: authStore.token,
-			},
-		}),
-		axios.get('/savings/monthly-count', {
-			headers: {
-				Authorization: authStore.token,
-			},
-		})
-	]);
-	myCount.value = myCountResponse.data;
-	achive.value = achiveResponse.data.nowAccount;
-	month.value = monthResponse.data
-	currentMonth.value = monthResponse.data[0];
+	try{
+		const [myCountResponse, achiveResponse, monthResponse] = await Promise.all([
+			axios.get('/mypage/mycount', {
+				headers: {
+					authorization: authStore.token,
+				}
+			}),
+			axios.get('/main/login', {
+				headers: {
+					authorization: authStore.token,
+				},
+			}),
+			axios.get('/savings/monthly-count', {
+				headers: {
+					Authorization: authStore.token,
+				},
+			})
+		]);
+		myCount.value = myCountResponse.data;
+		achive.value = achiveResponse.data.nowAccount;
+		month.value = monthResponse.data
+		currentMonth.value = monthResponse.data[0];
+	}catch(error){
+		alert("대시보드 생성중 오류가 발생했습니다.");
+    router.push('/');
+	}
 
 	const goalChartCtx = document.getElementById('achievement').getContext('2d');
 	const monthChartCtx = document.getElementById('average');

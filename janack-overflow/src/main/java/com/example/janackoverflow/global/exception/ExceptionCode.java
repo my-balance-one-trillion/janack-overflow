@@ -6,7 +6,7 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 public enum ExceptionCode {
-
+    UNAUTHORIZED(401, "회원정보가 없습니다."),
     USER_NOT_FOUND(404, "사용자가 존재하지 않습니다."),
     ACCOUNT_NOT_FOUND(404, "계좌가 존재하지 않습니다."),
     ACCOUNT_EXIST(404, "계좌가 이미 존재합니다."),

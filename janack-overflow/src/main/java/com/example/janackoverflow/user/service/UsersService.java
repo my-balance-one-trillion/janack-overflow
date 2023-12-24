@@ -84,7 +84,7 @@ public class UsersService {
         System.out.println("findByEmail start! email : " + email);
 
         return usersRepository.findByEmail(email)
-                .orElseThrow(() -> new BusinessLogicException(ExceptionCode.USER_NOT_FOUND));
+                .orElseThrow(() -> new BusinessLogicException(ExceptionCode.UNAUTHORIZED));
     }
 
 }

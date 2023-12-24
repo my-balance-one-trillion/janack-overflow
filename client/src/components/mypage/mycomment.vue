@@ -27,11 +27,11 @@
             </thead>
             <tbody>
               <tr class="border-b" v-for="item in commentList">
-                <td class="text-m text-gray-900 font-light px-6 py-4 line-clamp-1 w-64 h-9">
-                  {{ item.comment }}{{ item.id }}
+                <td class="text-m text-gray-900 font-light px-6 py-4 line-clamp-2 w-64 h-9">
+                  {{ item.comment }}
                 </td>
-                <td class="text-m text-gray-900 font-light px-6 py-4 whitespace-nowrap">
-                  {{ item.issue_title }}
+                <td class="text-m text-gray-900 font-light px-6 py-4 w-64 h-9 whitespace-nowrap">
+                  {{ truncateText(item.issue_title)}}
                 </td>
                 <td class="text-m text-gray-900 font-light px-6 py-4 whitespace-nowrap">
                   {{ item.createdAt }}
@@ -90,15 +90,47 @@ let pageInt = reactive([]);
 
 getCommentList(0);
 async function getCommentList(i) {
-  const response = await axios.get(`/mypage/mycomment?page=${i}&size=5`, {
-    headers: {
-      "Authorization": useAuthStore().token
+  try{
+    const response = await axios.get(`/mypage/mycomment?page=${i}&size=5`, {
+      headers: {
+        "Authorization": useAuthStore().token
+      }
+    });
+    const { data, pageDTO, pageNumber } = response.data;
+    commentList.value = data;
+    pageSet.value = pageDTO;
+    pageInt = pageNumber;
+  }catch(error){
+    alert("사용자의 댓글을 불러올수 없습니다.");
+    router.push('/mypage');
+  }
+}
+
+function pageForward(i) {
+  try{
+    let warpForward = i - 6;
+    if (warpForward <= 0) {
+      getCommentList(0);
+    } else {
+      getCommentList(warpForward);
+      
     }
-  });
-  const { data, pageDTO, pageNumber } = response.data;
-  commentList.value = data;
-  pageSet.value = pageDTO;
-  pageInt = pageNumber;
+  }catch(error){
+    router.push('/error');
+  }
+}
+
+function pageNext(i) {
+  try{
+    let warpNext = i + 4;
+    if (warpNext > pageSet.value.totalPages - 1) {
+      getCommentList(pageSet.value.totalPages - 1);
+    } else {
+      getCommentList(warpNext);
+    }
+  }catch(error){
+    router.push('/error');
+  }
 }
 
 // ----------------------------
@@ -119,23 +151,15 @@ async function deleteMyComment(commentid) {
   }
 }
 
-function pageForward(i) {
-  let warpForward = i - 6;
-  if (warpForward <= 0) {
-    getCommentList(0);
-  } else {
-    getCommentList(warpForward);
-
+// ----------------------------
+// 댓글 지우기
+// ----------------------------
+function truncateText(text) {
+  if (text.length > 20) {
+    return text.substring(0, 20) + '...';
   }
+  return text;
 }
 
-function pageNext(i) {
-  let warpNext = i + 4;
-  if (warpNext > pageSet.value.totalPages - 1) {
-    getCommentList(pageSet.value.totalPages - 1);
-  } else {
-    getCommentList(warpNext);
-  }
-}
 </script>
 <style scoped></style>
