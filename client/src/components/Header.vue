@@ -30,28 +30,67 @@
           </router-link>
         </div>
       </div>
-      <div class="menu-wrap" v-if="role.role !== 'ADMIN' || !authStore.token">
+      <div
+        class="menu-wrap relative"
+        v-if="role.role !== 'ADMIN' || !authStore.token"
+      >
         <div class="bars-wrap flex justify-end">
-          <div ref="menuBar" id="menu-bar" @click="menuOnClick" class="z-30">
-            <div id="bar1" class="bar"></div>
-            <div id="bar2" class="bar"></div>
-            <div id="bar3" class="bar"></div>
+          <div
+            ref="menuBar"
+            id="menu-bar"
+            @click="menuOnClick"
+            class="z-30 w-9 cursor-pointer"
+          >
+            <div
+              id="bar1"
+              class="bar h-1 bg-black rounded-xl duration-200"
+            ></div>
+            <div
+              id="bar2"
+              class="bar h-1 bg-black rounded-xl duration-200"
+            ></div>
+            <div
+              id="bar3"
+              class="bar h-1 bg-black rounded-xl duration-200"
+            ></div>
           </div>
         </div>
 
-        <nav ref="nav" class="nav z-30" id="nav">
+        <nav
+          ref="nav"
+          class="nav z-30 absolute w-40 -translate-x-40 hidden"
+          id="nav"
+        >
           <ul>
-            <li><router-link to="/">메인</router-link></li>
-            <li v-if="authStore.token">
-              <router-link to="/saving">적금</router-link>
+            <li class="text-right p-3">
+              <router-link to="/" class="text-white text-2xl hover:font-bold"
+                >메인</router-link
+              >
             </li>
-            <li><router-link to="/community">커뮤니티</router-link></li>
-            <li v-if="authStore.token">
-              <router-link to="/chat">채팅</router-link>
+            <li class="text-right p-3" v-if="authStore.token">
+              <router-link
+                to="/saving"
+                class="text-white text-2xl hover:font-bold"
+                >적금</router-link
+              >
+            </li>
+            <li class="text-right p-3">
+              <router-link
+                to="/community"
+                class="text-white text-2xl hover:font-bold"
+                >커뮤니티</router-link
+              >
+            </li>
+            <li class="text-right p-3" v-if="authStore.token">
+              <router-link
+                to="/chat"
+                class="text-white text-2xl hover:font-bold"
+                >채팅</router-link
+              >
             </li>
           </ul>
         </nav>
-        <div ref="menuBg" class="menu-bg z-20" id="menu-bg"></div>
+        <div ref="menuBg" class="menu-bg z-20 absolute" id="menu-bg"></div>
       </div>
     </div>
   </header>
@@ -98,21 +137,6 @@ function menuOnClick() {
 /* ------------------------------------
 헤더 nav transform 
 ------------------------------------ */
-.menu-wrap {
-  position: relative;
-}
-#menu-bar {
-  width: 35px;
-  cursor: pointer;
-}
-
-.bar {
-  height: 5px;
-  width: 100%;
-  background-color: #000;
-  border-radius: 5px;
-  transition: 0.3s ease;
-}
 
 #bar1 {
   transform: translateY(-4px);
@@ -125,40 +149,11 @@ function menuOnClick() {
 .menu-bg {
   top: -25px;
   right: 0;
-  position: absolute;
   width: 0;
   height: 0;
   background: radial-gradient(circle, #bf1131, #bf1131);
   border-radius: 50%;
   transition: 0.3s ease;
-}
-
-.nav {
-  position: absolute;
-  transform: translate(-100%, -10%);
-  transition: 0.3s ease;
-  display: none;
-  width: 10rem;
-}
-
-.nav ul {
-  padding: 0 10px 0 22px;
-}
-
-.nav li {
-  list-style: none;
-  padding: 12px 0;
-  text-align: right;
-}
-
-.nav li a {
-  color: white;
-  font-size: 25px;
-  text-decoration: none;
-}
-
-.nav li a:hover {
-  font-weight: bold;
 }
 
 .change {
@@ -178,7 +173,7 @@ function menuOnClick() {
 }
 
 .change #bar3 {
-  transform: translateY(-6px) rotateZ(45deg);
+  transform: translateY(-4px) rotateZ(45deg);
 }
 
 .change-bg {
