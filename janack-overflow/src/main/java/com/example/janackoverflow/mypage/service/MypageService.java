@@ -2,6 +2,8 @@ package com.example.janackoverflow.mypage.service;
 
 import com.example.janackoverflow.community.entity.Comment;
 import com.example.janackoverflow.community.repository.CommentRepository;
+import com.example.janackoverflow.global.exception.BusinessLogicException;
+import com.example.janackoverflow.global.exception.ExceptionCode;
 import com.example.janackoverflow.global.pagination.PageResponseDTO;
 import com.example.janackoverflow.global.pagination.PaginationService;
 import com.example.janackoverflow.issue.entity.Issue;
@@ -52,8 +54,8 @@ public class MypageService {
 
 //    회원 정보 수정
     public String updateUser(UsersRequestDTO usersRequestDTO, Long usersId){
-        String updateStatus = "ok";
-        Users users = usersRepository.findById(usersId).orElseThrow(RuntimeException::new);
+        String updateStatus = "정상적으로 회원정보 수정";
+        Users users = usersRepository.findById(usersId).orElseThrow(()->new BusinessLogicException(ExceptionCode.USER_NOT_FOUND));
         if(passwordEncoder.matches(usersRequestDTO.getPassword(), users.getPassword())){
             Users updatedUser = users.toBuilder()
                     .digit(usersRequestDTO.getDigit())
@@ -69,20 +71,20 @@ public class MypageService {
                     usersRepository.save(updatedUser);
                     updatedUser.updatePassword(passwordEncoder.encode(usersRequestDTO.getNewPassword()));
                 }else{
-                    updateStatus = "newPasswordConfirmError";
+                    updateStatus = "새 패스워드 재검증 오류";
                     return updateStatus;
                 }
             }
             usersRepository.save(updatedUser);
         }else{
-            updateStatus = "passwordError";
+            updateStatus = "패스워드 오류";
         }
         return updateStatus;
     }
 
 //    프로필사진만 교체
     public void updateProfileImage(UsersRequestDTO usersRequestDTO, Long usersId){
-        Users users = usersRepository.findById(usersId).orElseThrow(RuntimeException::new);
+        Users users = usersRepository.findById(usersId).orElseThrow(()-> new BusinessLogicException(ExceptionCode.USER_NOT_FOUND));
         Users updatedUsers = users.toBuilder()
                 .profileImage(usersRequestDTO.getProfileImage())
                 .build();
@@ -124,7 +126,7 @@ public class MypageService {
         if(Objects.equals(usersId, comment.getUsers().getId())){
             commentRepository.deleteByIdAndUsers_Id(commentId, usersId);
         }else{
-            throw new RuntimeException("잘못된 접근입니다!");
+            throw new BusinessLogicException(ExceptionCode.UNAUTHORIZED);
         }
     }
 }

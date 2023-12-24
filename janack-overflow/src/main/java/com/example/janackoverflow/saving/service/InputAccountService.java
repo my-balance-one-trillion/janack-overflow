@@ -56,7 +56,7 @@ public class InputAccountService {
      public Optional<InputAccountResponseDTO> getInProgressAccountByUser(Users users) {
         return Optional.ofNullable(inputAccountRepository.findByUsersIdAndStatus(users.getId(), "01")
                 .map(InputAccountResponseDTO::toDto)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "진행 중인 적금 없음")));
+                .orElseThrow(() -> new BusinessLogicException(ExceptionCode.ACCOUNT_NOT_FOUND)));
     }
 
     // 사용자의 모든 입금 계좌(적금 계좌) 조회
@@ -65,7 +65,7 @@ public class InputAccountService {
         List<InputAccount> allAccountsByUser =  inputAccountRepository.findByUsersIdOrderByCreatedAtDesc(users.getId());
 
         if (allAccountsByUser.isEmpty()) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "적금 없음");
+            throw new BusinessLogicException(ExceptionCode.ACCOUNT_NOT_FOUND);
         }
 
         return allAccountsByUser.stream()
@@ -77,7 +77,7 @@ public class InputAccountService {
     @Transactional
     public InputAccount updateInputAccount(InputAccountRequestDTO inputAccountRequestDTO, Users users) {
         InputAccount updateAccount = inputAccountRepository.findByUsersIdAndStatus(users.getId(), "01")
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "진행 중인 적금 없음"));
+                .orElseThrow(() -> new BusinessLogicException(ExceptionCode.ACCOUNT_NOT_FOUND));
 
         // 적금 정보 수정 (적금 이름, 적금 목표명, 적금 목표 금액)
         updateAccount.updateInputAccount(inputAccountRequestDTO.getAcntName(),
@@ -91,7 +91,7 @@ public class InputAccountService {
     @Transactional
     public InputAccount deleteInputAccount(Long userId) {
         InputAccount deleteAccount = inputAccountRepository.findByUsersIdAndStatus(userId, "01")
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "진행 중인 적금 없음"));
+                .orElseThrow(() -> new BusinessLogicException(ExceptionCode.ACCOUNT_NOT_FOUND));
 
         deleteAccount.updateStatus("02");  // 적금 포기 상태로 변경
         return inputAccountRepository.save(deleteAccount);

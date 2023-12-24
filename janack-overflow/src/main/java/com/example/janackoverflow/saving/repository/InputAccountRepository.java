@@ -9,10 +9,7 @@ import java.util.Optional;
 
 @Repository
 public interface InputAccountRepository extends JpaRepository<InputAccount, Long> {
-    List<InputAccount> findByUsersId(Long userId);
-
     Optional<InputAccount> findByUsersIdAndStatus(Long userId, String status);
-
     Optional<InputAccount> findTop1ByUsersIdAndStatusOrderByCreatedAtDesc(Long userId, String status);
     List<InputAccount> findByUsersIdOrderByCreatedAtDesc(Long id);
 }
