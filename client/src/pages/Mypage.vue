@@ -1,5 +1,5 @@
 <template>
-  <main class="my-10 flex items-start" v-if="authStore.token">
+  <main class="my-10 flex items-start" v-if="authStore.userInfo.role ==='USER'">
     <aside class="flex flex-row">
       <div class="flex flex-col w-56 bg-white rounded-3xl overflow-hidden border border-sub-red">
         <div class="mt-6 mx-auto">
@@ -81,7 +81,7 @@
   </main>
   <main class="flex flex-col justify-center h-screen" v-else>
     <div class="flex flex-col justify-center items-center">
-      <p>로그인이 필요한 서비스입니다.</p>
+      <p>회원 전용 서비스입니다.</p>
       <p>
         <router-link to="/login" class="cursor-pointer text-main-red underline">로그인</router-link>
       </p>

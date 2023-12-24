@@ -1,6 +1,8 @@
 package com.example.janackoverflow.admin.service;
 
 import com.example.janackoverflow.community.repository.CommentRepository;
+import com.example.janackoverflow.global.exception.BusinessLogicException;
+import com.example.janackoverflow.global.exception.ExceptionCode;
 import com.example.janackoverflow.global.pagination.PageResponseDTO;
 import com.example.janackoverflow.global.pagination.PaginationService;
 import com.example.janackoverflow.issue.entity.Issue;
@@ -61,7 +63,7 @@ public class AdminService {
 
     //유저 상태 변경이므로 이미지 바꾸는거랑 같은 로직이면 될듯
     public void updateUsersStatus(UsersRequestDTO usersRequestDTO, Long usersId) {
-        Users users = usersRepository.findById(usersId).orElseThrow(RuntimeException::new);
+        Users users = usersRepository.findById(usersId).orElseThrow(()-> new BusinessLogicException(ExceptionCode.USER_NOT_FOUND));
         Users updatedUsers = users.toBuilder()
                 .status(usersRequestDTO.getStatus())
                 .build();
@@ -85,7 +87,7 @@ public class AdminService {
 
     //글 권한 수정하기
     public void updateIssuePub(Long issueId, boolean issuePub) {
-        Issue issue = issueRepository.findById(issueId).orElseThrow(RuntimeException::new);
+        Issue issue = issueRepository.findById(issueId).orElseThrow(()-> new BusinessLogicException(ExceptionCode.ERROR_NOT_FOUND));
         issue.updatePublicStatus(issuePub);
         issueRepository.save(issue);
     }
@@ -97,7 +99,6 @@ public class AdminService {
                 issueRepository.count(),
                 commentRepository.count()
         ).collect(Collectors.toList());
-        System.out.println(count);
         return count;
     }
 
@@ -116,8 +117,6 @@ public class AdminService {
                     return data;
                 })
                 .collect(Collectors.toList());
-
-        System.out.println(signList);
         return signList;
     }
 
@@ -135,8 +134,6 @@ public class AdminService {
                     return data;
                 })
                 .collect(Collectors.toList());
-
-        System.out.println(solutionList);
         return solutionList;
     }
 }

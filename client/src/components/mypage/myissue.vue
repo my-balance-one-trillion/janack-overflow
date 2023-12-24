@@ -95,34 +95,46 @@ let pageInt = reactive([]);
 
 getIssueList(0);
 async function getIssueList(i) {
-  const response = await axios.get(`/mypage/myissue?page=${i}&size=5`, {
-    headers: {
-      "Authorization": useAuthStore().token
-    }
-  });
-  const { data, pageDTO, pageNumber } = response.data;
-  issueList.value = data;
-  pageSet.value = pageDTO;
-  pageInt = pageNumber;
+  try{
+    const response = await axios.get(`/mypage/myissue?page=${i}&size=5`, {
+      headers: {
+        "Authorization": useAuthStore().token
+      }
+    });
+    const { data, pageDTO, pageNumber } = response.data;
+    issueList.value = data;
+    pageSet.value = pageDTO;
+    pageInt = pageNumber;
+  }catch(error){
+    alert("사용자의 글을 불러올수 없습니다.");
+    router.push('/mypage');
+  }
 }
 
 function pageForward(i) {
-
-  let warpForward = i - 6;
-  if (warpForward <= 0) {
-    getIssueList(0);
-  } else {
-    getIssueList(warpForward);
-
+  try{
+    let warpForward = i - 6;
+    if (warpForward <= 0) {
+      getIssueList(0);
+    } else {
+      getIssueList(warpForward);
+  
+    }
+  }catch(error){
+    router.push('/error');
   }
 }
 
 function pageNext(i) {
-  let warpNext = i + 4;
-  if (warpNext > pageSet.value.totalPages - 1) {
-    getIssueList(pageSet.value.totalPages - 1);
-  } else {
-    getIssueList(warpNext);
+  try{
+    let warpNext = i + 4;
+    if (warpNext > pageSet.value.totalPages - 1) {
+      getIssueList(pageSet.value.totalPages - 1);
+    } else {
+      getIssueList(warpNext);
+    }
+  }catch(error){
+    router.push('/error');
   }
 }
 
