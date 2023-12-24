@@ -110,13 +110,16 @@ public class ChatRoomService {
     public void enterChatRoom(Long chatRoomId, Long usersId){
 
         ChatRoom chatRoom = chatRoomRepository.findById(chatRoomId)
-                .orElseThrow(()-> new IllegalArgumentException("없음"));
+                .orElseThrow(()-> new IllegalArgumentException("채팅방 없음"));
         Users users = usersRepository.findById(usersId)
                 .orElseThrow(() -> new IllegalArgumentException("not found:"+usersId));
 
-        if( isJoined(chatRoomId, usersId)){
-            System.out.println("이미 있는 유저거나 다참");
-        } else {
+        if( !isJoined(chatRoomId, usersId) && isMax(chatRoomId)){
+            //없는데 꽉참
+            throw new IllegalArgumentException("인원이 다 찼습니다.");
+        } else if(isJoined(chatRoomId, usersId)) {
+            System.out.println("이미 들어와있음");
+        }  else {
             chatRoomUsersRepository.save(ChatRoomUsers.builder()
                     .chatRoom(chatRoom)
                     .users(users)
@@ -128,11 +131,11 @@ public class ChatRoomService {
     //사람 퇴장
     public void quitChatRoom(Long chatRoomId, Long usersId){
         ChatRoom chatRoom = chatRoomRepository.findById(chatRoomId)
-                .orElseThrow(()-> new IllegalArgumentException("없음"));
+                .orElseThrow(()-> new IllegalArgumentException("채팅방이 존재하지 않습니다."));
         Users users = usersRepository.findById(usersId)
-                .orElseThrow(() -> new IllegalArgumentException("not found:"+usersId));
+                .orElseThrow(() -> new IllegalArgumentException("유저가 존재하지 않습니다."));
         ChatRoomUsers chatRoomUsers = chatRoomUsersRepository.findByChatRoomAndUsers(chatRoom, users)
-                .orElseThrow(() -> new IllegalArgumentException("x"));
+                .orElseThrow(() -> new IllegalArgumentException("들어와있지 않습니다."));
 
         System.out.println("퇴장:"+chatRoomUsers.getId());
 

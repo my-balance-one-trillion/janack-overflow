@@ -2,15 +2,16 @@
   <div class="flex my-5 mt-20">
     <div class="flex flex-col h-full">
       <img src="/images/main-text.svg" width="700px" />
-      <div v-if="isLoggedin" class="flex items-center content-center min-h-[300px]">
+      <div
+        v-if="isLoggedin"
+        class="flex items-center content-center min-h-[300px]"
+      >
         <router-link
           to="/intro"
           type="button"
           class="px-10 py-5 m-2 mx-auto shadow bg-main-red hover:bg-hover-red rounded-xl w-fit"
         >
-          <div class="text-4xl font-bold text-white ">
-            적금 생성하기
-          </div>
+          <div class="text-4xl font-bold text-white">적금 생성하기</div>
         </router-link>
       </div>
     </div>
@@ -32,12 +33,17 @@
     <div class="text-3xl">
       최근 올라온<span class="text-main-red"> 에러</span>
     </div>
-    <div class="flex flex-wrap justify-center my-5">
+    <div v-if="!isNoContent" class="flex flex-wrap justify-center my-5">
       <MainPageCard
         v-for="(issue, index) in issueList"
         :issue="issue"
         :key="index"
       />
+    </div>
+    <div v-else>
+      <div class="my-40 text-5xl">
+      업로드된 이슈가 없습니다.
+    </div>
     </div>
   </div>
 
@@ -54,7 +60,6 @@
         <div style="font-size: 21px">
           코딩하다가 만났던<br />에러를 해결하는 동시에<br />
           의미있게 적금하세요!<br />
-          
         </div>
       </div>
     </div>
@@ -117,15 +122,21 @@ import { onMounted, ref } from "vue";
 import axios from "axios";
 import MainPageCard from "./MainPageCard.vue";
 
+const isNoContent = ref(false);
 const issueList = ref([]);
 defineProps({
-  isLoggedin:{
+  isLoggedin: {
     type: Boolean,
-  }
-})
+  },
+});
 onMounted(() => {
-  axios.get("http://localhost:8081/main/unlogin").then((response) => {
-    issueList.value = response.data;
+  axios.get("http://localhost:8081/main/unlogin")
+  .then((response) => {
+    if(response.status == 204){
+      isNoContent.value = true;
+    } else {
+      issueList.value = response.data;
+    }
     // console.log("response", issueList.value);
   });
 });

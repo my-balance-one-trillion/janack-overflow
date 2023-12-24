@@ -33,15 +33,23 @@ public class MainController {
     @GetMapping("/unlogin")
     private ResponseEntity<?> getUnLoggedInMainPage(){
         List<IssueDTO.ResponseDTO> issueResponseDTOList = mainService.readRecent10Issues();
-        return ResponseEntity.ok(issueResponseDTOList);
+        if(!issueResponseDTOList.isEmpty()) {
+            return ResponseEntity.ok(issueResponseDTOList);
+        } else {
+            return ResponseEntity.noContent().build();
+        }
     }
     //로그인 시 메인페이지
     @GetMapping("/login")
     private ResponseEntity<?> getLoggedInMainPage(@AuthenticationPrincipal NowUserDetails nowUserDetails){
+
+        if(nowUserDetails.getUser() == null){
+            return ResponseEntity.badRequest().build();
+        }
         Long userId = nowUserDetails.getUser().getId();
+
         try{
             NowAccountResponseDTO nowAccountResponseDTO = mainService.readNowAccount(userId);
-            System.out.println("now:"+nowAccountResponseDTO);
             List<IssueResponseDTO> issueResponseDTOList = mainService.readWeeklyIssues(userId);
             Map<String, Object> responseMap = new HashMap<>();
             responseMap.put("nowAccount", nowAccountResponseDTO);

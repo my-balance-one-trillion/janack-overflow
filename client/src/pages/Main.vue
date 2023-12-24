@@ -1,11 +1,10 @@
 <template>
-  <LoggedInMain 
-    v-if="isLoggedin && Object.keys(nowAccount).length > 0" 
+  <LoggedInMain
+    v-if="isLoggedin && Object.keys(nowAccount).length > 0"
     :nowAccount="nowAccount"
     :weeklyIssues="weeklyIssues"
-    />
-  <LoggedOutMain v-else 
-  :isLoggedin="isLoggedin"/>
+  />
+  <LoggedOutMain v-else :isLoggedin="isLoggedin" />
 </template>
 
 <script setup>
@@ -39,18 +38,14 @@ onMounted(async () => {
         }
         if (response.data.weeklyIssues) {
           weeklyIssues.value = response.data.weeklyIssues;
-          console.log("값 넣기", weeklyIssues.value);
         }
         console.log("통신 후 값", nowAccount.value, weeklyIssues.value);
         console.log("길이", Object.keys(nowAccount.value).length);
+      })
+      .catch((error) => {
+        console.error("에러 발생", error.response);
       });
-    // .catch((error)  => {
-    //   console.error("에러 발생", error.response);
-
-    // }
-    // )
   }
-  console.log("길이", Object.keys(nowAccount.value).length);
 });
 </script>
 

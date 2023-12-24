@@ -146,6 +146,10 @@ onMounted(async () => {
       roomInfo.value = response.data.roomInfo;
       messageReq.value.roomId = roomInfo.value.id;
       console.log("리시브", recvList.value, "방정보", roomInfo.value);
+    })
+    .catch((error) => {
+      window.alert("잘못된 접근입니다.");
+      router.go(-1);
     });
 
   //인원수, 원래 사람 체크
@@ -175,6 +179,10 @@ onMounted(async () => {
     })
     .then((response) => {
       console.log("입장", response);
+    })
+    .catch((error) => {
+      console.log("입장 실패 ", error);
+      
     });
 
   if (chatDiv.value) {
@@ -244,11 +252,11 @@ function quit() {
       .then((response) => {
         stompClient.disconnect();
         console.log("퇴장", response.data);
-        window.alert("퇴장.");
+        window.alert("퇴장합니다.");
         router.push("/chat");
       })
       .catch((error) => {
-        window.alert("퇴장 실패");
+        window.alert(error.response.data);
       });
   }
 }
