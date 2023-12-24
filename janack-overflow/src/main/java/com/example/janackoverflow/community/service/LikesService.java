@@ -45,8 +45,8 @@ public class LikesService {
     @Transactional
     public void saveLikes (Long usersId, Long issueId) {
         log.info("usersId : " + usersId);
-        Users users = usersRepository.findById(usersId).orElseThrow(() -> new IllegalArgumentException("user를 찾을 수 없음"));
-        Issue issue = issueRepository.findById(issueId).orElseThrow(() -> new IllegalArgumentException("issue를 찾을 수 없음"));
+        Users users = usersRepository.findById(usersId).orElseThrow(() -> new BusinessLogicException(ExceptionCode.USER_NOT_FOUND));
+        Issue issue = issueRepository.findById(issueId).orElseThrow(() -> new BusinessLogicException(ExceptionCode.ERROR_NOT_FOUND));
 
         LikesDTO.LikesRequestDTO likesRequestDTO = LikesDTO.LikesRequestDTO.builder()
                         .users(users)
