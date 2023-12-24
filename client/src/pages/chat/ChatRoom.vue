@@ -1,5 +1,5 @@
 <template>
-  <div class="flex flex-col flex-auto mx-auto w-7/12 h-10/12 my-4 p-6">
+  <div class="flex flex-col flex-auto w-7/12 p-6 mx-auto my-4 h-10/12">
     <div class="flex justify-between my-3">
       <router-link :to="'/chat'">◀</router-link>
       <span class="text-2xl">
@@ -20,7 +20,7 @@
             <template v-if="Object.keys(userInfo).length > 0" v-for="(item, idx) in recvList" :key="idx">
               <!-- 입장 메시지 -->
               <div v-if="item.type == 'ENTER' || item.type == 'QUIT'"
-                class="col-start-1 col-end-13 p-3 rounded-lg flex justify-center items-center">
+                class="flex items-center justify-center col-start-1 col-end-13 p-3 rounded-lg">
                 <div class="flex flex-row-reverse items-center justify-start">
                   <div class="relative px-4 py-2 mr-3 text-sm bg-indigo-100 shadow rounded-xl">
                     <div>
@@ -37,7 +37,7 @@
                       {{ item.content }}
                     </div>
                   </div>
-                  <div class="text-xs px-3">
+                  <div class="px-3 text-xs">
                     {{ item.createdAt }}
                   </div>
                 </div>
@@ -54,7 +54,7 @@
                   <div class="relative px-4 py-2 ml-3 text-sm bg-white shadow rounded-xl">
                     {{ item.content }}
                   </div>
-                  <div class="text-xs px-3">
+                  <div class="px-3 text-xs">
                     {{ item.createdAt }}
                   </div>
                 </div>
@@ -146,6 +146,10 @@ onMounted(async () => {
       roomInfo.value = response.data.roomInfo;
       messageReq.value.roomId = roomInfo.value.id;
       console.log("리시브", recvList.value, "방정보", roomInfo.value);
+    })
+    .catch((error) => {
+      window.alert("잘못된 접근입니다.");
+      router.go(-1);
     });
 
   //인원수, 원래 사람 체크
@@ -175,6 +179,10 @@ onMounted(async () => {
     })
     .then((response) => {
       console.log("입장", response);
+    })
+    .catch((error) => {
+      console.log("입장 실패 ", error);
+      
     });
 
   if (chatDiv.value) {
@@ -244,11 +252,11 @@ function quit() {
       .then((response) => {
         stompClient.disconnect();
         console.log("퇴장", response.data);
-        window.alert("퇴장.");
+        window.alert("퇴장합니다.");
         router.push("/chat");
       })
       .catch((error) => {
-        window.alert("퇴장 실패");
+        window.alert(error.response.data);
       });
   }
 }

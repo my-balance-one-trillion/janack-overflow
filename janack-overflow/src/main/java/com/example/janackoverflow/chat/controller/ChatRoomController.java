@@ -29,11 +29,11 @@ public class ChatRoomController {
 
     //모든 채팅방 리스트
     @GetMapping
-    public ResponseEntity<?> getAllChatRooms(){
+    public ResponseEntity<?> getAllChatRooms() {
         try {
             List<ChatRoomDTO.ResponseDTO> chatRoomDTOList = chatRoomService.readAll();
             return ResponseEntity.ok(chatRoomDTOList);
-        } catch (Exception e){
+        } catch (Exception e) {
             String error = e.getMessage();
             return ResponseEntity.badRequest().body(error);
         }
@@ -41,26 +41,28 @@ public class ChatRoomController {
 
     //들어가있는 채팅방
     @GetMapping("/my")
-    public ResponseEntity<?> getJoinedRooms(@AuthenticationPrincipal NowUserDetails nowUserDetails){
+    public ResponseEntity<?> getJoinedRooms(@AuthenticationPrincipal NowUserDetails nowUserDetails) {
         try {
             List<ChatRoomDTO.ResponseDTO> chatRoomDTOList = chatRoomService.readJoinedRooms(nowUserDetails.getUser().getId());
             return ResponseEntity.ok(chatRoomDTOList);
-        } catch (Exception e){
+        } catch (Exception e) {
             String error = e.getMessage();
             return ResponseEntity.badRequest().body(error);
         }
     }
+
     //내가 만든 방
     @GetMapping("/createdRoom")
-    public ResponseEntity<?> getCreatedRooms(@AuthenticationPrincipal NowUserDetails nowUserDetails){
+    public ResponseEntity<?> getCreatedRooms(@AuthenticationPrincipal NowUserDetails nowUserDetails) {
         List<ChatRoomDTO.ResponseDTO> chatRoomDTOList = chatRoomService.readCreatedRoom(nowUserDetails.getUser().getId());
 
         return ResponseEntity.ok(chatRoomDTOList);
     }
+
     //채팅 내역 불러오기+입장
     @GetMapping("/{roomId}")
     public ResponseEntity<?> chatList(@AuthenticationPrincipal NowUserDetails nowUserDetails,
-                                      @PathVariable(value = "roomId") Long roomId){
+                                      @PathVariable(value = "roomId") Long roomId) {
         try {
             Long userId = nowUserDetails.getUser().getId();
             ChatRoomDTO.ResponseDTO chatRoomDTO = chatRoomService.read(roomId);
@@ -69,28 +71,30 @@ public class ChatRoomController {
             responseMap.put("roomInfo", chatRoomDTO);
             responseMap.put("messageList", chatMessageList);
             return ResponseEntity.ok(responseMap);
-        } catch (Exception e){
+        } catch (Exception e) {
             String error = e.getMessage();
             log.error(error);
             return ResponseEntity.badRequest().body(error);
         }
     }
+
     //유저 입장
     @GetMapping("/enter/{roomId}")
     public ResponseEntity<?> enterChatRoom(@AuthenticationPrincipal NowUserDetails nowUserDetails,
-                                           @PathVariable(value = "roomId") Long roomId){
+                                           @PathVariable(value = "roomId") Long roomId) {
+
         Long userId = nowUserDetails.getUser().getId();
         //유저 수 다 찼을때 못들어오게 하기
-        if(!chatRoomService.isMax(roomId)) {
-            chatRoomService.enterChatRoom(roomId, userId);
-            return ResponseEntity.ok("입장");
-        } else {
-            return ResponseEntity.ok("인원이 다 찼습니다.");
-        }
-
-
+            try {
+                chatRoomService.enterChatRoom(roomId, userId);
+                return ResponseEntity.ok("입장");
+            } catch (IllegalArgumentException e) {
+                return ResponseEntity.badRequest().build();
+            }
 
     }
+
+
     //유저 퇴장
     @DeleteMapping("/quit/{roomId}")
     public ResponseEntity<?> quitChatRoom(@AuthenticationPrincipal NowUserDetails nowUserDetails,
@@ -101,7 +105,7 @@ public class ChatRoomController {
             return ResponseEntity.ok("퇴장");
         } catch (Exception e){
             String error = e.getMessage();
-            return ResponseEntity.badRequest().body(error);
+            return ResponseEntity.badRequest().body("퇴장에 실패하였습니다.");
         }
     }
 
@@ -115,8 +119,7 @@ public class ChatRoomController {
             log.info("생성된 방 id {}", chatRoom.getId());
             return ResponseEntity.created(URI.create("/chat/" + chatRoom.getId())).body(ChatRoomDTO.ResponseDTO.fromEntity(chatRoom));
         } catch (Exception e){
-            String error = e.getMessage();
-            return ResponseEntity.badRequest().body(error);
+            return ResponseEntity.badRequest().body("존재하지 않는 방입니다.");
         }
     }
     //채팅방 삭제

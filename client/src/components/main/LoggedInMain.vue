@@ -74,7 +74,7 @@
   <div class="flex justify-end w-9/12 mx-auto">
     <button class="rounded-[25px] bg-main-red hover:bg-hover-red text-white w-fit h-fit px-5 py-3"
       style="font-size: 21px">
-      <router-link to="/issue">이슈 등록</router-link>
+      <router-link to="/issue">에러 등록</router-link>
 
     </button>
   </div>
