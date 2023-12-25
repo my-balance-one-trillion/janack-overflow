@@ -6,6 +6,7 @@ import com.example.janackoverflow.mypage.domain.response.MyIssueResponseDTO;
 import com.example.janackoverflow.user.domain.request.UsersRequestDTO;
 import com.example.janackoverflow.user.domain.response.UsersResponseDTO;
 import com.example.janackoverflow.user.repository.UsersRepository;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Map;
 
+@Tag(name = "관리자 Controller", description = "관리자 관련 API")
 @RestController
 public class AdminController {
     private final AdminService adminService;

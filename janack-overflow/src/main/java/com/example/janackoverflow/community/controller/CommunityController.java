@@ -12,6 +12,7 @@ import com.example.janackoverflow.global.security.auth.NowUserDetails;
 import com.example.janackoverflow.issue.domain.IssueDTO;
 import com.example.janackoverflow.issue.service.IssueService;
 import com.example.janackoverflow.mypage.service.MypageService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -24,6 +25,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Objects;
 
+@Tag(name = "커뮤니티 Controller", description = "커뮤니티 관련 API")
 @RestController
 @Slf4j
 @RequestMapping(value = "/community")
@@ -104,7 +106,6 @@ public class CommunityController {
 
         return ResponseEntity.ok().build();
     }
-
 
     @GetMapping(value = "/solvedissue/{issueId}/articles")
     public ResponseEntity<List<MediumArticle>> getArticles(@PathVariable("issueId")long issueId){

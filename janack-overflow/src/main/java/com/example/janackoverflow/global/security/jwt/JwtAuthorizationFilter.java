@@ -41,7 +41,8 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
 							"/static/**",
 							"/favicon.ico",
 							"/signup",
-							"/login"
+							"/login",
+							"/v3/api-docs/**", "/swagger-ui/**", "/swagger-resources/**"
 					));
 
 	// Filter에서 제외할 URL 설정 <- 이거 안하면 로그인도 막힐거 같아서 걸어둠
