@@ -7,14 +7,10 @@
     </div>
     <div class="flex justify-between items-center gap-4">
       <div class="login-wrap h-6">
-        <div
-          @click="removeToken"
-          v-if="authStore.token"
-          class="text-gray-600 text-xl"
-        >
+        <div class="text-gray-600 text-xl cursor-pointer" v-if="authStore.token" @click="removeToken">
           LOGOUT
         </div>
-        <router-link to="/login" class="text-gray-600 text-xl" v-else>
+        <router-link to="/login" class="text-gray-600 text-xl cursor-pointer" v-else>
           LOGIN
         </router-link>
       </div>
@@ -30,63 +26,27 @@
           </router-link>
         </div>
       </div>
-      <div
-        class="menu-wrap relative"
-        v-if="role.role !== 'ADMIN' || !authStore.token"
-      >
+      <div class="menu-wrap relative" v-if="role.role !== 'ADMIN' || !authStore.token">
         <div class="bars-wrap flex justify-end">
-          <div
-            ref="menuBar"
-            id="menu-bar"
-            @click="menuOnClick"
-            class="z-30 w-9 cursor-pointer"
-          >
-            <div
-              id="bar1"
-              class="bar h-1 bg-black rounded-xl duration-200"
-            ></div>
-            <div
-              id="bar2"
-              class="bar h-1 bg-black rounded-xl duration-200"
-            ></div>
-            <div
-              id="bar3"
-              class="bar h-1 bg-black rounded-xl duration-200"
-            ></div>
+          <div ref="menuBar" id="menu-bar" @click="menuOnClick" class="z-30 w-9 cursor-pointer">
+            <div id="bar1" class="bar h-1 bg-black rounded-xl duration-200"></div>
+            <div id="bar2" class="bar h-1 bg-black rounded-xl duration-200"></div>
+            <div id="bar3" class="bar h-1 bg-black rounded-xl duration-200"></div>
           </div>
         </div>
-
-        <nav
-          ref="nav"
-          class="nav z-30 absolute w-40 -translate-x-40 hidden"
-          id="nav"
-        >
+        <nav ref="nav" class="nav z-30 absolute w-40 -translate-x-40 hidden">
           <ul>
             <li class="text-right p-3">
-              <router-link to="/" class="text-white text-2xl hover:font-bold"
-                >메인</router-link
-              >
+              <router-link to="/" class="text-white text-2xl hover:font-bold">메인</router-link>
             </li>
             <li class="text-right p-3" v-if="authStore.token">
-              <router-link
-                to="/saving"
-                class="text-white text-2xl hover:font-bold"
-                >적금</router-link
-              >
+              <router-link to="/saving" class="text-white text-2xl hover:font-bold">적금</router-link>
             </li>
             <li class="text-right p-3">
-              <router-link
-                to="/community"
-                class="text-white text-2xl hover:font-bold"
-                >커뮤니티</router-link
-              >
+              <router-link to="/community" class="text-white text-2xl hover:font-bold">커뮤니티</router-link>
             </li>
             <li class="text-right p-3" v-if="authStore.token">
-              <router-link
-                to="/chat"
-                class="text-white text-2xl hover:font-bold"
-                >채팅</router-link
-              >
+              <router-link to="/chat" class="text-white text-2xl hover:font-bold">채팅</router-link>
             </li>
           </ul>
         </nav>

@@ -54,7 +54,7 @@ public class MypageService {
 
 //    회원 정보 수정
     public String updateUser(UsersRequestDTO usersRequestDTO, Long usersId){
-        String updateStatus = "정상적으로 회원정보 수정";
+        String updateStatus = "ok";
         Users users = usersRepository.findById(usersId).orElseThrow(()->new BusinessLogicException(ExceptionCode.USER_NOT_FOUND));
         if(passwordEncoder.matches(usersRequestDTO.getPassword(), users.getPassword())){
             Users updatedUser = users.toBuilder()
@@ -71,13 +71,13 @@ public class MypageService {
                     usersRepository.save(updatedUser);
                     updatedUser.updatePassword(passwordEncoder.encode(usersRequestDTO.getNewPassword()));
                 }else{
-                    updateStatus = "새 패스워드 재검증 오류";
+                    updateStatus = "passwordConfirmError";
                     return updateStatus;
                 }
             }
             usersRepository.save(updatedUser);
         }else{
-            updateStatus = "패스워드 오류";
+            updateStatus = "passwordError";
         }
         return updateStatus;
     }
