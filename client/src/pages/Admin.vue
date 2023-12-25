@@ -3,8 +3,7 @@
 		<aside class="flex flex-row">
 			<div class="flex flex-col w-56 bg-white rounded-3xl overflow-hidden border border-sub-grn">
 				<div class="mt-6 mx-auto">
-					<img id="profileimg" :src="`/images/${authStore.userInfo.profileImage}`" class="rounded-full w-32"
-						alt="profile picture" />
+					<img id="profileimg" :src="`/images/${authStore.userInfo.profileImage}`" class="rounded-full w-32" alt="profile picture" />
 				</div>
 
 				<div class="mt-5 mx-auto">
