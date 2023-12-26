@@ -4,14 +4,17 @@
     <Router-View />
   </div>
   <Footer />
+  <Modal v-if="isModalOpen" @close="closeModal" :msg="alertMsg" :mode="modalMode">
+  </Modal>
 </template>
 
 <script setup>
-import { onBeforeMount, ref } from "vue";
+import { onBeforeMount, ref,watch } from "vue";
 import Header from "@/components/Header.vue";
 import Footer from "@/components/Footer.vue";
 import { useAuthStore } from "@/stores/auth";
 import { useRouter } from "vue-router";
+import Modal from './components/Modal.vue';
 
 const authStore = useAuthStore();
 const router = useRouter();
@@ -44,6 +47,25 @@ async function handleRouteLogic() {
   }
 
 }
+
+// --------------------
+// 모달 로직
+// --------------------
+
+const isModalOpen = ref(false);
+const alertMsg = ref('');
+const modalMode = ref('');
+
+window.alert = (message) => {
+  isModalOpen.value = true;
+  modalMode.value = 'alert';
+  alertMsg.value = message;
+}
+
+const closeModal = () => {
+  isModalOpen.value = false;
+  alertMsg.value = '';
+};
 
 </script>
 
