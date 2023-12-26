@@ -75,15 +75,18 @@ role.value = props;
 console.log(role.value.role);
 
 function removeToken() {
-  // location.reload();
-  localStorage.removeItem("token");
-  authStore.clearToken();
-  alert("로그아웃되었습니다.");
-  console.log("현재 주소", currentRoute.path);
-  if (currentRoute.path == "/") {
-    location.reload();
+  let logoutConfirm = confirm('로그아웃 하시겠습니까?');
+  if(logoutConfirm){
+    localStorage.removeItem("token");
+    authStore.clearToken();
+    console.log("현재 주소", currentRoute.path);
+    if (currentRoute.path == "/") {
+      location.reload();
+    }
+    router.push("/");
+  }else{
+    return;
   }
-  router.push("/");
 }
 
 function menuOnClick() {
@@ -140,123 +143,5 @@ function menuOnClick() {
   width: 520px;
   height: 470px;
   transform: translate(60%, -30%);
-}
-
-/*
- * search btn
- */
-.glow {
-  top: -10%;
-  left: -10%;
-  width: 120%;
-  height: 120%;
-  border-radius: 100%;
-}
-
-.glow-1 {
-  animation: glow1 4s linear infinite;
-}
-
-.glow-2 {
-  animation: glow2 4s linear infinite;
-  animation-delay: 100ms;
-}
-
-.glow-3 {
-  animation: glow3 4s linear infinite;
-  animation-delay: 200ms;
-}
-
-.glow-4 {
-  animation: glow4 4s linear infinite;
-  animation-delay: 300ms;
-}
-
-@keyframes glow1 {
-  0% {
-    transform: translate(10%, 10%) scale(1);
-  }
-
-  25% {
-    transform: translate(-10%, 10%) scale(1);
-  }
-
-  50% {
-    transform: translate(-10%, -10%) scale(1);
-  }
-
-  75% {
-    transform: translate(10%, -10%) scale(1);
-  }
-
-  100% {
-    transform: translate(10%, 10%) scale(1);
-  }
-}
-
-@keyframes glow2 {
-  0% {
-    transform: translate(-10%, -10%) scale(1);
-  }
-
-  25% {
-    transform: translate(10%, -10%) scale(1);
-  }
-
-  50% {
-    transform: translate(10%, 10%) scale(1);
-  }
-
-  75% {
-    transform: translate(-10%, 10%) scale(1);
-  }
-
-  100% {
-    transform: translate(-10%, -10%) scale(1);
-  }
-}
-
-@keyframes glow3 {
-  0% {
-    transform: translate(-10%, 10%) scale(1);
-  }
-
-  25% {
-    transform: translate(-10%, -10%) scale(1);
-  }
-
-  50% {
-    transform: translate(10%, -10%) scale(1);
-  }
-
-  75% {
-    transform: translate(10%, 10%) scale(1);
-  }
-
-  100% {
-    transform: translate(-10%, 10%) scale(1);
-  }
-}
-
-@keyframes glow4 {
-  0% {
-    transform: translate(10%, -10%) scale(1);
-  }
-
-  25% {
-    transform: translate(10%, 10%) scale(1);
-  }
-
-  50% {
-    transform: translate(-10%, 10%) scale(1);
-  }
-
-  75% {
-    transform: translate(-10%, -10%) scale(1);
-  }
-
-  100% {
-    transform: translate(10%, -10%) scale(1);
-  }
 }
 </style>
