@@ -36,10 +36,8 @@ class JanackOverflowApplicationTests {
 
 	@Test
 	void contextLoads() throws JsonProcessingException {
-//		System.out.println(chatMessageRepository.findTop1ByChatRoomIdAndUsersIdAndTypeOrderByCreatedAtDesc(43L, 31L, ChatMessageDTO.MessageType.ENTER)
-//				.get().getId());
-		chatMessageService.readChatSinceJoin(43L, 31L)
-				.forEach(System.out::println);
+
+		bankingService.transfer(10000, "3020000009693");
 	}
 
 
