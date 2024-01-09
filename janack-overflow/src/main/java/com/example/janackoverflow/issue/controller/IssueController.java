@@ -16,6 +16,7 @@ import com.example.janackoverflow.issue.service.SolutionService;
 import com.example.janackoverflow.main.service.BankingService;
 import com.example.janackoverflow.user.entity.Users;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -25,6 +26,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
 
+@Tag(name = "이슈 Controller", description = "이슈 관련 API")
 @RestController
 @RequestMapping("/issues")
 public class IssueController {

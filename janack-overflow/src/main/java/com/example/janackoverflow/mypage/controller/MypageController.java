@@ -8,6 +8,7 @@ import com.example.janackoverflow.user.service.UsersService;
 import com.example.janackoverflow.mypage.service.MypageService;
 import com.example.janackoverflow.user.domain.request.UsersRequestDTO;
 import com.example.janackoverflow.user.domain.response.UsersResponseDTO;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@Tag(name = "마이페이지 Controller", description = "마이페이지 관련 API")
 @RestController
 public class MypageController {
     private final MypageService mypageService;

@@ -17,6 +17,7 @@ import com.example.janackoverflow.saving.service.InputAccountService;
 import com.example.janackoverflow.saving.service.RuleService;
 import com.example.janackoverflow.user.entity.Users;
 import com.querydsl.core.Tuple;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.catalina.User;
 import org.springframework.http.HttpStatus;
@@ -27,6 +28,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
 
+@Tag(name = "적금 Controller", description = "적금 관련 API")
 @Slf4j
 @RestController
 @RequestMapping("/savings")

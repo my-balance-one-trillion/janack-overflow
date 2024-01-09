@@ -3,6 +3,8 @@ package com.example.janackoverflow.community.service;
 import com.example.janackoverflow.community.domain.likes.LikesDTO;
 import com.example.janackoverflow.community.entity.Likes;
 import com.example.janackoverflow.community.repository.LikesRepository;
+import com.example.janackoverflow.global.exception.BusinessLogicException;
+import com.example.janackoverflow.global.exception.ExceptionCode;
 import com.example.janackoverflow.issue.entity.Issue;
 import com.example.janackoverflow.issue.repository.IssueRepository;
 import com.example.janackoverflow.user.entity.Users;
@@ -11,6 +13,7 @@ import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.util.Objects;
 import java.util.Optional;
 
 @Service
@@ -42,8 +45,8 @@ public class LikesService {
     @Transactional
     public void saveLikes (Long usersId, Long issueId) {
         log.info("usersId : " + usersId);
-        Users users = usersRepository.findById(usersId).orElseThrow(() -> new IllegalArgumentException("user를 찾을 수 없음"));
-        Issue issue = issueRepository.findById(issueId).orElseThrow(() -> new IllegalArgumentException("issue를 찾을 수 없음"));
+        Users users = usersRepository.findById(usersId).orElseThrow(() -> new BusinessLogicException(ExceptionCode.USER_NOT_FOUND));
+        Issue issue = issueRepository.findById(issueId).orElseThrow(() -> new BusinessLogicException(ExceptionCode.ERROR_NOT_FOUND));
 
         LikesDTO.LikesRequestDTO likesRequestDTO = LikesDTO.LikesRequestDTO.builder()
                         .users(users)
@@ -55,7 +58,11 @@ public class LikesService {
 
     @Transactional
     public long deleteLike(long issueId, long usersId) {
-        return likesRespository.deleteByIssueIdAndUsersId(issueId, usersId);
+        long isDeleteLike = likesRespository.deleteByIssueIdAndUsersId(issueId, usersId);
+        if ( isDeleteLike < 0 ) {
+            throw new BusinessLogicException(ExceptionCode.ERROR_NOT_FOUND);
+        }
+        return isDeleteLike;
     }
 
     public long selectLikes(Long usersId, Long issueId) {

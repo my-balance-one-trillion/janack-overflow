@@ -16,7 +16,7 @@ import static com.example.janackoverflow.community.entity.QComment.comment;
 
 @Repository
 @RequiredArgsConstructor
-public class CommentListRepositoruImpl implements CommentListRespository{
+public class CommentListRepositoryImpl implements CommentListRespository{
     private final JPAQueryFactory jpaQueryFactory;
 
     @Override

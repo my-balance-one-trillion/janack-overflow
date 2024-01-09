@@ -6,6 +6,7 @@ import com.example.janackoverflow.chat.entity.ChatRoom;
 import com.example.janackoverflow.chat.service.ChatMessageService;
 import com.example.janackoverflow.chat.service.ChatRoomService;
 import com.example.janackoverflow.global.security.auth.NowUserDetails;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -17,6 +18,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+@Tag(name = "채팅 Controller", description = "채팅 관련 API")
 @RestController
 @RequestMapping("/chatrooms")
 @Slf4j

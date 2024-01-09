@@ -7,6 +7,7 @@ import com.example.janackoverflow.issue.entity.Issue;
 import com.example.janackoverflow.main.domain.NowAccountResponseDTO;
 import com.example.janackoverflow.main.service.MainService;
 import com.example.janackoverflow.saving.entity.InputAccount;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
 import org.eclipse.jdt.internal.compiler.batch.Main;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +22,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+@Tag(name = "매인 Controller", description = "메인 관련 API")
 @RestController
 @RequestMapping("/main")
 @Slf4j
